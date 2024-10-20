@@ -1,5 +1,6 @@
 package com.example.dreamday.domain;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.Objects;
@@ -10,15 +11,24 @@ public class Orcamento {
     private Cliente cliente;
     private OrcamentoStatus status;
     private LocalDate dataCriacao;
-    private BigInteger custoEstimado;
-    private BigInteger valorTotal;
+    private BigDecimal custoEstimado;
+    private BigDecimal valorTotal;
     private String observaces;
 
     public Orcamento(
             Long id, Cliente cliente, OrcamentoStatus status,
-            LocalDate dataCriacao, BigInteger custoEstimado,
-            BigInteger valorTotal, String observaces) {
+            LocalDate dataCriacao, BigDecimal custoEstimado,
+            BigDecimal valorTotal, String observaces) {
         this.id = id;
+        this.cliente = cliente;
+        this.status = status;
+        this.dataCriacao = dataCriacao;
+        this.custoEstimado = custoEstimado;
+        this.valorTotal = valorTotal;
+        this.observaces = observaces;
+    }
+
+    public Orcamento(Cliente cliente, OrcamentoStatus status, LocalDate dataCriacao, BigDecimal custoEstimado, BigDecimal valorTotal, String observaces) {
         this.cliente = cliente;
         this.status = status;
         this.dataCriacao = dataCriacao;
@@ -43,11 +53,11 @@ public class Orcamento {
         return dataCriacao;
     }
 
-    public BigInteger getCustoEstimado() {
+    public BigDecimal getCustoEstimado() {
         return custoEstimado;
     }
 
-    public BigInteger getValorTotal() {
+    public BigDecimal getValorTotal() {
         return valorTotal;
     }
 
@@ -59,11 +69,11 @@ public class Orcamento {
         this.observaces = observaces;
     }
 
-    public void setValorTotal(BigInteger valorTotal) {
+    public void setValorTotal(BigDecimal valorTotal) {
         this.valorTotal = valorTotal;
     }
 
-    public void setCustoEstimado(BigInteger custoEstimado) {
+    public void setCustoEstimado(BigDecimal custoEstimado) {
         this.custoEstimado = custoEstimado;
     }
 

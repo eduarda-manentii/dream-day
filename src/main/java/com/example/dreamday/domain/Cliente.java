@@ -24,6 +24,16 @@ public class Cliente {
         this.cpf = cpf;
     }
 
+    public Cliente(Long id, String nome, String conjugue, LocalDate dataCasamento, String telefone, String email, String cpf) {
+        this.id = id;
+        this.nome = nome;
+        this.conjugue = conjugue;
+        this.dataCasamento = dataCasamento;
+        this.telefone = telefone;
+        this.email = email;
+        this.cpf = cpf;
+    }
+
     public Long getId() {
         return id;
     }
