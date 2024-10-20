@@ -8,7 +8,7 @@ public interface DaoCategoria {
 
     void inserir(Categoria categoria);
     void alterar(Categoria  categoria);
-    void excluirPor(Integer id);
+    void excluirPor(Long id);
     List<Categoria> listarPor(String nome);
     List<Categoria> listarTodas();
 }
