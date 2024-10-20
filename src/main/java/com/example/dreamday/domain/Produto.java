@@ -2,23 +2,28 @@ package com.example.dreamday.domain;
 
 public class Produto {
 
-    private Integer id;
+    private Long id;
     private String nome;
     private String descricao;
 
     public Produto() {}
 
-    public Produto(Integer id, String nome, String descricao) {
+    public Produto(Long id, String nome, String descricao) {
         this.id = id;
         this.nome = nome;
         this.descricao = descricao;
     }
 
-    public Integer getId() {
+    public Produto(Long id, String nome) {
+        this.id = id;
+        this.nome = nome;
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

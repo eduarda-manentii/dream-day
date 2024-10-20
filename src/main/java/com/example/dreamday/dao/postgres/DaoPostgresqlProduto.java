@@ -65,7 +65,7 @@ public class DaoPostgresqlProduto implements DaoProduto {
             ps = conexao.prepareStatement(UPDATE);
             ps.setString(1, produto.getNome());
             ps.setString(2, produto.getDescricao());
-            ps.setInt(3, produto.getId());
+            ps.setLong(3, produto.getId());
             boolean isAlteracaoOk = ps.executeUpdate() == 1;
             if (isAlteracaoOk) {
                 this.conexao.commit();
@@ -81,12 +81,12 @@ public class DaoPostgresqlProduto implements DaoProduto {
         }
     }
 
-    public void excluirPor(Integer id) {
+    public void excluirPor(Long id) {
         PreparedStatement ps = null;
         try {
             ManagerDb.getInstance().configurarAutoCommitDa(conexao, false);
             ps = conexao.prepareStatement(DELETE);
-            ps.setInt(1, id);
+            ps.setLong(1, id);
             boolean isExclusaoOk = ps.executeUpdate() == 1;
             if (isExclusaoOk) {
                 this.conexao.commit();
@@ -145,7 +145,7 @@ public class DaoPostgresqlProduto implements DaoProduto {
 
     private Produto extrairDo(ResultSet rs) {
         try {
-            int id = rs.getInt("id");
+            long id = rs.getLong("id");
             String nome = rs.getString("nome");
             String descricao = rs.getString("descricao");
             return new Produto(id, nome, descricao);

@@ -9,7 +9,7 @@ public interface DaoFornecedor {
 
     void inserir(Fornecedor fornecedor);
     void alterar(Fornecedor  fornecedor);
-    void excluirPor(Integer id);
+    void excluirPor(Long id);
     List<Fornecedor> listarPor(String nome);
     List<Fornecedor> listarTodos();
 }

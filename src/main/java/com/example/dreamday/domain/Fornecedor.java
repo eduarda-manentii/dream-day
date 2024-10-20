@@ -2,25 +2,30 @@ package com.example.dreamday.domain;
 
 public class Fornecedor {
 
-    private Integer id;
+    private Long id;
     private String nome;
     private String telefone;
     private String email;
 
     public Fornecedor() {}
 
-    public Fornecedor(Integer id, String nome, String telefone, String email) {
+    public Fornecedor(Long id, String nome, String telefone, String email) {
         this.id = id;
         this.nome = nome;
         this.telefone = telefone;
         this.email = email;
     }
 
-    public Integer getId() {
+    public Fornecedor(Long id, String nome) {
+        this.id = id;
+        this.nome = nome;
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

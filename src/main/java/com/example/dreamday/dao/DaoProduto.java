@@ -9,7 +9,7 @@ public interface DaoProduto {
 
     void inserir(Produto produto);
     void alterar(Produto  produto);
-    void excluirPor(Integer id);
+    void excluirPor(Long id);
     List<Produto> listarPor(String nome);
     List<Produto> listarTodos();
 }

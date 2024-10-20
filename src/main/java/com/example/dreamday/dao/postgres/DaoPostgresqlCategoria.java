@@ -51,7 +51,7 @@ public class DaoPostgresqlCategoria implements DaoCategoria {
             ManagerDb.getInstance().configurarAutoCommitDa(conexao, false);
             ps = conexao.prepareStatement(UPDATE);
             ps.setString(1, categoria.getNome());
-            ps.setInt(2, categoria.getId());
+            ps.setLong(2, categoria.getId());
             boolean isAlteracaoOk = ps.executeUpdate() == 1;
             if (isAlteracaoOk) {
                 this.conexao.commit();
@@ -67,12 +67,12 @@ public class DaoPostgresqlCategoria implements DaoCategoria {
         }
     }
 
-    public void excluirPor(Integer id) {
+    public void excluirPor(Long id) {
         PreparedStatement ps = null;
         try {
             ManagerDb.getInstance().configurarAutoCommitDa(conexao, false);
             ps = conexao.prepareStatement(DELETE);
-            ps.setInt(1, id);
+            ps.setLong(1, id);
             boolean isExclusaoOk = ps.executeUpdate() == 1;
             if (isExclusaoOk) {
                 this.conexao.commit();
@@ -131,7 +131,7 @@ public class DaoPostgresqlCategoria implements DaoCategoria {
 
     private Categoria extrairDo(ResultSet rs) {
         try {
-            int id = rs.getInt("id");
+            long id = rs.getLong("id");
             String nome= rs.getString("nome");
             return new Categoria(id, nome);
         }catch (Exception ex) {

@@ -86,12 +86,12 @@ public class DaoPostgresqlFornecedor implements DaoFornecedor {
         }
     }
 
-    public void excluirPor(Integer id) {
+    public void excluirPor(Long id) {
         PreparedStatement ps = null;
         try {
             ManagerDb.getInstance().configurarAutoCommitDa(conexao, false);
             ps = conexao.prepareStatement(DELETE);
-            ps.setInt(1, id);
+            ps.setLong(1, id);
             boolean isExclusaoOk = ps.executeUpdate() == 1;
             if (isExclusaoOk) {
                 this.conexao.commit();
@@ -150,7 +150,7 @@ public class DaoPostgresqlFornecedor implements DaoFornecedor {
 
     private Fornecedor extrairDo(ResultSet rs) {
         try {
-            int id = rs.getInt("id");
+            long id = rs.getLong("id");
             String nome = rs.getString("nome");
             String telefone = rs.getString("telefone");
             String email = rs.getString("email");

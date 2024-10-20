@@ -2,6 +2,7 @@ package com.example.dreamday.dao;
 
 import com.example.dreamday.dao.postgres.DaoPostgresqlCategoria;
 import com.example.dreamday.dao.postgres.DaoPostgresqlFornecedor;
+import com.example.dreamday.dao.postgres.DaoPostgresqlItemFornecedor;
 import com.example.dreamday.dao.postgres.DaoPostgresqlProduto;
 
 public class FactoryDao {
@@ -28,5 +29,9 @@ public class FactoryDao {
 
     public DaoProduto getDaoProduto() {
         return new DaoPostgresqlProduto();
+    }
+
+    public DaoItemFornecedor getDaoItemFornecedor() {
+        return new DaoPostgresqlItemFornecedor();
     }
 }
