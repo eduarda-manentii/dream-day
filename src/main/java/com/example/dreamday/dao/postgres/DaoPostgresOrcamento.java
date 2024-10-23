@@ -87,7 +87,7 @@ public class DaoPostgresOrcamento implements DaoOrcamento {
         try {
             ManagerDb.getInstance().configurarAutocommitDa(conexao, false);
             ps = conexao.prepareStatement(DELETE);
-            ps.setInt(1, id);
+            ps.setLong(1, id);
             boolean isExclusaoOK = ps.executeUpdate() == 1;
             if (isExclusaoOK) {
                 this.conexao.commit();
@@ -109,7 +109,7 @@ public class DaoPostgresOrcamento implements DaoOrcamento {
         ResultSet rs = null;
         try {
             ps = conexao.prepareStatement(SELECT_BY_ID);
-            ps.setInt(1, id);
+            ps.setLong(1, id);
             rs = ps.executeQuery();
             if (rs.next()) {
                 return extrairDo(rs);
