@@ -9,4 +9,5 @@ module com.example.dreamday {
     exports com.example.dreamday;
     exports com.example.dreamday.controller;
     opens com.example.dreamday.controller to javafx.fxml;
+    opens com.example.dreamday.domain to javafx.base;
 }
