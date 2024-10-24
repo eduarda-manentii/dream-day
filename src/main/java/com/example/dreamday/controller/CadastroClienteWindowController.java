@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 
 public class CadastroClienteWindowController {
@@ -38,6 +39,8 @@ public class CadastroClienteWindowController {
     private TextField txtTelefone;
 
     private ClienteService service;
+
+    private Cliente clienteSelecionado;
 
     public CadastroClienteWindowController() {
         this.service = new ClienteService();
@@ -66,10 +69,22 @@ public class CadastroClienteWindowController {
             if (!(nomeCompleto.isBlank() && nomeConjugue.isBlank() && cpf.isBlank() && email.isBlank() && telefone.isBlank() && dataDoCasamento.isBlank())) {
                 DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                 LocalDate dataDoCasamentoDT = LocalDate.parse(txtDataCasamento.getText(), formatter);
-                Cliente cliente = new Cliente(nomeCompleto, nomeConjugue, dataDoCasamentoDT, telefone, email, cpf);
-                service.salvar(cliente);
+                if (clienteSelecionado != null) {
+                    clienteSelecionado.setNome(nomeCompleto);
+                    clienteSelecionado.setConjugue(nomeConjugue);
+                    clienteSelecionado.setCpf(cpf);
+                    clienteSelecionado.setEmail(email);
+                    clienteSelecionado.setTelefone(telefone);
+                    clienteSelecionado.setDataCasamento(dataDoCasamentoDT);
+                    service.salvar(clienteSelecionado);
+                    clienteSelecionado = null;
+                    showMessage("Cliente alterado com sucesso!");
+                } else {
+                    Cliente cliente = new Cliente(nomeCompleto, nomeConjugue, dataDoCasamentoDT, telefone, email, cpf);
+                    service.salvar(cliente);
+                    showMessage("Cliente cadastrado com sucesso!");
+                }
                 limparCampos();
-                showMessage("Cliente cadastrado com sucesso!");
             } else {
                 showMessage("Todos os campos são obrigatórios!");
             }
@@ -85,9 +100,6 @@ public class CadastroClienteWindowController {
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 stage.close();
             });
-        } else {
-            Stage stage = (Stage) btnCancelar.getScene().getWindow();
-            stage.close();
         }
     }
 
@@ -133,5 +145,16 @@ public class CadastroClienteWindowController {
                 acao.run();
             }
         });
+    }
+
+    public void setAttributes(Cliente clienteSelecionado) {
+        this.clienteSelecionado = clienteSelecionado;
+        txtNomeCompleto.setText(clienteSelecionado.getNome());
+        txtNomeConjugue.setText(clienteSelecionado.getConjugue());
+        txtCpf.setText(clienteSelecionado.getCpf());
+        txtEmail.setText(clienteSelecionado.getEmail());
+        txtTelefone.setText(clienteSelecionado.getTelefone());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        txtDataCasamento.setText(clienteSelecionado.getDataCasamento().format(formatter));
     }
 }

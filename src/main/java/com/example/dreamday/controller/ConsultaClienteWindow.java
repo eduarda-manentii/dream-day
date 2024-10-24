@@ -9,6 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -17,6 +18,8 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 
@@ -59,7 +62,11 @@ public class ConsultaClienteWindow {
         codigoColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         nomeColumn.setCellValueFactory(new PropertyValueFactory<>("nome"));
         conjugueColumn.setCellValueFactory(new PropertyValueFactory<>("conjugue"));
-        dataCasamentoColumn.setCellValueFactory(new PropertyValueFactory<>("dataCasamento"));
+        dataCasamentoColumn.setCellValueFactory(cellData -> {
+            LocalDate dataCasamento = cellData.getValue().getDataCasamento();
+            String formattedDate = dataCasamento.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            return new SimpleStringProperty(formattedDate);
+        });
         telefoneColumn.setCellValueFactory(new PropertyValueFactory<>("telefone"));
         tableCliente.setItems(clienteList);
         tableCliente.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
@@ -102,7 +109,24 @@ public class ConsultaClienteWindow {
     }
 
     @FXML
-    public void onButtonEditarClicked(ActionEvent actionEvent) {
+    public void onButtonEditarClicked(ActionEvent actionEvent) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/dreamday/cadastro-cliente-window.fxml"));
+        Parent root = loader.load();
+        CadastroClienteWindowController clienteController = loader.getController();
+        Cliente clienteSelecionado = tableCliente.getSelectionModel().getSelectedItem();
+        if (clienteSelecionado == null) {
+            warningMessage();
+        } else {
+            clienteController.setAttributes(clienteSelecionado);
+            Scene scene = new Scene(root, 1500, 1500);
+            Stage popup = new Stage();
+            popup.setTitle("");
+            popup.setScene(scene);
+            popup.show();
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            stage.close();
+            tableCliente.refresh();
+        }
     }
 
     @FXML
