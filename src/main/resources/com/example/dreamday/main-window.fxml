@@ -8,7 +8,7 @@
 <AnchorPane
         maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="513.0"
         prefWidth="731.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1"
-        fx:controller="com.example.dreamday.controller.MainViewController" >
+        fx:controller="com.example.dreamday.MainViewController" >
    <children>
       <MenuBar layoutY="-1.0" prefHeight="34.0" prefWidth="731.0">
         <menus>

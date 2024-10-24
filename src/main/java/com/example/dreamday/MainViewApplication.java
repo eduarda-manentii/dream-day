@@ -13,7 +13,7 @@ public class MainViewApplication extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(MainViewApplication.class.getResource("main-window.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
-        stage.setTitle("Dream day <3");
+        stage.setTitle("DreamDay <3");
         stage.setScene(scene);
         stage.show();
     }

@@ -6,22 +6,22 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.dreamday.controller.CadastroClienteWindowController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.dreamday.controller.CadastroClienteWindowController">
    <children>
-      <Label fx:id="lblNomeCompleto" layoutX="46.0" layoutY="98.0" text="Nome completo" />
-      <TextField fx:id="txtNomeCompleto" layoutX="142.0" layoutY="94.0" prefHeight="25.0" prefWidth="412.0" />
-      <Label fx:id="lblNomeConjugue" layoutX="46.0" layoutY="137.0" text="Nome cônjugue" />
-      <TextField fx:id="txtNomeConjugue" layoutX="142.0" layoutY="133.0" prefHeight="25.0" prefWidth="412.0" />
-      <Label fx:id="lblcPF" layoutX="46.0" layoutY="176.0" text="CPF" />
-      <TextField fx:id="txtCpf" layoutX="142.0" layoutY="172.0" prefHeight="25.0" prefWidth="412.0" />
-      <Label fx:id="lblDataCasamento" layoutX="46.0" layoutY="220.0" text="Data do Casório" />
-      <TextField fx:id="txtDataCasamento" layoutX="142.0" layoutY="216.0" prefHeight="25.0" prefWidth="412.0" />
-      <Label fx:id="lblTelefone" layoutX="46.0" layoutY="255.0" text="Telefone" />
-      <TextField fx:id="txtTelefone" layoutX="142.0" layoutY="251.0" prefHeight="25.0" prefWidth="412.0" />
-      <Label fx:id="lblEmail" layoutX="46.0" layoutY="299.0" text="E-mail" />
-      <TextField fx:id="txtEmail" layoutX="142.0" layoutY="295.0" prefHeight="25.0" prefWidth="412.0" />
-      <Button fx:id="btnSalvar" layoutX="424.0" layoutY="343.0" mnemonicParsing="false" onAction="#onButtonSalvarClicked" prefHeight="25.0" prefWidth="133.0" text="Salvar" />
-      <Button fx:id="btnCancelar" layoutX="290.0" layoutY="343.0" mnemonicParsing="false" onAction="#onButtonCancelarClicked" prefHeight="25.0" prefWidth="121.0" text="Cancelar" />
+      <Label fx:id="lblNomeCompleto" layoutX="41.0" layoutY="98.0" text="Nome completo" />
+      <TextField fx:id="txtNomeCompleto" layoutX="153.0" layoutY="94.0" prefHeight="25.0" prefWidth="412.0" />
+      <Label fx:id="lblNomeConjugue" layoutX="41.0" layoutY="137.0" text="Nome cônjugue" />
+      <TextField fx:id="txtNomeConjugue" layoutX="153.0" layoutY="133.0" prefHeight="25.0" prefWidth="412.0" />
+      <Label fx:id="lblcPF" layoutX="41.0" layoutY="176.0" text="CPF" />
+      <TextField fx:id="txtCpf" layoutX="153.0" layoutY="172.0" prefHeight="25.0" prefWidth="412.0" />
+      <Label fx:id="lblDataCasamento" layoutX="41.0" layoutY="220.0" text="Data do Casório" />
+      <TextField fx:id="txtDataCasamento" layoutX="153.0" layoutY="216.0" prefHeight="25.0" prefWidth="412.0" />
+      <Label fx:id="lblTelefone" layoutX="41.0" layoutY="255.0" text="Telefone" />
+      <TextField fx:id="txtTelefone" layoutX="153.0" layoutY="251.0" prefHeight="25.0" prefWidth="412.0" />
+      <Label fx:id="lblEmail" layoutX="41.0" layoutY="299.0" text="E-mail" />
+      <TextField fx:id="txtEmail" layoutX="153.0" layoutY="295.0" prefHeight="25.0" prefWidth="412.0" />
+      <Button fx:id="btnSalvar" layoutX="430.0" layoutY="343.0" mnemonicParsing="false" onAction="#onButtonSalvarClicked" prefHeight="25.0" prefWidth="133.0" text="Salvar" />
+      <Button fx:id="btnCancelar" layoutX="296.0" layoutY="343.0" mnemonicParsing="false" onAction="#onButtonCancelarClicked" prefHeight="25.0" prefWidth="121.0" text="Cancelar" />
       <Label fx:id="lblCadastroDeCliente" layoutX="47.0" layoutY="47.0" text="Cadastro de Cliente">
          <font>
             <Font size="20.0" />

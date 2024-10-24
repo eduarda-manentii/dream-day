@@ -7,11 +7,9 @@ import javafx.fxml.FXML;
 
 import javafx.scene.control.*;
 
-import javax.swing.text.MaskFormatter;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.function.UnaryOperator;
 
 
 public class CadastroClienteWindowController {
