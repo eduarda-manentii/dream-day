@@ -15,4 +15,6 @@ public interface DaoCliente {
     public Cliente buscarPor(int id);
 
     public List<Cliente> listarPor(String nome);
+
+    List<Cliente> listarTodos();
 }

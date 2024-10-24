@@ -49,11 +49,7 @@ public class ClienteService {
         return dao.listarPor(nome + "%");
     }
 
-    public List<Cliente> listarTodos() {
-        return dao.listarPor("%%");
-    }
-
-    public void excluirPor(Long idDoCliente) {
+      public void excluirPor(Long idDoCliente) {
         if (idDoCliente == null || idDoCliente <= 0) {
             throw new IllegalArgumentException("O id para exclusão deve ser maior que zero");
         }
@@ -69,6 +65,10 @@ public class ClienteService {
             throw new IllegalArgumentException("Não existe cliente vinculado ao id informado");
         }
         return clienteEncontrado;
+    }
+
+    public List<Cliente> listarTodos() {
+        return dao.listarTodos();
     }
 
 }
