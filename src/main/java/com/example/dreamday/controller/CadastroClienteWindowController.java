@@ -19,7 +19,6 @@ public class CadastroClienteWindowController {
     @FXML
     private Button btnCancelar;
 
-
     @FXML
     private TextField txtCpf;
 
@@ -57,21 +56,25 @@ public class CadastroClienteWindowController {
 
     @FXML
     void onButtonSalvarClicked(ActionEvent event) {
-        String nomeCompleto = txtNomeCompleto.getText();
-        String nomeConjugue = txtNomeConjugue.getText();
-        String cpf = txtCpf.getText();
-        String email = txtEmail.getText();
-        String telefone = txtTelefone.getText();
-        String dataDoCasamento = txtDataCasamento.getText();
-        if (!(nomeCompleto.isBlank() && nomeConjugue.isBlank() && cpf.isBlank() && email.isBlank() && telefone.isBlank() && dataDoCasamento.isBlank())) {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            LocalDate dataDoCasamentoDT = LocalDate.parse(txtDataCasamento.getText(), formatter);
-            Cliente cliente = new Cliente(nomeCompleto, nomeConjugue, dataDoCasamentoDT, telefone, email, cpf);
-            service.salvar(cliente);
-            limparCampos();
-            showMessage("Cliente cadastrado com sucesso!");
-        } else {
-            showMessage("Todos os campos são obrigatórios!");
+        try {
+            String nomeCompleto = txtNomeCompleto.getText();
+            String nomeConjugue = txtNomeConjugue.getText();
+            String cpf = txtCpf.getText();
+            String email = txtEmail.getText();
+            String telefone = txtTelefone.getText();
+            String dataDoCasamento = txtDataCasamento.getText();
+            if (!(nomeCompleto.isBlank() && nomeConjugue.isBlank() && cpf.isBlank() && email.isBlank() && telefone.isBlank() && dataDoCasamento.isBlank())) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                LocalDate dataDoCasamentoDT = LocalDate.parse(txtDataCasamento.getText(), formatter);
+                Cliente cliente = new Cliente(nomeCompleto, nomeConjugue, dataDoCasamentoDT, telefone, email, cpf);
+                service.salvar(cliente);
+                limparCampos();
+                showMessage("Cliente cadastrado com sucesso!");
+            } else {
+                showMessage("Todos os campos são obrigatórios!");
+            }
+        } catch (Exception e) {
+            showMessage(e.getMessage());
         }
     }
 
