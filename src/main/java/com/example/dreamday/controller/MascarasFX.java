@@ -168,7 +168,7 @@ public class MascarasFX {
             if (novoTexto.length() > 15) {
                 return null;
             }
-            if (!novoTexto.matches("\\(\\d{0,2}\\)?\\s?\\d{0,5}-?\\d{0,4}")) {
+            if (!novoTexto.matches("\\(\\d{0,2}\\)?\\s?\\d{0,5}-?\\d{0,5}")) {
                 return null;
             }
             return change;
@@ -196,7 +196,7 @@ public class MascarasFX {
             }
         });
         textField.setOnKeyReleased((KeyEvent evt) -> {
-            if (!textField.getText().matches("\\(\\d{0,2}\\)?\\s?\\d{0,5}-?\\d{0,4}")) {
+            if (!textField.getText().matches("\\(\\d{0,2}\\)?\\s?\\d{0,5}-?\\d{0,5}")) {
                 textField.setText(textField.getText().replaceAll("[^\\d()\\s-]", ""));
                 textField.positionCaret(textField.getText().length());
             }
