@@ -41,6 +41,11 @@ public class DaoPostgresCliente implements DaoCliente {
         try {
             ps = conexao.prepareStatement(INSERT);
             ps.setString(1, cliente.getNome());
+            ps.setString(2, cliente.getConjugue());
+            ps.setDate(3, Date.valueOf(cliente.getDataCasamento()));
+            ps.setString(4, cliente.getTelefone());
+            ps.setString(5, cliente.getEmail());
+            ps.setString(6, cliente.getCpf());
             ps.execute();
         }catch (Exception e) {
             throw new RuntimeException("Ocorreu um erro ao inserir o cliente. "
