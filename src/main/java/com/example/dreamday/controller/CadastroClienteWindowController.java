@@ -41,6 +41,12 @@ public class CadastroClienteWindowController {
     @FXML
     void initialize() throws ParseException {
         txtDataCasamento.setPromptText("dd/MM/yyyy");
+        txtCpf.setPromptText("XXX.XXX.XXX-XX");
+        txtTelefone.setPromptText("(XX) XXXXX-XXXX");
+        MascarasFX.mascaraData(txtDataCasamento);
+        MascarasFX.mascaraCPF(txtCpf);
+        MascarasFX.mascaraEmail(txtEmail);
+        MascarasFX.mascaraTelefone(txtTelefone);
     }
 
     @FXML
