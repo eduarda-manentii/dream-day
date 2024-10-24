@@ -28,8 +28,8 @@ public class ClienteService {
         if (cliente == null) {
             throw new NullPointerException("O cliente não pode ser nulo");
         }
-        if (cliente.getNome() == null || cliente.getNome().isBlank() || cliente.getNome().length() > 250) {
-            throw new IllegalArgumentException("O nome é obrigatório e deve conter menos de 250 caracteres");
+        if (cliente.getNome() == null || cliente.getNome().isBlank() || cliente.getNome().length() > 250  || cliente.getNome().length() < 5) {
+            throw new IllegalArgumentException("O nome é obrigatório e deve conter entre 5 a 250 caracteres");
         }
         if (cliente.getTelefone() == null || cliente.getTelefone().isBlank()) {
             throw new IllegalArgumentException("O telefone é obrigatório");
