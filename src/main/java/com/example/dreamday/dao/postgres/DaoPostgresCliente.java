@@ -150,6 +150,7 @@ public class DaoPostgresCliente implements DaoCliente {
 
     private Cliente extrairDo(ResultSet rs) {
         try {
+            long id = rs.getLong("id");
             String nomeDoCliente = rs.getString("nome");
             String conjugue = rs.getString("conjugue");
             LocalDate dataCasamento = rs.getDate("data_casamento").toLocalDate();
@@ -157,7 +158,7 @@ public class DaoPostgresCliente implements DaoCliente {
             String email = rs.getString("email");
             String cpf = rs.getString("cpf");
 
-            return new Cliente(nomeDoCliente, conjugue, dataCasamento, telefone, email, cpf);
+            return new Cliente(id, nomeDoCliente, conjugue, dataCasamento, telefone, email, cpf);
 
         }catch (Exception e) {
             throw new RuntimeException("Ocorreu um erro ao extrair o cliente. "
