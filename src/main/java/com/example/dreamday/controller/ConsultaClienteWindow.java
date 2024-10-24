@@ -1,6 +1,11 @@
 package com.example.dreamday.controller;
 
 import com.example.dreamday.MainViewApplication;
+import com.example.dreamday.domain.Cliente;
+import com.example.dreamday.service.ClienteService;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -102,6 +107,18 @@ public class ConsultaClienteWindow {
 
     @FXML
     public void onButtonExcluirClicked(ActionEvent actionEvent) {
+        Cliente clienteSelecionado = tableCliente.getSelectionModel().getSelectedItem();
+        if (clienteSelecionado == null) {
+            warningMessage();
+        } else {
+            confirmationMessage("Tem certeza que deseja remover o item selecionado?", () -> {
+                service.excluirPor(clienteSelecionado.getId());
+                recarregarTabela();
+                tableCliente.refresh();
+            });
+        }
+    }
+
     private void recarregarTabela() {
         clienteList.clear();
         clienteList.addAll(service.listarTodos());
