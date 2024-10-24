@@ -5,16 +5,15 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="513.0" prefWidth="731.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="513.0" prefWidth="731.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.dreamday.MainViewController">
    <children>
       <MenuBar layoutY="-1.0" prefHeight="34.0" prefWidth="731.0">
         <menus>
           <Menu mnemonicParsing="false" text="Cadastros">
             <items>
-              <MenuItem mnemonicParsing="false" text="Categoria" />
-                  <MenuItem mnemonicParsing="false" text="Produto" />
-                  <MenuItem mnemonicParsing="false" text="Fornecedor" />
+              <MenuItem fx:id="menuItemCadastroCategoria" mnemonicParsing="false" onAction="#mostrarCadastroCategoria" text="Categoria" />
+                  <MenuItem fx:id="menuItemCadastroProduto" mnemonicParsing="false" onAction="#mostrarCadastroProduto" text="Produto" />
+                  <MenuItem fx:id="menuItemCadastroFornecedor" mnemonicParsing="false" onAction="#mostrarCadastroProduto" text="Fornecedor" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Orçamentos" />
