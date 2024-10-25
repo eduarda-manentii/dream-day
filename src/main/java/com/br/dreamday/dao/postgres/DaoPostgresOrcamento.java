@@ -1,10 +1,10 @@
-package com.example.dreamday.dao.postgres;
+package com.br.dreamday.dao.postgres;
 
-import com.example.dreamday.dao.DaoOrcamento;
-import com.example.dreamday.dao.ManagerDb;
-import com.example.dreamday.domain.Cliente;
-import com.example.dreamday.domain.Orcamento;
-import com.example.dreamday.domain.OrcamentoStatus;
+import com.br.dreamday.dao.DaoOrcamento;
+import com.br.dreamday.dao.ManagerDb;
+import com.br.dreamday.domain.Cliente;
+import com.br.dreamday.domain.Orcamento;
+import com.br.dreamday.domain.OrcamentoStatus;
 
 import java.math.BigDecimal;
 import java.sql.Connection;

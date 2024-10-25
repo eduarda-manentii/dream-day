@@ -1,6 +1,6 @@
-package com.example.dreamday.controller;
+package com.br.dreamday.controller;
 
-import com.example.dreamday.service.OrcamentoService;
+import com.br.dreamday.service.OrcamentoService;
 import javafx.fxml.FXML;
 
 import javafx.fxml.FXMLLoader;

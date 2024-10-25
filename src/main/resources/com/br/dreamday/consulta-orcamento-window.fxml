@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.dreamday.controller.ConsultaOrcamentoWindow">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.br.dreamday.controller.ConsultaOrcamentoWindow">
    <children>
       <Button fx:id="btAdicionar" layoutX="463.0" layoutY="33.0" mnemonicParsing="false" onAction="#onButtonAdicionarClicked" prefHeight="28.0" prefWidth="112.0" text="Adicionar" />
       <Label fx:id="lblNomeDoCliente" layoutX="36.0" layoutY="93.0" text="Nome do Cliente" />

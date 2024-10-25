@@ -1,4 +1,4 @@
-package com.example.dreamday;
+package com.br.dreamday;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

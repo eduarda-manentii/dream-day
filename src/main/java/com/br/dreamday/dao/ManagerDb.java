@@ -1,4 +1,4 @@
-package com.example.dreamday.dao;
+package com.br.dreamday.dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -15,7 +15,7 @@ public class ManagerDb {
             Class.forName("org.postgresql.Driver").getDeclaredConstructor().newInstance();
             this.conexao = DriverManager.getConnection(
                     "jdbc:postgresql://localhost:5432/dream-day",
-                    "postgres", "root");
+                    "postgres", "postgres");
         }catch (Exception e) {
             throw new RuntimeException("Ocorreu um erro de conexão "
                     + "com o banco de dados. Motivo: " + e.getMessage());

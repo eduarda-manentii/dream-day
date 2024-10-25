@@ -1,6 +1,6 @@
-package com.example.dreamday.dao;
+package com.br.dreamday.dao;
 
-import com.example.dreamday.domain.Orcamento;
+import com.br.dreamday.domain.Orcamento;
 
 public interface DaoOrcamento {
 

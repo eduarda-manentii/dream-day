@@ -1,8 +1,8 @@
-package com.example.dreamday.service;
+package com.br.dreamday.service;
 
-import com.example.dreamday.dao.DaoCliente;
-import com.example.dreamday.dao.FactoryDao;
-import com.example.dreamday.domain.Cliente;
+import com.br.dreamday.dao.DaoCliente;
+import com.br.dreamday.dao.FactoryDao;
+import com.br.dreamday.domain.Cliente;
 
 import java.time.LocalDate;
 import java.util.List;

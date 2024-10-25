@@ -1,6 +1,6 @@
-package com.example.dreamday.dao;
+package com.br.dreamday.dao;
 
-import com.example.dreamday.domain.Cliente;
+import com.br.dreamday.domain.Cliente;
 
 import java.time.LocalDate;
 import java.util.List;

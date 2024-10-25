@@ -1,11 +1,10 @@
-package com.example.dreamday.service;
+package com.br.dreamday.service;
 
-import com.example.dreamday.dao.DaoOrcamento;
-import com.example.dreamday.dao.FactoryDao;
-import com.example.dreamday.domain.Orcamento;
+import com.br.dreamday.dao.DaoOrcamento;
+import com.br.dreamday.dao.FactoryDao;
+import com.br.dreamday.domain.Orcamento;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 public class OrcamentoService {
 

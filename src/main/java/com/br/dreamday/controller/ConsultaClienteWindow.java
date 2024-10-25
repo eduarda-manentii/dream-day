@@ -1,8 +1,9 @@
-package com.example.dreamday.controller;
+package com.br.dreamday.controller;
 
-import com.example.dreamday.MainViewApplication;
-import com.example.dreamday.domain.Cliente;
-import com.example.dreamday.service.ClienteService;
+import com.br.dreamday.MainViewApplication;
+import com.br.dreamday.domain.Cliente;
+import com.br.dreamday.service.ClienteService;
+import com.br.dreamday.utils.MascarasFX;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -118,7 +119,7 @@ public class ConsultaClienteWindow {
 
     @FXML
     public void onButtonEditarClicked(ActionEvent actionEvent) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/dreamday/cadastro-cliente-window.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/br/dreamday/cadastro-cliente-window.fxml"));
         Parent root = loader.load();
         CadastroClienteWindowController clienteController = loader.getController();
         Cliente clienteSelecionado = tableCliente.getSelectionModel().getSelectedItem();

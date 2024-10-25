@@ -1,6 +1,5 @@
-package com.example.dreamday.domain;
+package com.br.dreamday.domain;
 
-import java.math.BigInteger;
 import java.time.LocalDate;
 import java.util.Objects;
 

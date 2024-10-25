@@ -1,4 +1,4 @@
-package com.example.dreamday.domain;
+package com.br.dreamday.domain;
 
 public enum OrcamentoStatus {
     APROVADO,

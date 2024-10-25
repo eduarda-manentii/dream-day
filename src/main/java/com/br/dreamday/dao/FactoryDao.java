@@ -1,7 +1,7 @@
-package com.example.dreamday.dao;
+package com.br.dreamday.dao;
 
-import com.example.dreamday.dao.postgres.DaoPostgresCliente;
-import com.example.dreamday.dao.postgres.DaoPostgresOrcamento;
+import com.br.dreamday.dao.postgres.DaoPostgresCliente;
+import com.br.dreamday.dao.postgres.DaoPostgresOrcamento;
 
 public class FactoryDao {
 
