@@ -2,6 +2,7 @@ package com.example.dreamday.dao;
 
 import com.example.dreamday.domain.Cliente;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface DaoCliente {
@@ -16,5 +17,7 @@ public interface DaoCliente {
 
     public List<Cliente> listarPor(String nome);
 
-    List<Cliente> listarTodos();
+    public List<Cliente> listarPor(String nome, LocalDate dataDeCasamento);
+
+    public List<Cliente> listarTodos();
 }

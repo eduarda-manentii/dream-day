@@ -29,6 +29,11 @@ public class DaoPostgresCliente implements DaoCliente {
             + "WHERE Upper(c.nome) LIKE Upper(?) "
             + "ORDER BY c.nome ";
 
+    private final String SELECT_BY_NOME_AND_DATE = "SELECT c.id, c.nome, c.conjugue, c.data_casamento, c.telefone, c.email, c.cpf "
+            + " FROM clientes c "
+            + "WHERE Upper(c.nome) LIKE Upper(?) AND c.data_casamento = ? "
+            + "ORDER BY c.nome ";
+
     private final String SELECT_TODES = "SELECT c.id, c.nome, c.conjugue, c.data_casamento, c.telefone, c.email, c.cpf "
             + "FROM clientes c "
             + "ORDER BY LOWER(c.nome)";
@@ -150,6 +155,30 @@ public class DaoPostgresCliente implements DaoCliente {
             ManagerDb.getInstance().fechar(ps);
             ManagerDb.getInstance().fechar(rs);
         }
+    }
+
+
+    @Override
+    public List<Cliente> listarPor(String nome, LocalDate dataDeCasamento) {
+        List<Cliente> clientes = new ArrayList<>();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            ps = conexao.prepareStatement(SELECT_BY_NOME_AND_DATE);
+            ps.setString(1, nome);
+            ps.setDate(2, Date.valueOf(dataDeCasamento));
+            rs = ps.executeQuery();
+            while(rs.next()) {
+                clientes.add(extrairDo(rs));
+            }
+        } catch (Exception ex) {
+            throw new RuntimeException("Ocorreu um erro na listagem"
+                    + " dos clientes. Motivo: " + ex.getMessage());
+        } finally {
+            ManagerDb.getInstance().fechar(ps);
+            ManagerDb.getInstance().fechar(rs);
+        }
+        return clientes;
     }
 
     @Override

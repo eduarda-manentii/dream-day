@@ -94,7 +94,15 @@ public class ConsultaClienteWindow {
     public void onButtonFiltrarClicked(ActionEvent actionEvent) {
         try {
             List<Cliente> clientes;
-            if (!txtNomeDoCliente.getText().isBlank()) {
+            if (!txtDataDoCasamento.getText().isBlank() && !txtNomeDoCliente.getText().isBlank()) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                LocalDate dataDoCasamentoDT = LocalDate.parse(txtDataDoCasamento.getText(), formatter);
+                clientes = service.listarPor(txtNomeDoCliente.getText(), dataDoCasamentoDT);
+            } else if (!txtDataDoCasamento.getText().isBlank()) {
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                LocalDate dataDoCasamentoDT = LocalDate.parse(txtDataDoCasamento.getText(), formatter);
+                clientes = service.listarPor("%", dataDoCasamentoDT);
+            } else if (!txtNomeDoCliente.getText().isBlank()) {
                 clientes = service.listarPor(txtNomeDoCliente.getText());
             } else {
                 clientes = service.listarTodos();

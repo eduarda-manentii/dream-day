@@ -4,6 +4,7 @@ import com.example.dreamday.dao.DaoCliente;
 import com.example.dreamday.dao.FactoryDao;
 import com.example.dreamday.domain.Cliente;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public class ClienteService {
@@ -54,6 +55,13 @@ public class ClienteService {
             throw new IllegalArgumentException("O id para exclusão deve ser maior que zero");
         }
         this.dao.excluirPor(idDoCliente.intValue());
+    }
+
+    public List<Cliente> listarPor(String nome, LocalDate dataDeCasamento) {
+        if (nome == null || nome.isBlank()) {
+            throw new IllegalArgumentException("Informe o nome para listagem");
+        }
+        return dao.listarPor(nome + "%", dataDeCasamento);
     }
 
     public Cliente buscarPor(Long idDoCliente) {
