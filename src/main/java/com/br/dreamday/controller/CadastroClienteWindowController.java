@@ -103,6 +103,20 @@ public class CadastroClienteWindowController {
         }
     }
 
+
+    @FXML
+    void onButtonVoltarClicked(ActionEvent event) {
+        if (camposPreenchidos()) {
+            confirmationMessage("Tem certeza que deseja cancelar a inserção?", () -> {
+                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                stage.close();
+            });
+        } else {
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.close();
+        }
+    }
+
     private boolean camposPreenchidos() {
         String nomeCompleto = txtNomeCompleto.getText();
         String nomeConjugue = txtNomeConjugue.getText();

@@ -127,14 +127,13 @@ public class ConsultaClienteWindow {
             warningMessage();
         } else {
             clienteController.setAttributes(clienteSelecionado);
-            Scene scene = new Scene(root, 1500, 1500);
+            Scene scene = new Scene(root, 640, 400);
+
             Stage popup = new Stage();
-            popup.setTitle("");
             popup.setScene(scene);
-            popup.show();
-            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-            stage.close();
-            tableCliente.refresh();
+            popup.initModality(Modality.APPLICATION_MODAL);
+            popup.showAndWait();
+            recarregarTabela();
         }
     }
 
