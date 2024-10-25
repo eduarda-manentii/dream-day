@@ -11,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.text.ParseException;
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
@@ -88,6 +89,8 @@ public class CadastroClienteWindowController {
             } else {
                 showMessage("Todos os campos são obrigatórios!");
             }
+        }  catch (DateTimeException ex) {
+            showMessage("Digite um valor para a hora válido.");
         } catch (Exception e) {
             showMessage(e.getMessage());
         }
@@ -102,7 +105,6 @@ public class CadastroClienteWindowController {
             });
         }
     }
-
 
     @FXML
     void onButtonVoltarClicked(ActionEvent event) {
@@ -141,6 +143,7 @@ public class CadastroClienteWindowController {
     private void showMessage(String mensagem) {
         ButtonType loginButtonType = new ButtonType("Ok!", ButtonBar.ButtonData.OK_DONE);
         Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle("Aviso");
         dialog.setContentText(mensagem);
         dialog.getDialogPane().getButtonTypes().add(loginButtonType);
         boolean desativado = false;

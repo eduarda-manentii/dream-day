@@ -19,6 +19,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -112,6 +113,8 @@ public class ConsultaClienteWindow {
             clienteList.addAll(clientes);
             tableCliente.setItems(clienteList);
             tableCliente.refresh();
+        }  catch (DateTimeException ex) {
+            showMessage("Digite um valor para a hora válido.");
         } catch (Exception e) {
             showMessage(e.getMessage());
         }
@@ -159,6 +162,7 @@ public class ConsultaClienteWindow {
     private void showMessage(String mensagem) {
         ButtonType loginButtonType = new ButtonType("Ok!", ButtonBar.ButtonData.OK_DONE);
         Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle("Aviso");
         dialog.setContentText(mensagem);
         dialog.getDialogPane().getButtonTypes().add(loginButtonType);
         boolean desativado = false;
