@@ -14,7 +14,7 @@ public class ManagerDb {
         try {
             Class.forName("org.postgresql.Driver").getDeclaredConstructor().newInstance();
             this.conexao = DriverManager.getConnection(
-                    "jdbc:postgresql://localhost:5432/dream-day",
+                    "jdbc:postgresql://localhost:5433/dream-day",
                     "postgres", "postgres");
         }catch (Exception e) {
             throw new RuntimeException("Ocorreu um erro de conexão "
@@ -26,7 +26,7 @@ public class ManagerDb {
         return conexao;
     }
 
-    public void configurarAutocommitDa(Connection conexao, boolean isHabilitado) {
+    public void configurarAutoCommitDa(Connection conexao, boolean isHabilitado) {
         try {
             if (conexao != null) {
                 conexao.setAutoCommit(isHabilitado);

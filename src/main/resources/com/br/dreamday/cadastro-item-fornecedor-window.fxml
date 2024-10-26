@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="rootPane" prefHeight="317.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.br.dreamday.controller.CadastroItemFornecedorWindow">
+   <children>
+      <Label layoutX="22.0" layoutY="23.0" text="Vincular Item">
+         <font>
+            <Font name="System Bold" size="22.0" />
+         </font>
+      </Label>
+      <Label layoutX="37.0" layoutY="83.0" text="Fornecedor:" />
+      <Label layoutX="37.0" layoutY="131.0" text="Produto:" />
+      <Label layoutX="37.0" layoutY="240.0" text="Preço:" />
+      <Label layoutX="37.0" layoutY="183.0" text="Categoria:" />
+      <Label fx:id="lblNomeFornecedor" layoutX="156.0" layoutY="83.0" prefHeight="18.0" prefWidth="407.0" />
+      <TextField fx:id="txtPreco" layoutX="156.0" layoutY="236.0" prefHeight="26.0" prefWidth="407.0" />
+      <TextField fx:id="autoTxtCategoria" layoutX="156.0" layoutY="179.0" prefHeight="25.0" prefWidth="407.0" />
+   </children>
+</AnchorPane>

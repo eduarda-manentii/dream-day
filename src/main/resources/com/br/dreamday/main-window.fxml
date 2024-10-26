@@ -11,10 +11,10 @@
         <menus>
           <Menu mnemonicParsing="false" text="Cadastros">
             <items>
-              <MenuItem mnemonicParsing="false" text="Categoria" />
-                  <MenuItem mnemonicParsing="false" text="Produto" />
-                  <MenuItem mnemonicParsing="false" text="Fornecedor" />
-                  <MenuItem fx:id="mnCliente" mnemonicParsing="false" onAction="#mostrarConsultaCliente" text="Cliente" />
+              <MenuItem fx:id="menuItemCadastroCategoria" mnemonicParsing="false" onAction="#mostrarCadastroCategoria" text="Categoria" />
+              <MenuItem fx:id="menuItemCadastroProduto" mnemonicParsing="false" onAction="#mostrarCadastroProduto" text="Produto" />
+              <MenuItem fx:id="menuItemCadastroFornecedor" mnemonicParsing="false" onAction="#mostrarCadastroFornecedor" text="Fornecedor" />
+              <MenuItem fx:id="mnCliente" mnemonicParsing="false" onAction="#mostrarConsultaCliente" text="Cliente" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Orçamentos">

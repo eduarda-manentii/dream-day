@@ -2,6 +2,10 @@ package com.br.dreamday.dao;
 
 import com.br.dreamday.dao.postgres.DaoPostgresCliente;
 import com.br.dreamday.dao.postgres.DaoPostgresOrcamento;
+import com.br.dreamday.dao.postgres.DaoPostgresqlCategoria;
+import com.br.dreamday.dao.postgres.DaoPostgresqlFornecedor;
+import com.br.dreamday.dao.postgres.DaoPostgresqlItemFornecedor;
+import com.br.dreamday.dao.postgres.DaoPostgresqlProduto;
 
 public class FactoryDao {
 
@@ -16,6 +20,22 @@ public class FactoryDao {
 
     public  DaoOrcamento getDaoOrcamento() {
         return new DaoPostgresOrcamento();
+    }
+
+    public DaoCategoria getDaoCategoria() {
+        return new DaoPostgresqlCategoria();
+    }
+
+    public DaoFornecedor getDaoFornecedor() {
+        return new DaoPostgresqlFornecedor();
+    }
+
+    public DaoProduto getDaoProduto() {
+        return new DaoPostgresqlProduto();
+    }
+
+    public DaoItemFornecedor getDaoItemFornecedor() {
+        return new DaoPostgresqlItemFornecedor();
     }
 
     public static FactoryDao getInstance() {

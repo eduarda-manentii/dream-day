@@ -7,22 +7,21 @@ public class ItemOrcamento {
 
     private Long id;
     private Orcamento orcamento;
-    //private ItemFornecedor itemFornecedor;
-    private Long itemFornecedorId;
+    private ItemFornecedor itemFornecedor;
     private LocalDate dataDeEntrega;
     private  ItemOrcamentoStatus status;
 
-    public ItemOrcamento(Long id, Orcamento orcamento, ItemOrcamentoStatus status, Long itemFornecedorId, LocalDate dataDeEntrega) {
+    public ItemOrcamento(Long id, Orcamento orcamento, ItemFornecedor itemFornecedor, LocalDate dataDeEntrega, ItemOrcamentoStatus status) {
         this.id = id;
         this.orcamento = orcamento;
-        this.status = status;
-        this.itemFornecedorId = itemFornecedorId;
+        this.itemFornecedor = itemFornecedor;
         this.dataDeEntrega = dataDeEntrega;
+        this.status = status;
     }
 
-    public ItemOrcamento(Orcamento orcamento, Long itemFornecedorId, LocalDate dataDeEntrega, ItemOrcamentoStatus status) {
+    public ItemOrcamento(Orcamento orcamento, ItemFornecedor itemFornecedor, LocalDate dataDeEntrega, ItemOrcamentoStatus status) {
         this.orcamento = orcamento;
-        this.itemFornecedorId = itemFornecedorId;
+        this.itemFornecedor = itemFornecedor;
         this.dataDeEntrega = dataDeEntrega;
         this.status = status;
     }
@@ -31,36 +30,36 @@ public class ItemOrcamento {
         return id;
     }
 
-    public Orcamento getOrcamento() {
-        return orcamento;
-    }
-
-    public Long getItemFornecedorId() {
-        return itemFornecedorId;
-    }
-
-    public LocalDate getDataDeEntrega() {
-        return dataDeEntrega;
-    }
-
-    public ItemOrcamentoStatus getStatus() {
-        return status;
-    }
-
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Orcamento getOrcamento() {
+        return orcamento;
     }
 
     public void setOrcamento(Orcamento orcamento) {
         this.orcamento = orcamento;
     }
 
-    public void setItemFornecedorId(Long itemFornecedorId) {
-        this.itemFornecedorId = itemFornecedorId;
+    public ItemFornecedor getItemFornecedor() {
+        return itemFornecedor;
+    }
+
+    public void setItemFornecedor(ItemFornecedor itemFornecedor) {
+        this.itemFornecedor = itemFornecedor;
+    }
+
+    public LocalDate getDataDeEntrega() {
+        return dataDeEntrega;
     }
 
     public void setDataDeEntrega(LocalDate dataDeEntrega) {
         this.dataDeEntrega = dataDeEntrega;
+    }
+
+    public ItemOrcamentoStatus getStatus() {
+        return status;
     }
 
     public void setStatus(ItemOrcamentoStatus status) {
