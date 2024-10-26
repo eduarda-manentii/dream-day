@@ -8,8 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane fx:id="txtCustoEstimado" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.br.dreamday.controller.CadastroOrcamentoWindow">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.br.dreamday.controller.CadastroOrcamentoWindow">
    <children>
       <Label fx:id="lblNovoOrcamento" layoutX="36.0" layoutY="33.0" text="Novo orçamento">
          <font>
@@ -17,16 +16,16 @@
          </font>
       </Label>
       <Label fx:id="lblCliente" layoutX="36.0" layoutY="91.0" text="Cliente" />
-      <TextField fx:id="txtCliente" layoutX="134.0" layoutY="87.0" prefHeight="25.0" prefWidth="426.0" />
       <Label fx:id="lblCustoEstimado" layoutX="36.0" layoutY="134.0" text="Custo estimado" />
-      <TextField fx:id="txtCliente1" layoutX="134.0" layoutY="130.0" prefHeight="25.0" prefWidth="426.0" />
+      <TextField fx:id="txtCustoEstimado" layoutX="134.0" layoutY="130.0" prefHeight="25.0" prefWidth="426.0" />
       <Label fx:id="lblStatus" layoutX="37.0" layoutY="180.0" text="Status" />
       <ComboBox fx:id="cbStatus" layoutX="134.0" layoutY="177.0" prefHeight="25.0" prefWidth="426.0" />
       <Label fx:id="lblObservacoes" layoutX="36.0" layoutY="219.0" text="Observações" />
-      <TextArea layoutX="39.0" layoutY="242.0" prefHeight="55.0" prefWidth="522.0" />
+      <TextArea fx:id="txtAreaObservacoes" layoutX="39.0" layoutY="242.0" prefHeight="55.0" prefWidth="522.0" />
       <Button fx:id="btnVincularItem" layoutX="431.0" layoutY="310.0" mnemonicParsing="false" onAction="#onButtonVincularItemClicked" prefHeight="1.0" prefWidth="133.0" text="Vincular item" />
       <Button fx:id="btnSalvar" layoutX="392.0" layoutY="361.0" mnemonicParsing="false" onAction="#onButtonSalvarClicked" prefHeight="25.0" prefWidth="172.0" text="Salvar" />
       <Button fx:id="btnCancelar" layoutX="210.0" layoutY="361.0" mnemonicParsing="false" onAction="#onButtonCancelarClicked" prefHeight="25.0" prefWidth="179.0" text="Cancelar" />
       <Button fx:id="btnVoltar" layoutX="36.0" layoutY="361.0" mnemonicParsing="false" onAction="#onButtonVoltarClicked" prefHeight="25.0" prefWidth="172.0" text="Voltar" />
+      <ComboBox fx:id="cbCliente" layoutX="134.0" layoutY="87.0" prefHeight="25.0" prefWidth="426.0" />
    </children>
 </AnchorPane>

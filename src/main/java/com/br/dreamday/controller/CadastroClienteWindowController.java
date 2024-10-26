@@ -19,9 +19,6 @@ import java.time.format.DateTimeFormatter;
 public class CadastroClienteWindowController {
 
     @FXML
-    private Button btnCancelar;
-
-    @FXML
     private TextField txtCpf;
 
     @FXML
