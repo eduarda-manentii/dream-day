@@ -10,7 +10,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -96,7 +98,22 @@ public class VincularItemWindow {
 
     @FXML
     void onButtonCancelarClicked(ActionEvent event) throws IOException {
+        if (camposPreenchidos()) {
+            confirmationMessage("Tem certeza que deseja cancelar a inserção?", () -> {
+                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+                stage.close();
+            });
+        } else {
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.close();
+        }
+    }
 
+    private boolean camposPreenchidos() {
+        String dataDeEntrega = txtDadaDeEntrega.getText();
+        String quantidade = txtQuantidade.getText();
+        return !dataDeEntrega.isBlank() || !quantidade.isBlank() ||
+                cbItem.getValue() == null || cbStatus.getValue() == null;
     }
 
     void limparCampos() {
@@ -115,6 +132,19 @@ public class VincularItemWindow {
         boolean desativado = false;
         dialog.getDialogPane().lookupButton(loginButtonType).setDisable(desativado);
         dialog.showAndWait();
+    }
+
+    private void confirmationMessage(String mensagem, Runnable acao) {
+        Alert dialog = new Alert(Alert.AlertType.CONFIRMATION);
+        ButtonType btnYes = new ButtonType("Sim");
+        ButtonType btnNo = new ButtonType("Não");
+        dialog.setContentText(mensagem);
+        dialog.getButtonTypes().setAll(btnYes, btnNo);
+        dialog.showAndWait().ifPresent(b -> {
+            if (b == btnYes) {
+                acao.run();
+            }
+        });
     }
 
 }
