@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 public class OrcamentoService {
 
     private DaoOrcamento dao;
+    private Orcamento orcamentoAtual;
 
     public OrcamentoService() {
         this.dao = FactoryDao.getInstance().getDaoOrcamento();
@@ -22,6 +23,7 @@ public class OrcamentoService {
         } else {
             this.dao.inserir(orcamento);
         }
+        salvarOrcamento(orcamento);
     }
 
     private void validar(Orcamento orcamento) {
@@ -68,6 +70,18 @@ public class OrcamentoService {
         } else {
             throw new IllegalArgumentException("O id para busca não pode ser menor que zero");
         }
+    }
+
+    public void salvarOrcamento(Orcamento orcamento) {
+        this.orcamentoAtual = orcamento;
+    }
+
+    public Orcamento getOrcamentoAtual() {
+        return orcamentoAtual;
+    }
+
+    public void atualizarValorTotal(Long idOrcamento, BigDecimal subtotal) {
+        dao.atualizarValorTotal(idOrcamento, subtotal);
     }
 
 }

@@ -27,6 +27,8 @@ public class DaoPostgresOrcamento implements DaoOrcamento {
             + " WHERE orcamentos.id_cliente = c.id " +
             "   AND o.id = ? ";
 
+    private final String UPDATE_VALOR_TOTAL = "UPDATE orcamentos SET valor_total = valor_total + ? WHERE id = ?";
+
     private Connection conexao;
 
     public DaoPostgresOrcamento() {
@@ -38,7 +40,7 @@ public class DaoPostgresOrcamento implements DaoOrcamento {
         PreparedStatement ps = null;
         try {
             ps = conexao.prepareStatement(INSERT);
-            ps.setString(1, orcamento.getCliente().getNome());
+            ps.setLong(1, orcamento.getCliente().getId());
             ps.setString(2, String.valueOf(orcamento.getStatus()));
             ps.setString(3, orcamento.getObservaces());
             ps.setDate(4, Date.valueOf(orcamento.getDataCriacao()));
@@ -121,6 +123,21 @@ public class DaoPostgresOrcamento implements DaoOrcamento {
         }finally {
             ManagerDb.getInstance().fechar(ps);
             ManagerDb.getInstance().fechar(rs);
+        }
+    }
+
+    @Override
+    public void atualizarValorTotal(Long idOrcamento, BigDecimal subtotal) {
+        PreparedStatement ps = null;
+        try {
+            ps = conexao.prepareStatement(UPDATE_VALOR_TOTAL);
+            ps.setBigDecimal(1, subtotal);
+            ps.setLong(2, idOrcamento);
+            ps.executeUpdate();
+        } catch (Exception ex) {
+            throw new RuntimeException("Erro ao atualizar o valor total do orçamento. Motivo: " + ex.getMessage());
+        } finally {
+            ManagerDb.getInstance().fechar(ps);
         }
     }
 

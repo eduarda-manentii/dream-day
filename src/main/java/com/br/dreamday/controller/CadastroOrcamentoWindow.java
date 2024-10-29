@@ -73,22 +73,19 @@ public class CadastroOrcamentoWindow {
             OrcamentoStatus status = cbStatus.getValue();
             String observacoes = txtAreaObservacoes.getText();
             LocalDate dataDeCriacao = LocalDate.now();
-            //TODO: listar itens de um orçamento para calcular valor total e passar para o parâmetro
-            Orcamento orcamento = new Orcamento(cliente, status, dataDeCriacao, custoEstimado, custoEstimado, observacoes);
+            Orcamento orcamento = new Orcamento(cliente, status, dataDeCriacao, custoEstimado, BigDecimal.ZERO, observacoes);
             service.salvar(orcamento);
+            showMessage("Orçamento salvo com sucesso!");
         } catch (Exception e) {
             showMessage(e.getMessage());
         }
     }
 
-    @FXML
-    void onButtonCancelarClicked(ActionEvent event) {
-
-    }
-
-    @FXML
-    void onButtonVincularItemClicked(ActionEvent event) throws IOException {
-        Parent parent = FXMLLoader.load(Objects.requireNonNull(MainViewApplication.class.getResource("vincular-item-window.fxml")));
+    void abrirTelaVincularItem(Orcamento orcamento) throws IOException {
+        FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(MainViewApplication.class.getResource("vincular-item-window.fxml")));
+        Parent parent = loader.load();
+        VincularItemWindow controller = loader.getController();
+        controller.setOrcamento(orcamento);
         Stage popupStage = new Stage();
         popupStage.setTitle("Vincular Item");
         Scene scene = new Scene(parent);
@@ -97,7 +94,20 @@ public class CadastroOrcamentoWindow {
         popupStage.centerOnScreen();
         popupStage.setResizable(false);
         popupStage.showAndWait();
+    }
 
+    @FXML
+    void onButtonCancelarClicked(ActionEvent event) {
+    }
+
+    @FXML
+    void onButtonVincularItemClicked(ActionEvent event) throws IOException {
+        Orcamento orcamento = service.getOrcamentoAtual();
+        if (orcamento == null) {
+            showMessage("Salve o orçamento antes de vincular um item.");
+            return;
+        }
+        abrirTelaVincularItem(orcamento);
     }
 
     @FXML
