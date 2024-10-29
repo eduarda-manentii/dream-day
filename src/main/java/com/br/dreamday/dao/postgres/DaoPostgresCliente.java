@@ -68,7 +68,7 @@ public class DaoPostgresCliente implements DaoCliente {
     public void alterar(Cliente cliente) {
         PreparedStatement ps = null;
         try {
-            ManagerDb.getInstance().configurarAutocommitDa(conexao, false);
+            ManagerDb.getInstance().configurarAutoCommitDa(conexao, false);
             ps = conexao.prepareStatement(UPDATE);
             ps.setString(1, cliente.getNome());
             ps.setString(2, cliente.getConjugue());
@@ -83,7 +83,7 @@ public class DaoPostgresCliente implements DaoCliente {
             }else {
                 this.conexao.rollback();
             }
-            ManagerDb.getInstance().configurarAutocommitDa(conexao, true);
+            ManagerDb.getInstance().configurarAutoCommitDa(conexao, true);
         } catch (Exception e) {
             throw new RuntimeException("Ocorreu um erro ao alterar o cliente. "
                     + "Motivo: " + e.getMessage());
@@ -96,7 +96,7 @@ public class DaoPostgresCliente implements DaoCliente {
     public void excluirPor(int id) {
         PreparedStatement ps = null;
         try {
-            ManagerDb.getInstance().configurarAutocommitDa(conexao, false);
+            ManagerDb.getInstance().configurarAutoCommitDa(conexao, false);
             ps = conexao.prepareStatement(DELETE);
             ps.setInt(1, id);
             boolean isExclusaoOK = ps.executeUpdate() == 1;
@@ -105,7 +105,7 @@ public class DaoPostgresCliente implements DaoCliente {
             }else {
                 this.conexao.rollback();
             }
-            ManagerDb.getInstance().configurarAutocommitDa(conexao, true);
+            ManagerDb.getInstance().configurarAutoCommitDa(conexao, true);
         } catch (Exception e) {
             throw new RuntimeException("Ocorreu um erro ao excluir o cliente. "
                     + "Motivo: " + e.getMessage());

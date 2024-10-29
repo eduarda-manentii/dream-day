@@ -9,20 +9,23 @@ public class ItemOrcamento {
     private Orcamento orcamento;
     private ItemFornecedor itemFornecedor;
     private LocalDate dataDeEntrega;
+    private Double quantidade;
     private  ItemOrcamentoStatus status;
 
-    public ItemOrcamento(Long id, Orcamento orcamento, ItemFornecedor itemFornecedor, LocalDate dataDeEntrega, ItemOrcamentoStatus status) {
+    public ItemOrcamento(Long id, Orcamento orcamento, ItemFornecedor itemFornecedor, LocalDate dataDeEntrega, Double quantidade, ItemOrcamentoStatus status) {
         this.id = id;
         this.orcamento = orcamento;
         this.itemFornecedor = itemFornecedor;
         this.dataDeEntrega = dataDeEntrega;
+        this.quantidade = quantidade;
         this.status = status;
     }
 
-    public ItemOrcamento(Orcamento orcamento, ItemFornecedor itemFornecedor, LocalDate dataDeEntrega, ItemOrcamentoStatus status) {
+    public ItemOrcamento(Orcamento orcamento, ItemFornecedor itemFornecedor, LocalDate dataDeEntrega, Double quantidade, ItemOrcamentoStatus status) {
         this.orcamento = orcamento;
         this.itemFornecedor = itemFornecedor;
         this.dataDeEntrega = dataDeEntrega;
+        this.quantidade = quantidade;
         this.status = status;
     }
 
@@ -56,6 +59,14 @@ public class ItemOrcamento {
 
     public void setDataDeEntrega(LocalDate dataDeEntrega) {
         this.dataDeEntrega = dataDeEntrega;
+    }
+
+    public Double getQuantidade() {
+        return quantidade;
+    }
+
+    public void setQuantidade(Double quantidade) {
+        this.quantidade = quantidade;
     }
 
     public ItemOrcamentoStatus getStatus() {

@@ -1,8 +1,7 @@
 package com.br.dreamday.controller;
 
-import com.br.dreamday.domain.Cliente;
-import com.br.dreamday.domain.Orcamento;
-import com.br.dreamday.domain.OrcamentoStatus;
+import com.br.dreamday.MainViewApplication;
+import com.br.dreamday.domain.*;
 import com.br.dreamday.service.ClienteService;
 import com.br.dreamday.service.OrcamentoService;
 import com.br.dreamday.utils.MascarasFX;
@@ -10,15 +9,21 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 public class CadastroOrcamentoWindow {
 
@@ -82,7 +87,16 @@ public class CadastroOrcamentoWindow {
     }
 
     @FXML
-    void onButtonVincularItemClicked(ActionEvent event) {
+    void onButtonVincularItemClicked(ActionEvent event) throws IOException {
+        Parent parent = FXMLLoader.load(Objects.requireNonNull(MainViewApplication.class.getResource("vincular-item-window.fxml")));
+        Stage popupStage = new Stage();
+        popupStage.setTitle("Vincular Item");
+        Scene scene = new Scene(parent);
+        popupStage.setScene(scene);
+        popupStage.initModality(Modality.APPLICATION_MODAL);
+        popupStage.centerOnScreen();
+        popupStage.setResizable(false);
+        popupStage.showAndWait();
 
     }
 

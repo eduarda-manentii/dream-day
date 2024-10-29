@@ -68,11 +68,11 @@ public class MainViewController {
         Stage popStage = new Stage();
         popStage.setTitle("Orçamentos");
         Scene scene = new Scene(parent);
-        popupStage.setScene(scene);
-        popupStage.initModality(Modality.APPLICATION_MODAL);
-        popupStage.centerOnScreen();
-        popupStage.setResizable(false);
-        popupStage.showAndWait();
+        popStage.setScene(scene);
+        popStage.initModality(Modality.APPLICATION_MODAL);
+        popStage.centerOnScreen();
+        popStage.setResizable(false);
+        popStage.showAndWait();
     }
 
     @FXML

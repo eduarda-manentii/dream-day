@@ -32,9 +32,9 @@ public class ItemFornecedorService {
             throw new NullPointerException("O fornecedor não pode ser nula.");
         }
 
-        boolean isIdInvalido = itemFornecedor.getId() == null
-                && itemFornecedor.getId().getIdFornecedor() != null
-                && itemFornecedor.getId().getIdProduto() != null;
+        boolean isIdInvalido = itemFornecedor.getId() != null
+                && itemFornecedor.getFornecedor() != null
+                && itemFornecedor.getProduto() != null;
 
         if (isIdInvalido) {
             throw new IllegalArgumentException("O item deve ter um produto e um fornecedor vinculado.");

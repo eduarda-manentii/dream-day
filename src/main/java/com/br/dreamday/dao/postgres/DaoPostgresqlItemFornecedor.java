@@ -85,8 +85,8 @@ public class DaoPostgresqlItemFornecedor implements DaoItemFornecedor {
         PreparedStatement ps = null;
         try {
             ps = conexao.prepareStatement(INSERT);
-            ps.setLong(1, itemFornecedor.getId().getIdFornecedor());
-            ps.setLong(2, itemFornecedor.getId().getIdProduto());
+            ps.setLong(1, itemFornecedor.getFornecedor().getId());
+            ps.setLong(2, itemFornecedor.getProduto().getId());
             ps.setBigDecimal(3, itemFornecedor.getPreco());
             ps.setLong(4, itemFornecedor.getCategoria().getId());
             ps.execute();
@@ -103,12 +103,10 @@ public class DaoPostgresqlItemFornecedor implements DaoItemFornecedor {
         try {
             ManagerDb.getInstance().configurarAutoCommitDa(conexao, false);
             ps = conexao.prepareStatement(UPDATE);
-            ps.setLong(1, itemFornecedor.getId().getIdFornecedor());
-            ps.setLong(2, itemFornecedor.getId().getIdProduto());
-            ps.setBigDecimal(3, itemFornecedor.getPreco());
-            ps.setLong(4, itemFornecedor.getCategoria().getId());
-            ps.setLong(5, itemFornecedor.getId().getIdFornecedor());
-            ps.setLong(6, itemFornecedor.getId().getIdProduto());
+            ps.setBigDecimal(1, itemFornecedor.getPreco());
+            ps.setLong(2, itemFornecedor.getCategoria().getId());
+            ps.setLong(3, itemFornecedor.getFornecedor().getId());
+            ps.setLong(4, itemFornecedor.getProduto().getId());
 
             boolean isAlteracaoOK = ps.executeUpdate() == 1;
             if (isAlteracaoOK) {
