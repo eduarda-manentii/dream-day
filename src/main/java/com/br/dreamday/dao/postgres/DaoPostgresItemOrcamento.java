@@ -15,10 +15,11 @@ import java.util.List;
 
 public class DaoPostgresItemOrcamento implements DaoItemOrcamento {
 
-    private final String INSERT = "INSERT INTO itens_orcamentos (id_item_fornecedor, id_orcamento, data_entrega, quantidade, status) VALUES (?, ?, ?, ?, ?)";
+    private final String INSERT = "INSERT INTO itens_orcamentos (id_fornecedor, id_produto, id_orcamento, data_entrega, quantidade, status) VALUES (?, ?, ?, ?, ?, ?)";
 
     private final String UPDATE = "UPDATE itens_orcamentos SET " +
-            "id_item_fornecedor = ?, " +
+            "id_fornecedor = ?, " +
+            "id_produto = ?, " +
             "id_orcamento = ?, " +
             "data_entrega = ?, " +
             "quantidade = ?, " +

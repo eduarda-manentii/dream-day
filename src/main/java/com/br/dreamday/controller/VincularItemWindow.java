@@ -10,8 +10,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -65,12 +64,14 @@ public class VincularItemWindow {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate dataEntrega = LocalDate.parse(txtDadaDeEntrega.getText(), formatter);
         ItemOrcamentoStatus status = cbStatus.getValue();
-        Double quantidade = Double.parseDouble(txtQuantidade.getText());
+        double quantidade = Double.parseDouble(txtQuantidade.getText());
 
         ItemOrcamento itemOrcamento = new ItemOrcamento(orcamento, itemFornecedor, dataEntrega, quantidade, status);
         service.salvar(itemOrcamento);
         BigDecimal subtotal = itemFornecedor.getPreco().multiply(new BigDecimal(quantidade));
         orcamentoService.atualizarValorTotal(orcamento.getId(), subtotal);
+        showMessage("Item vinculado com sucesso!");
+        limparCampos();
     }
 
     @FXML
@@ -96,6 +97,24 @@ public class VincularItemWindow {
     @FXML
     void onButtonCancelarClicked(ActionEvent event) throws IOException {
 
+    }
+
+    void limparCampos() {
+        txtDadaDeEntrega.setText("");
+        txtQuantidade.setText("");
+        cbItem.setValue(null);
+        cbStatus.setValue(null);
+    }
+
+    private void showMessage(String mensagem) {
+        ButtonType loginButtonType = new ButtonType("Ok!", ButtonBar.ButtonData.OK_DONE);
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle("Aviso");
+        dialog.setContentText(mensagem);
+        dialog.getDialogPane().getButtonTypes().add(loginButtonType);
+        boolean desativado = false;
+        dialog.getDialogPane().lookupButton(loginButtonType).setDisable(desativado);
+        dialog.showAndWait();
     }
 
 }

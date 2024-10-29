@@ -26,10 +26,8 @@ public class CadastroItemFornecedorWindow implements Initializable {
     @FXML
     private Label lblNomeFornecedor;
 
-    @FXML
-    private TextField txtPreco;
-
     private Fornecedor fornecedor;
+
     private final ProdutoService produtoService;
 
     public CadastroItemFornecedorWindow() {
