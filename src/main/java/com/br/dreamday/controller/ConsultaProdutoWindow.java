@@ -22,30 +22,6 @@ import java.util.Objects;
 public class ConsultaProdutoWindow {
 
     @FXML
-    private Button btnAdicionar;
-
-    @FXML
-    private Button btnEditar;
-
-    @FXML
-    private Button btnFiltrar;
-
-    @FXML
-    private Button btnFiltrar1;
-
-    @FXML
-    private Label lblNome;
-
-    @FXML
-    private MenuItem menuItemCadastroCategoria;
-
-    @FXML
-    private MenuItem menuItemCadastroFornecedor;
-
-    @FXML
-    private MenuItem menuItemCadastroProduto;
-
-    @FXML
     private TableView<Produto> tableProduto;
 
     @FXML

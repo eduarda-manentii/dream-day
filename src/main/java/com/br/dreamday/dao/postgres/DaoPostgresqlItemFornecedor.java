@@ -1,11 +1,8 @@
 package com.br.dreamday.dao.postgres;
 
-import com.br.dreamday.domain.Fornecedor;
-import com.br.dreamday.domain.ItemFornecedor;
-import com.br.dreamday.domain.Produto;
+import com.br.dreamday.domain.*;
 import com.br.dreamday.dao.DaoItemFornecedor;
 import com.br.dreamday.dao.ManagerDb;
-import com.br.dreamday.domain.Categoria;
 import com.br.dreamday.domain.key.ItemFornecedorKey;
 
 import java.math.BigDecimal;
@@ -26,7 +23,7 @@ public class DaoPostgresqlItemFornecedor implements DaoItemFornecedor {
 
     private final String UPDATE = "UPDATE itens_fornecedores SET "
             + "preco = ?, "
-            + "id_categoria = ?, "
+            + "id_categoria = ? "
             + "WHERE id_fornecedor = ? and id_produto = ?";
 
     private final String DELETE = "DELETE FROM itens_fornecedores WHERE id_fornecedor = ? and id_produto = ?";
@@ -47,20 +44,20 @@ public class DaoPostgresqlItemFornecedor implements DaoItemFornecedor {
 
 
     private final String SELECT_BY_NOME_PRECO_FORN = "SELECT "
-            + "p.id id_produto, "
-            + "p.nome nome_produto, "
-            + "f.id id_fornecedor "
-            + "f.nome nome_fornecedor "
-            + "c.id id_categoria "
-            + "c.nome nome_categoria "
-            + "if.id_fornecedor "
-            + "if.id_produto "
-            + "if.preco, "
-            + "FROM itens_fornecedores if, "
-            + "join categorias c on c.id = if.id_categoria "
-            + "join fornecedores f on f.id = if.id_fornecedor "
-            + "join produtos p on p.id = if.id_produto "
-            + "WHERE Upper(p.nome) LIKE Upper(?) ";
+            + "p.id AS id_produto, "
+            + "p.nome AS nome_produto, "
+            + "f.id AS id_fornecedor, "
+            + "f.nome AS nome_fornecedor, "
+            + "c.id AS id_categoria, "
+            + "c.nome AS nome_categoria, "
+            + "if.id_fornecedor, "
+            + "if.id_produto, "
+            + "if.preco "
+            + "FROM itens_fornecedores if "
+            + "JOIN categorias c ON c.id = if.id_categoria "
+            + "JOIN fornecedores f ON f.id = if.id_fornecedor "
+            + "JOIN produtos p ON p.id = if.id_produto "
+            + "WHERE UPPER(p.nome) LIKE UPPER(?)";
 
     private final String SELECT_ID_EXISTENTE = "SELECT COUNT (itens_fornecedores.id_categoria) as qtde "
             + "FROM itens_fornecedores " + "WHERE itens_fornecedores.id_fornecedor = ? AND itens_fornecedores.id_produto = ?";
@@ -71,8 +68,23 @@ public class DaoPostgresqlItemFornecedor implements DaoItemFornecedor {
     private final String SELECT_ID_PROD_EXISTENTE = "SELECT COUNT (itens_fornecedores.id_produto) as qtde "
             + "FROM itens_fornecedores " + "WHERE itens_fornecedores.id_produto = ?";
 
-    private final String SELECT_ID_FORN_EXISTENTE = "SELECT COUNT (itens_fornecedores.id_produto) as qtde "
-            + "FROM itens_fornecedores " + "WHERE itens_fornecedores.id_produto = ?";
+    private final String SELECT_ID_FORN_EXISTENTE = "SELECT COUNT (itens_fornecedores.id_fornecedor) as qtde "
+            + "FROM itens_fornecedores "
+            + "WHERE itens_fornecedores.id_fornecedor = ?";
+
+    private final String SELECT_TODES = "SELECT "
+            + "ifs.id_fornecedor, "
+            + "f.nome AS nome_fornecedor, "
+            + "p.id AS id_produto, "
+            + "p.nome AS nome_produto, "
+            + "c.id AS id_categoria, "
+            + "c.nome AS nome_categoria, "
+            + "ifs.preco "
+            + "FROM itens_fornecedores ifs "
+            + "JOIN fornecedores f ON f.id = ifs.id_fornecedor "
+            + "JOIN produtos p ON p.id = ifs.id_produto "
+            + "JOIN categorias c ON c.id = ifs.id_categoria "
+            + "ORDER BY LOWER(f.nome)";
 
     private final Connection conexao;
 
@@ -203,6 +215,27 @@ public class DaoPostgresqlItemFornecedor implements DaoItemFornecedor {
             ManagerDb.getInstance().fechar(ps);
             ManagerDb.getInstance().fechar(rs);
         }
+    }
+
+    @Override
+    public List<ItemFornecedor> listarTodos() {
+        List<ItemFornecedor> itensFornecedores = new ArrayList<>();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            ps = conexao.prepareStatement(SELECT_TODES);
+            rs = ps.executeQuery();
+            while(rs.next()) {
+                itensFornecedores.add(extrairDo(rs));
+            }
+        } catch (Exception ex) {
+            throw new RuntimeException("Ocorreu um erro na listagem"
+                    + " dos itens de fornecedores. Motivo: " + ex.getMessage());
+        } finally {
+            ManagerDb.getInstance().fechar(ps);
+            ManagerDb.getInstance().fechar(rs);
+        }
+        return itensFornecedores;
     }
 
     @Override

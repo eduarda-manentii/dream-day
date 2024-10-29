@@ -22,28 +22,10 @@ import java.util.Objects;
 public class ConsultaCategoriaWindow {
 
     @FXML
-    private Button btnAdicionar;
-
-    @FXML
-    private Button btnFiltrar;
-
-    @FXML
     private TableColumn<Categoria, String> codigoColumn;
 
     @FXML
     private TableColumn<Categoria, String> nomeColumn;
-
-    @FXML
-    private Label lblNome;
-
-    @FXML
-    private MenuItem menuItemCadastroCategoria;
-
-    @FXML
-    private MenuItem menuItemCadastroFornecedor;
-
-    @FXML
-    private MenuItem menuItemCadastroProduto;
 
     @FXML
     private TableView<Categoria> tableCategoria;

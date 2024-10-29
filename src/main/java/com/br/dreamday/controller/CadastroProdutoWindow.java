@@ -13,9 +13,6 @@ public class CadastroProdutoWindow {
     private Button btnCancelar;
 
     @FXML
-    private Button btnSalvar;
-
-    @FXML
     private TextArea txaDescricao;
 
     @FXML

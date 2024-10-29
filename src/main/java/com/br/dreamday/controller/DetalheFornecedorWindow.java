@@ -24,15 +24,6 @@ import java.util.Objects;
 public class DetalheFornecedorWindow {
 
     @FXML
-    private Button btnEditar;
-
-    @FXML
-    private Button btnExcluir;
-
-    @FXML
-    private Button btnVincularItem;
-
-    @FXML
     private TableView<ItemFornecedor> tableItens;
 
     @FXML
@@ -61,15 +52,6 @@ public class DetalheFornecedorWindow {
 
     @FXML
     private Label lblEmailFornecedor;
-
-    @FXML
-    private MenuItem menuItemCadastroCategoria;
-
-    @FXML
-    private MenuItem menuItemCadastroFornecedor;
-
-    @FXML
-    private MenuItem menuItemCadastroProduto;
 
     private ObservableList<ItemFornecedor> itemFornecedorList;
     private final ItemFornecedorService itemFornecedorService;

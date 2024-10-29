@@ -13,18 +13,6 @@ public class CadastroFornecedorWindow {
     private Button btnCancelar;
 
     @FXML
-    private Button btnSalvar;
-
-    @FXML
-    private MenuItem menuItemCadastroCategoria;
-
-    @FXML
-    private MenuItem menuItemCadastroFornecedor;
-
-    @FXML
-    private MenuItem menuItemCadastroProduto;
-
-    @FXML
     private TextField txtEmail;
 
     @FXML

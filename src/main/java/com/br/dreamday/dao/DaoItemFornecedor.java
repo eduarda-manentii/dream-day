@@ -12,6 +12,7 @@ public interface DaoItemFornecedor {
     void excluirPor(Long idFornecedor, Long idProduto);
     List<ItemFornecedor> listarPor(String nomeProduto, String nomeFornecedor, BigDecimal valorInicial, BigDecimal valorFinal);
     List<ItemFornecedor> listarPor(Long idFornecedor);
+    List<ItemFornecedor> listarTodos();
     boolean validarRemocaoCategoria(Long idCategoria);
     boolean validarRemocaoFornecedor(Long idFornecedor);
     boolean validarRemocaoProduto(Long idProduto);

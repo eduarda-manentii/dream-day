@@ -22,12 +22,6 @@ import java.util.Objects;
 public class ConsultaFornecedorWindow {
 
     @FXML
-    private Button btnAdicionar;
-
-    @FXML
-    private Button btnFiltrar;
-
-    @FXML
     private TableView<Fornecedor> tableFornecedor;
 
     @FXML
@@ -44,18 +38,6 @@ public class ConsultaFornecedorWindow {
 
     @FXML
     private TableColumn<Fornecedor, String> acoesColumn;
-
-    @FXML
-    private Label lblNome;
-
-    @FXML
-    private MenuItem menuItemCadastroCategoria;
-
-    @FXML
-    private MenuItem menuItemCadastroFornecedor;
-
-    @FXML
-    private MenuItem menuItemCadastroProduto;
 
     @FXML
     private TextField txtNomeFiltro;
