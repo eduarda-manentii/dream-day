@@ -41,8 +41,10 @@ public class CadastroOrcamentoWindow {
 
     private OrcamentoService service;
     private ClienteService clienteService;
+    private Long orcamentoId;
 
     public CadastroOrcamentoWindow() {
+        this.orcamentoId = Long.valueOf(0);
         this.service = new OrcamentoService();
         this.clienteService = new ClienteService();
     }
@@ -74,18 +76,18 @@ public class CadastroOrcamentoWindow {
             String observacoes = txtAreaObservacoes.getText();
             LocalDate dataDeCriacao = LocalDate.now();
             Orcamento orcamento = new Orcamento(cliente, status, dataDeCriacao, custoEstimado, BigDecimal.ZERO, observacoes);
-            service.salvar(orcamento);
+            orcamentoId = service.salvar(orcamento);
             showMessage("Orçamento salvo com sucesso!");
         } catch (Exception e) {
             showMessage(e.getMessage());
         }
     }
 
-    void abrirTelaVincularItem(Orcamento orcamento) throws IOException {
+    void abrirTelaVincularItem() throws IOException {
         FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(MainViewApplication.class.getResource("vincular-item-window.fxml")));
         Parent parent = loader.load();
         VincularItemWindow controller = loader.getController();
-        controller.setOrcamento(orcamento);
+        controller.setOrcamentoId(orcamentoId);
         Stage popupStage = new Stage();
         popupStage.setTitle("Vincular Item");
         Scene scene = new Scene(parent);
@@ -102,12 +104,11 @@ public class CadastroOrcamentoWindow {
 
     @FXML
     void onButtonVincularItemClicked(ActionEvent event) throws IOException {
-        Orcamento orcamento = service.getOrcamentoAtual();
-        if (orcamento == null) {
+        if (orcamentoId == 0) {
             showMessage("Salve o orçamento antes de vincular um item.");
             return;
         }
-        abrirTelaVincularItem(orcamento);
+        abrirTelaVincularItem();
     }
 
     @FXML

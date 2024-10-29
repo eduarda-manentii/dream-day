@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 
 public interface DaoOrcamento {
 
-    public void inserir(Orcamento orcamento);
+    public Long inserir(Orcamento orcamento);
 
     public void alterar(Orcamento orcamento);
 

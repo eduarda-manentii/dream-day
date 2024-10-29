@@ -62,6 +62,11 @@ public class DaoPostgresItemOrcamento implements DaoItemOrcamento {
 
     private Connection conexao;
 
+    public DaoPostgresItemOrcamento() {
+        this.conexao = ManagerDb.getInstance().getConexao();
+    }
+
+
     @Override
     public void inserir(ItemOrcamento itemOrcamento) {
         PreparedStatement ps = null;

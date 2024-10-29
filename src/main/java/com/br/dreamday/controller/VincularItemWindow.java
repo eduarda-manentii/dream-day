@@ -32,17 +32,14 @@ public class VincularItemWindow {
     @FXML
     private TextField txtDadaDeEntrega;
 
-
     @FXML
     private TextField txtQuantidade;
 
+    private Long orcamentoId;
     private Orcamento orcamento;
-
-    private ItemFornecedorService itemFornecedorService;
-
     private OrcamentoService orcamentoService;
-
-   private ItemOrcamentoService service;
+    private ItemFornecedorService itemFornecedorService;
+    private ItemOrcamentoService service;
 
     public VincularItemWindow() {
         this.service = new ItemOrcamentoService();
@@ -50,8 +47,30 @@ public class VincularItemWindow {
         this.itemFornecedorService = new ItemFornecedorService();
     }
 
-    public void setOrcamento(Orcamento orcamento) {
-        this.orcamento = orcamento;
+    public void setOrcamentoId(Long orcamentoId) {
+        this.orcamentoId = orcamentoId;
+        carregarOrcamento();
+    }
+
+    private void carregarOrcamento() {
+        this.orcamento = orcamentoService.buscarPor(orcamentoId);
+        if (orcamento == null) {
+            throw new RuntimeException("Orçamento não encontrado para o ID: " + orcamentoId);
+        }
+    }
+
+    @FXML
+    void onButtonConfirmarClicked(ActionEvent event) throws IOException {
+        ItemFornecedor itemFornecedor = cbItem.getValue();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate dataEntrega = LocalDate.parse(txtDadaDeEntrega.getText(), formatter);
+        ItemOrcamentoStatus status = cbStatus.getValue();
+        Double quantidade = Double.parseDouble(txtQuantidade.getText());
+
+        ItemOrcamento itemOrcamento = new ItemOrcamento(orcamento, itemFornecedor, dataEntrega, quantidade, status);
+        service.salvar(itemOrcamento);
+        BigDecimal subtotal = itemFornecedor.getPreco().multiply(new BigDecimal(quantidade));
+        orcamentoService.atualizarValorTotal(orcamento.getId(), subtotal);
     }
 
     @FXML
@@ -72,20 +91,6 @@ public class VincularItemWindow {
         ObservableList<ItemFornecedor> obListClientes = FXCollections.observableArrayList(itensFornecedires);
         obListClientes.addFirst(null);
         cbItem.setItems(obListClientes);
-    }
-
-    @FXML
-    void onButtonConfirmarClicked(ActionEvent event) throws IOException {
-        ItemFornecedor itemFornecedor = cbItem.getValue();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate dataEntrega = LocalDate.parse(txtDadaDeEntrega.getText(), formatter);
-        ItemOrcamentoStatus status = cbStatus.getValue();
-        Double quantidade = Double.parseDouble(txtQuantidade.getText());
-
-        ItemOrcamento itemOrcamento = new ItemOrcamento(orcamento, itemFornecedor, dataEntrega, quantidade, status);
-        service.salvar(itemOrcamento);
-        BigDecimal subtotal = itemFornecedor.getPreco().multiply(new BigDecimal(quantidade));
-        orcamentoService.atualizarValorTotal(orcamento.getId(), subtotal);
     }
 
     @FXML

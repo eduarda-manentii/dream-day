@@ -15,16 +15,27 @@ import java.time.LocalDate;
 
 public class DaoPostgresOrcamento implements DaoOrcamento {
 
-    private final String INSERT = "INSERT INTO orcamentos (id_cliente, status, observacoes, data_criacao, custo_estimado, valor_total) VALUES (?, ?, ?, ?, ?, ?)";
-
-    private final String UPDATE = "UPDATE orcamentos SET id_cliente = ?, status = ?, observacoes = ?, data_criacao = ?, custo_estimado = ? , valor_total = ? WHERE id = ?";
-
+    private final String INSERT = "INSERT INTO orcamentos (id_cliente, status, observacoes, data_criacao, custo_estimado, valor_total) VALUES (?, ?, ?, ?, ?, ?) RETURNING id";
+    private final String UPDATE = "UPDATE orcamentos SET id_cliente = ?, status = ?, observacoes = ?, data_criacao = ?, custo_estimado = ?, valor_total = ? WHERE id = ?";
     private final String DELETE = "DELETE FROM orcamentos WHERE id = ?";
 
-    private final String SELECT_BY_ID = "SELECT o.id, c.nome nome_cliente, o.status, o.observacoes, o.data_criacao, o.custo_estimado, o.valor_total"
+    private final String SELECT_BY_ID = "SELECT " +
+            "o.id, " +
+            "c.id id_cliente, " +
+            "c.nome nome_cliente, " +
+            "c.conjugue conjugue_cliente, " +
+            "c.data_casamento data_casamento, " +
+            "c.telefone telefone, " +
+            "c.email email, " +
+            "c.cpf cpf, " +
+            "o.status, " +
+            "o.observacoes, " +
+            "o.data_criacao, " +
+            "o.custo_estimado, " +
+            "o.valor_total "
             + " FROM orcamentos o," +
             "       clientes c "
-            + " WHERE orcamentos.id_cliente = c.id " +
+            + " WHERE o.id_cliente = c.id " +
             "   AND o.id = ? ";
 
     private final String UPDATE_VALOR_TOTAL = "UPDATE orcamentos SET valor_total = valor_total + ? WHERE id = ?";
@@ -36,8 +47,9 @@ public class DaoPostgresOrcamento implements DaoOrcamento {
     }
 
     @Override
-    public void inserir(Orcamento orcamento) {
+    public Long inserir(Orcamento orcamento) {
         PreparedStatement ps = null;
+        ResultSet rs = null;
         try {
             ps = conexao.prepareStatement(INSERT);
             ps.setLong(1, orcamento.getCliente().getId());
@@ -46,12 +58,20 @@ public class DaoPostgresOrcamento implements DaoOrcamento {
             ps.setDate(4, Date.valueOf(orcamento.getDataCriacao()));
             ps.setBigDecimal(5, orcamento.getCustoEstimado());
             ps.setBigDecimal(6, orcamento.getValorTotal());
-            ps.execute();
+
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                Long idGerado = rs.getLong("id");
+                orcamento.setId(idGerado);
+                return idGerado;
+            } else {
+                throw new RuntimeException("Falha ao inserir o orçamento: ID não encontrado após a inserção.");
+            }
         } catch (Exception e) {
-            throw new RuntimeException("Ocorreu um erro ao inserir o orçamento. "
-                    + "Motivo: " + e.getMessage());
+            throw new RuntimeException("Ocorreu um erro ao inserir o orçamento. Motivo: " + e.getMessage());
         } finally {
             ManagerDb.getInstance().fechar(ps);
+            ManagerDb.getInstance().fechar(rs);
         }
     }
 
@@ -61,7 +81,7 @@ public class DaoPostgresOrcamento implements DaoOrcamento {
         try {
             ManagerDb.getInstance().configurarAutoCommitDa(conexao, false);
             ps = conexao.prepareStatement(UPDATE);
-            ps.setString(1, orcamento.getCliente().getNome());
+            ps.setLong(1, orcamento.getCliente().getId());
             ps.setString(2, String.valueOf(orcamento.getStatus()));
             ps.setString(3, orcamento.getObservaces());
             ps.setDate(4, Date.valueOf(orcamento.getDataCriacao()));
@@ -71,13 +91,12 @@ public class DaoPostgresOrcamento implements DaoOrcamento {
             boolean isAlteracaoOK = ps.executeUpdate() == 1;
             if (isAlteracaoOK) {
                 this.conexao.commit();
-            }else {
+            } else {
                 this.conexao.rollback();
             }
             ManagerDb.getInstance().configurarAutoCommitDa(conexao, true);
         } catch (Exception e) {
-            throw new RuntimeException("Ocorreu um erro ao alterar o orçamento. "
-                    + "Motivo: " + e.getMessage());
+            throw new RuntimeException("Ocorreu um erro ao alterar o orçamento. Motivo: " + e.getMessage());
         } finally {
             ManagerDb.getInstance().fechar(ps);
         }
@@ -98,8 +117,7 @@ public class DaoPostgresOrcamento implements DaoOrcamento {
             }
             ManagerDb.getInstance().configurarAutoCommitDa(conexao, true);
         } catch (Exception e) {
-            throw new RuntimeException("Ocorreu um erro ao excluir o orçamento."
-                    + "Motivo: " + e.getMessage());
+            throw new RuntimeException("Ocorreu um erro ao excluir o orçamento. Motivo: " + e.getMessage());
         } finally {
             ManagerDb.getInstance().fechar(ps);
         }
@@ -118,9 +136,8 @@ public class DaoPostgresOrcamento implements DaoOrcamento {
             }
             return null;
         } catch (Exception e) {
-            throw new RuntimeException("Ocorreu um erro ao buscar o orçamento. "
-                    + "Motivo: " + e.getMessage());
-        }finally {
+            throw new RuntimeException("Ocorreu um erro ao buscar o orçamento. Motivo: " + e.getMessage());
+        } finally {
             ManagerDb.getInstance().fechar(ps);
             ManagerDb.getInstance().fechar(rs);
         }
@@ -143,7 +160,7 @@ public class DaoPostgresOrcamento implements DaoOrcamento {
 
     private Orcamento extrairDo(ResultSet rs) {
         try {
-            long idCliente = rs.getLong("id_cliente");;
+            long idCliente = rs.getLong("id_cliente");
             String nomeDoCliente = rs.getString("nome_cliente");
             String conjugueDoCliente = rs.getString("conjugue_cliente");
             LocalDate dataDoCasamento = rs.getDate("data_casamento").toLocalDate();
@@ -152,15 +169,15 @@ public class DaoPostgresOrcamento implements DaoOrcamento {
             String cpf = rs.getString("cpf");
             Cliente cliente = new Cliente(idCliente, nomeDoCliente, conjugueDoCliente, dataDoCasamento, telefone, email, cpf);
 
+            long idOrcamento = rs.getLong("id");
             OrcamentoStatus status = OrcamentoStatus.valueOf(rs.getString("status"));
             String observacoes = rs.getString("observacoes");
             LocalDate dataCriacao = rs.getDate("data_criacao").toLocalDate();
             BigDecimal custoEstimado = rs.getBigDecimal("custo_estimado");
             BigDecimal valorTotal = rs.getBigDecimal("valor_total");
-            return new Orcamento(cliente, status, dataCriacao, custoEstimado, valorTotal, observacoes);
+            return new Orcamento(idOrcamento, cliente, status, dataCriacao, custoEstimado, valorTotal, observacoes);
         } catch (Exception e) {
             throw new RuntimeException("Ocorreu um erro ao extrair o orçamento. Motivo: " + e.getMessage());
         }
     }
-
 }
