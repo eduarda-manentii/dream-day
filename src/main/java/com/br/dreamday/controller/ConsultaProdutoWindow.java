@@ -1,6 +1,7 @@
 package com.br.dreamday.controller;
 
 import com.br.dreamday.MainViewApplication;
+import com.br.dreamday.domain.Categoria;
 import com.br.dreamday.domain.Produto;
 import com.br.dreamday.service.ProdutoService;
 import javafx.collections.FXCollections;
@@ -120,7 +121,11 @@ public class ConsultaProdutoWindow {
             popupStage.centerOnScreen();
             popupStage.setResizable(false);
             popupStage.showAndWait();
-            recarregarTabela();
+
+            Produto produto = cadastroProdutoWindow.getProduto();
+            int index = produtoList.indexOf(produtoSelecionado);
+            produtoList.set(index, produto);
+
             tableProduto.refresh();
         }
     }

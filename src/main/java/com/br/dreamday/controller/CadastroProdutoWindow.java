@@ -93,4 +93,8 @@ public class CadastroProdutoWindow {
         txaDescricao.setText(produtoSelecionado.getDescricao());
         isEdicaoProduto = true;
     }
+
+    public Produto getProduto() {
+        return this.produto;
+    }
 }

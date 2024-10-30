@@ -14,19 +14,18 @@ import java.util.List;
 public class AutoCompleteProduto extends TextField {
 
     private final ContextMenu entriesPopup;
-    private ProdutoService produtoService;
     private Produto produtoSelecionado;
+    private static final int LIMITADOR = 6;
 
     public AutoCompleteProduto(ProdutoService produtoService) {
         super();
         entriesPopup = new ContextMenu();
-        this.produtoService = produtoService;
 
         textProperty().addListener((observableValue, oldText, newText) -> {
-            if (newText.length() < 2) {
+            if (newText.length() < 3) {
                 entriesPopup.hide();
             } else {
-                List<Produto> resultadosEncontrados = produtoService.listarPor(newText);
+                List<Produto> resultadosEncontrados = produtoService.listarPor(newText, LIMITADOR);
                 if (!resultadosEncontrados.isEmpty()) {
                     popularPopup(resultadosEncontrados);
                     if (!entriesPopup.isShowing()) {
@@ -43,6 +42,15 @@ public class AutoCompleteProduto extends TextField {
 
     public Produto getProdutoSelecionado() {
         return this.produtoSelecionado;
+    }
+
+    public void setProdutoSelecionado(Produto produto) {
+        setText(produto.getNome());
+        this.produtoSelecionado = produto;
+    }
+
+    public void limparAutoComplete() {
+        this.produtoSelecionado = null;
     }
 
     private void popularPopup(List<Produto> resultadosEncontrados) {

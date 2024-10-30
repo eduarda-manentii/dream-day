@@ -10,5 +10,6 @@ public interface DaoProduto {
     void alterar(Produto  produto);
     void excluirPor(Long id);
     List<Produto> listarPor(String nome);
+    List<Produto> listarPor(String nome, Integer limite);
     List<Produto> listarTodos();
 }
