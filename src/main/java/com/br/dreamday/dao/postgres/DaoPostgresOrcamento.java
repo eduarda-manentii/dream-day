@@ -3,6 +3,7 @@ package com.br.dreamday.dao.postgres;
 import com.br.dreamday.dao.DaoOrcamento;
 import com.br.dreamday.dao.ManagerDb;
 import com.br.dreamday.domain.Cliente;
+import com.br.dreamday.domain.ItemOrcamentoStatus;
 import com.br.dreamday.domain.Orcamento;
 import com.br.dreamday.domain.OrcamentoStatus;
 
@@ -41,6 +42,67 @@ public class DaoPostgresOrcamento implements DaoOrcamento {
             "   AND o.id = ? ";
 
     private final String UPDATE_VALOR_TOTAL = "UPDATE orcamentos SET valor_total = valor_total + ? WHERE id = ?";
+
+    private final String SELECT_BY_CLI_NOME = "SELECT " +
+            "o.id, " +
+            "c.id id_cliente, " +
+            "c.nome, " +
+            "c.conjugue, " +
+            "c.data_casamento, " +
+            "c.telefone, " +
+            "c.email, " +
+            "c.cpf, " +
+            "o.status, " +
+            "o.observacoes, " +
+            "o.data_criacao, " +
+            "o.custo_estimado, " +
+            "o.valor_total "
+            + " FROM orcamentos o," +
+            "       clientes c " +
+            "WHERE o.id_cliente = c.id " +
+            "AND c.nome = ? "
+            + "ORDER BY c.nome";
+
+    private final String SELECT_BY_CLI_NOME_AND_STATUS = "SELECT " +
+            "o.id, " +
+            "c.id id_cliente, " +
+            "c.nome, " +
+            "c.conjugue, " +
+            "c.data_casamento, " +
+            "c.telefone, " +
+            "c.email, " +
+            "c.cpf, " +
+            "o.status, " +
+            "o.observacoes, " +
+            "o.data_criacao, " +
+            "o.custo_estimado, " +
+            "o.valor_total "
+            + " FROM orcamentos o," +
+            "       clientes c " +
+            "WHERE o.id_cliente = c.id " +
+            "AND c.nome = ? " +
+            "AND o.status = ? "
+            + "ORDER BY c.nome";
+
+    private final String SELECT_BY_STATUS = "SELECT " +
+            "o.id, " +
+            "c.id id_cliente, " +
+            "c.nome, " +
+            "c.conjugue, " +
+            "c.data_casamento, " +
+            "c.telefone, " +
+            "c.email, " +
+            "c.cpf, " +
+            "o.status, " +
+            "o.observacoes, " +
+            "o.data_criacao, " +
+            "o.custo_estimado, " +
+            "o.valor_total "
+            + " FROM orcamentos o," +
+            "       clientes c " +
+            "WHERE o.id_cliente = c.id " +
+            "AND o.status = ? "
+            + "ORDER BY c.nome";
 
     private final String SELECT_TODES = "SELECT " +
             "o.id, " +
@@ -176,6 +238,73 @@ public class DaoPostgresOrcamento implements DaoOrcamento {
             throw new RuntimeException("Erro ao atualizar o valor total do orçamento. Motivo: " + ex.getMessage());
         } finally {
             ManagerDb.getInstance().fechar(ps);
+        }
+    }
+
+    @Override
+    public List<Orcamento> listarPor(String nomeDoCliente, OrcamentoStatus status) {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        List<Orcamento> orcamentos = new ArrayList<Orcamento>();
+        try {
+            ps = conexao.prepareStatement(SELECT_BY_CLI_NOME_AND_STATUS);
+            ps.setString(1, nomeDoCliente);
+            ps.setString(2, String.valueOf(status));
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                orcamentos.add(extrairDo(rs));
+            }
+            return orcamentos;
+        } catch (Exception e) {
+            throw new RuntimeException("Ocorreu um erro ao listar os orcamentos. "
+                    + "Motivo: " + e.getMessage());
+        } finally {
+            ManagerDb.getInstance().fechar(ps);
+            ManagerDb.getInstance().fechar(rs);
+        }
+    }
+
+    @Override
+    public List<Orcamento> listarPor(ItemOrcamentoStatus status) {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        List<Orcamento> orcamentos = new ArrayList<Orcamento>();
+        try {
+            ps = conexao.prepareStatement(SELECT_BY_STATUS);
+            ps.setString(1, String.valueOf(status));
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                orcamentos.add(extrairDo(rs));
+            }
+            return orcamentos;
+        } catch (Exception e) {
+            throw new RuntimeException("Ocorreu um erro ao listar os orcamentos. "
+                    + "Motivo: " + e.getMessage());
+        } finally {
+            ManagerDb.getInstance().fechar(ps);
+            ManagerDb.getInstance().fechar(rs);
+        }
+    }
+
+    @Override
+    public List<Orcamento> listarPor(String nomeDoCliente) {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        List<Orcamento> orcamentos = new ArrayList<Orcamento>();
+        try {
+            ps = conexao.prepareStatement(SELECT_BY_CLI_NOME);
+            ps.setString(1, nomeDoCliente);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                orcamentos.add(extrairDo(rs));
+            }
+            return orcamentos;
+        } catch (Exception e) {
+            throw new RuntimeException("Ocorreu um erro ao listar os orcamentos. "
+                    + "Motivo: " + e.getMessage());
+        } finally {
+            ManagerDb.getInstance().fechar(ps);
+            ManagerDb.getInstance().fechar(rs);
         }
     }
 

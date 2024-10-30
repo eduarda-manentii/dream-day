@@ -25,7 +25,6 @@
       <Button fx:id="btnVincularItem" layoutX="431.0" layoutY="310.0" mnemonicParsing="false" onAction="#onButtonVincularItemClicked" prefHeight="1.0" prefWidth="133.0" text="Vincular item" />
       <Button fx:id="btnSalvar" layoutX="392.0" layoutY="361.0" mnemonicParsing="false" onAction="#onButtonSalvarClicked" prefHeight="25.0" prefWidth="172.0" text="Salvar" />
       <Button fx:id="btnCancelar" layoutX="210.0" layoutY="361.0" mnemonicParsing="false" onAction="#onButtonCancelarClicked" prefHeight="25.0" prefWidth="179.0" text="Cancelar" />
-      <Button fx:id="btnVoltar" layoutX="36.0" layoutY="361.0" mnemonicParsing="false" onAction="#onButtonVoltarClicked" prefHeight="25.0" prefWidth="172.0" text="Voltar" />
       <ComboBox fx:id="cbCliente" layoutX="134.0" layoutY="87.0" prefHeight="25.0" prefWidth="426.0" />
    </children>
 </AnchorPane>

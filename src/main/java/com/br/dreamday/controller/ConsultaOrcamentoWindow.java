@@ -1,8 +1,7 @@
 package com.br.dreamday.controller;
 
 import com.br.dreamday.MainViewApplication;
-import com.br.dreamday.domain.Fornecedor;
-import com.br.dreamday.domain.Orcamento;
+import com.br.dreamday.domain.*;
 import com.br.dreamday.service.FornecedorService;
 import com.br.dreamday.service.OrcamentoService;
 import javafx.collections.FXCollections;
@@ -19,6 +18,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Objects;
 
 public class ConsultaOrcamentoWindow {
@@ -45,7 +48,7 @@ public class ConsultaOrcamentoWindow {
     private TextField txtNomeDoCliente;
 
     @FXML
-    private ComboBox<OrcamentoService> cbStatus;
+    private ComboBox<OrcamentoStatus> cbStatus;
 
     private ObservableList<Orcamento> orcamentoList;
     private final OrcamentoService service;
@@ -137,7 +140,24 @@ public class ConsultaOrcamentoWindow {
     }
 
     @FXML
-    void onButtonFiltrarClicked() {}
+    void onButtonFiltrarClicked() {
+        try {
+            List<Orcamento> orcamentos;
+            if (!txtNomeDoCliente.getText().isBlank() && !(cbStatus.getValue() == null)) {
+               orcamentos = service.listarPor(txtNomeDoCliente.getText(), cbStatus.getValue());
+            } else if (!txtNomeDoCliente.getText().isBlank()) {
+                orcamentos = service.listarPor(txtNomeDoCliente.getText());
+            } else {
+                orcamentos = service.listarTodos();
+            }
+            orcamentoList.clear();
+            orcamentoList.addAll(orcamentos);
+            tblOrcamento.setItems(orcamentoList);
+            tblOrcamento.refresh();
+        }  catch (Exception e) {
+            showMessage(e.getMessage());
+        }
+    }
 
     public void exibirAlerta(Alert.AlertType tipo, String titulo, String cabecalho, String conteudo) {
         Alert alert = new Alert(tipo);
@@ -145,6 +165,17 @@ public class ConsultaOrcamentoWindow {
         alert.setHeaderText(cabecalho);
         alert.setContentText(conteudo);
         alert.showAndWait().filter(response -> response == ButtonType.OK);
+    }
+
+    private void showMessage(String mensagem) {
+        ButtonType loginButtonType = new ButtonType("Ok!", ButtonBar.ButtonData.OK_DONE);
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle("Aviso");
+        dialog.setContentText(mensagem);
+        dialog.getDialogPane().getButtonTypes().add(loginButtonType);
+        boolean desativado = false;
+        dialog.getDialogPane().lookupButton(loginButtonType).setDisable(desativado);
+        dialog.showAndWait();
     }
 
 }

@@ -5,6 +5,7 @@ module com.br.dreamday {
     requires java.desktop;
     requires org.controlsfx.controls;
     requires org.postgresql.jdbc;
+    requires jdk.jdi;
 
     opens com.br.dreamday.component to javafx.fxml;
     opens com.br.dreamday.controller to javafx.fxml;

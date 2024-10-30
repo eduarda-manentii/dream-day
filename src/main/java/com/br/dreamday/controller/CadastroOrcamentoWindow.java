@@ -75,9 +75,13 @@ public class CadastroOrcamentoWindow {
             OrcamentoStatus status = cbStatus.getValue();
             String observacoes = txtAreaObservacoes.getText();
             LocalDate dataDeCriacao = LocalDate.now();
-            Orcamento orcamento = new Orcamento(cliente, status, dataDeCriacao, custoEstimado, BigDecimal.ZERO, observacoes);
-            orcamentoId = service.salvar(orcamento);
-            showMessage("Orçamento salvo com sucesso!");
+            if(!camposPreenchidos()) {
+                showMessage("Preencha os campos obrigatórios!");
+            } else {
+                Orcamento orcamento = new Orcamento(cliente, status, dataDeCriacao, custoEstimado, BigDecimal.ZERO, observacoes);
+                orcamentoId = service.salvar(orcamento);
+                showMessage("Orçamento salvo com sucesso!");
+            }
         } catch (Exception e) {
             showMessage(e.getMessage());
         }
@@ -100,19 +104,6 @@ public class CadastroOrcamentoWindow {
 
     @FXML
     void onButtonCancelarClicked(ActionEvent event) {
-    }
-
-    @FXML
-    void onButtonVincularItemClicked(ActionEvent event) throws IOException {
-        if (orcamentoId == 0) {
-            showMessage("Salve o orçamento antes de vincular um item.");
-            return;
-        }
-        abrirTelaVincularItem();
-    }
-
-    @FXML
-    void onButtonVoltarClicked(ActionEvent event) {
         if (camposPreenchidos()) {
             confirmationMessage("Tem certeza que deseja cancelar a inserção?", () -> {
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
@@ -122,6 +113,15 @@ public class CadastroOrcamentoWindow {
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.close();
         }
+    }
+
+    @FXML
+    void onButtonVincularItemClicked(ActionEvent event) throws IOException {
+        if (orcamentoId == 0) {
+            showMessage("Salve o orçamento antes de vincular um item.");
+            return;
+        }
+        abrirTelaVincularItem();
     }
 
     private boolean camposPreenchidos() {

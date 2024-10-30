@@ -76,6 +76,7 @@ public class ItemOrcamento {
     public Fornecedor getFornecedor() {
         return itemFornecedor.getFornecedor();
     }
+
     public Produto getProduto() {
         return itemFornecedor.getProduto();
     }
