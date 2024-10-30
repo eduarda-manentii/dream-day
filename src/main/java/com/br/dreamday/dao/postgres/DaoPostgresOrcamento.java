@@ -57,8 +57,9 @@ public class DaoPostgresOrcamento implements DaoOrcamento {
             "o.custo_estimado, " +
             "o.valor_total "
             + " FROM orcamentos o," +
-            "       clientes c "
-            + "ORDER BY LOWER(c.nome)";
+            "       clientes c " +
+            "WHERE o.id_cliente = c.id "
+            + "ORDER BY o.id";
 
     private Connection conexao;
 
