@@ -1,6 +1,7 @@
 package com.br.dreamday.dao;
 
 import com.br.dreamday.domain.Cliente;
+import com.br.dreamday.domain.ItemFornecedor;
 import com.br.dreamday.domain.ItemOrcamento;
 
 import java.time.LocalDate;
@@ -12,9 +13,11 @@ public interface DaoItemOrcamento {
 
     public void alterar(ItemOrcamento itemOrcamento);
 
-    public void excluirPor(int id);
+    public void excluirPor(Long id);
 
     public ItemOrcamento buscarPor(int id);
+
+    List<ItemOrcamento> listarPor(Long idOrcamento);
 
     public List<ItemOrcamento> listarTodos();
 

@@ -12,6 +12,8 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DaoPostgresOrcamento implements DaoOrcamento {
 
@@ -22,12 +24,12 @@ public class DaoPostgresOrcamento implements DaoOrcamento {
     private final String SELECT_BY_ID = "SELECT " +
             "o.id, " +
             "c.id id_cliente, " +
-            "c.nome nome_cliente, " +
-            "c.conjugue conjugue_cliente, " +
-            "c.data_casamento data_casamento, " +
-            "c.telefone telefone, " +
-            "c.email email, " +
-            "c.cpf cpf, " +
+            "c.nome, " +
+            "c.conjugue, " +
+            "c.data_casamento, " +
+            "c.telefone, " +
+            "c.email, " +
+            "c.cpf, " +
             "o.status, " +
             "o.observacoes, " +
             "o.data_criacao, " +
@@ -39,6 +41,24 @@ public class DaoPostgresOrcamento implements DaoOrcamento {
             "   AND o.id = ? ";
 
     private final String UPDATE_VALOR_TOTAL = "UPDATE orcamentos SET valor_total = valor_total + ? WHERE id = ?";
+
+    private final String SELECT_TODES = "SELECT " +
+            "o.id, " +
+            "c.id id_cliente, " +
+            "c.nome, " +
+            "c.conjugue, " +
+            "c.data_casamento, " +
+            "c.telefone, " +
+            "c.email, " +
+            "c.cpf, " +
+            "o.status, " +
+            "o.observacoes, " +
+            "o.data_criacao, " +
+            "o.custo_estimado, " +
+            "o.valor_total "
+            + " FROM orcamentos o," +
+            "       clientes c "
+            + "ORDER BY LOWER(c.nome)";
 
     private Connection conexao;
 
@@ -158,11 +178,32 @@ public class DaoPostgresOrcamento implements DaoOrcamento {
         }
     }
 
+    @Override
+    public List<Orcamento> listarTodos() {
+        List<Orcamento> orcamentos = new ArrayList<>();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            ps = conexao.prepareStatement(SELECT_TODES);
+            rs = ps.executeQuery();
+            while(rs.next()) {
+                orcamentos.add(extrairDo(rs));
+            }
+        } catch (Exception ex) {
+            throw new RuntimeException("Ocorreu um erro na listagem"
+                    + " dos orcamentos. Motivo: " + ex.getMessage());
+        } finally {
+            ManagerDb.getInstance().fechar(ps);
+            ManagerDb.getInstance().fechar(rs);
+        }
+        return orcamentos;
+    }
+
     private Orcamento extrairDo(ResultSet rs) {
         try {
             long idCliente = rs.getLong("id_cliente");
-            String nomeDoCliente = rs.getString("nome_cliente");
-            String conjugueDoCliente = rs.getString("conjugue_cliente");
+            String nomeDoCliente = rs.getString("nome");
+            String conjugueDoCliente = rs.getString("conjugue");
             LocalDate dataDoCasamento = rs.getDate("data_casamento").toLocalDate();
             String telefone = rs.getString("telefone");
             String email = rs.getString("email");

@@ -5,6 +5,7 @@ import com.br.dreamday.dao.FactoryDao;
 import com.br.dreamday.domain.Orcamento;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class OrcamentoService {
 
@@ -74,6 +75,10 @@ public class OrcamentoService {
 
     public void atualizarValorTotal(Long idOrcamento, BigDecimal subtotal) {
         dao.atualizarValorTotal(idOrcamento, subtotal);
+    }
+
+    public List<Orcamento> listarTodos() {
+        return this.dao.listarTodos();
     }
 
 }

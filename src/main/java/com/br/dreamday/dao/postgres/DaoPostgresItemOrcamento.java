@@ -11,6 +11,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DaoPostgresItemOrcamento implements DaoItemOrcamento {
@@ -27,6 +28,47 @@ public class DaoPostgresItemOrcamento implements DaoItemOrcamento {
             "WHERE id = ?";
 
     private final String DELETE = "DELETE FROM itens_orcamentos WHERE id = ?";
+
+    private final String SELECT_BY_ID_ORC = "SELECT " +
+            "it.id, " +
+            "it.id_fornecedor, " +
+            "it.id_categoria, " +
+            "it.id_orcamento, " +
+            "it.data_entrega, " +
+            "it.quantidade, " +
+            "it.status, " +
+            "f.preco, " +
+            "f.id_fornecedor AS fornecedor_id, " +
+            "f.nome AS fornecedor_nome, " +
+            "f.telefone AS fornecedor_telefone, " +
+            "f.email AS fornecedor_email, " +
+            "p.id AS produto_id, " +
+            "p.nome AS produto_nome, " +
+            "p.descricao AS produto_descricao, " +
+            "c.id AS categoria_id, " +
+            "c.nome AS categoria_nome, " +
+            "o.id_categoria, " +
+            "o.status AS orcamento_status, " +
+            "o.observacoes, " +
+            "o.data_criacao, " +
+            "o.custo_estimado, " +
+            "o.valor_total, " +
+            "cli.id cliente_id, " +
+            "cli.nome cliente_nome, " +
+            "cli.conjugue cliente_conjugue, " +
+            "cli.data_casamento cliente_data_casamento, " +
+            "cli.telefone cliente_telefone, " +
+            "cli.email cliente_email, " +
+            "cli.cpf cliente_cpf " +
+            "FROM " +
+            "itens_orcamentos it " +
+            "JOIN itens_fornecedores f ON it.id_item_fornecedor = f.id " +
+            "JOIN orcamentos o ON it.id_orcamento = o.id " +
+            "JOIN produtos p ON f.id_produto = p.id " +
+            "JOIN categorias c ON it.id_categoria = c.id " +
+            "JOIN clientes cli ON cli.id = orcamentos.id_cliente " +
+            "WHERE it.id_orcamento = ? " +
+            "ORDER BY p.nome";
 
     private final String SELECT_BY_ID = "SELECT " +
             "it.id, " +
@@ -51,14 +93,62 @@ public class DaoPostgresItemOrcamento implements DaoItemOrcamento {
             "o.observacoes, " +
             "o.data_criacao, " +
             "o.custo_estimado, " +
-            "o.valor_total " +
+            "o.valor_total, " +
+            "cli.id cliente_id, " +
+            "cli.nome cliente_nome, " +
+            "cli.conjugue cliente_conjugue, " +
+            "cli.data_casamento cliente_data_casamento, " +
+            "cli.telefone cliente_telefone, " +
+            "cli.email cliente_email, " +
+            "cli.cpf cliente_cpf " +
             "FROM " +
             "itens_orcamentos it " +
             "JOIN itens_fornecedores f ON it.id_item_fornecedor = f.id " +
             "JOIN orcamentos o ON it.id_orcamento = o.id " +
             "JOIN produtos p ON f.id_produto = p.id " +
             "JOIN categorias c ON it.id_categoria = c.id " +
+            "JOIN clientes cli ON cli.id = orcamentos.id_cliente " +
             "WHERE it.id = ?";
+
+    private final String SELECT_TODES = "SELECT " +
+            "it.id, " +
+            "it.id_fornecedor, " +
+            "it.id_categoria, " +
+            "it.id_orcamento, " +
+            "it.data_entrega, " +
+            "it.quantidade, " +
+            "it.status, " +
+            "f.preco, " +
+            "f.id_fornecedor AS fornecedor_id, " +
+            "f.nome AS fornecedor_nome, " +
+            "f.telefone AS fornecedor_telefone, " +
+            "f.email AS fornecedor_email, " +
+            "p.id AS produto_id, " +
+            "p.nome AS produto_nome, " +
+            "p.descricao AS produto_descricao, " +
+            "c.id AS categoria_id, " +
+            "c.nome AS categoria_nome, " +
+            "o.id_categoria, " +
+            "o.status AS orcamento_status, " +
+            "o.observacoes, " +
+            "o.data_criacao, " +
+            "o.custo_estimado, " +
+            "o.valor_total, " +
+            "cli.id cliente_id, " +
+            "cli.nome cliente_nome, " +
+            "cli.conjugue cliente_conjugue, " +
+            "cli.data_casamento cliente_data_casamento, " +
+            "cli.telefone cliente_telefone, " +
+            "cli.email cliente_email, " +
+            "cli.cpf cliente_cpf " +
+            "FROM " +
+            "itens_orcamentos it " +
+            "JOIN itens_fornecedores f ON it.id_item_fornecedor = f.id " +
+            "JOIN orcamentos o ON it.id_orcamento = o.id " +
+            "JOIN produtos p ON f.id_produto = p.id " +
+            "JOIN categorias c ON it.id_categoria = c.id " +
+            "JOIN clientes cli ON cli.id = orcamentos.id_cliente " +
+            "ORDER BY LOWER(it.data_entrega) DESC";
 
 
     private Connection conexao;
@@ -116,7 +206,7 @@ public class DaoPostgresItemOrcamento implements DaoItemOrcamento {
     }
 
     @Override
-    public void excluirPor(int id) {
+    public void excluirPor(Long id) {
         PreparedStatement ps = null;
         try {
             ManagerDb.getInstance().configurarAutoCommitDa(conexao, false);
@@ -138,13 +228,67 @@ public class DaoPostgresItemOrcamento implements DaoItemOrcamento {
     }
 
     @Override
+    public List<ItemOrcamento> listarPor(Long idOrcamento) {
+        List<ItemOrcamento> itens = new ArrayList<>();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            ps = conexao.prepareStatement(SELECT_BY_ID_ORC);
+            ps.setLong(1, idOrcamento);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                itens.add(extrairDo(rs));
+            }
+            return itens;
+        } catch (Exception ex) {
+            throw new RuntimeException(
+                    "Ocorreu um erro ao listar o " + "nome do item. Motivo: " + ex.getMessage());
+        } finally {
+            ManagerDb.getInstance().fechar(ps);
+            ManagerDb.getInstance().fechar(rs);
+        }
+    }
+
+    @Override
     public ItemOrcamento buscarPor(int id) {
-        return null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            ps = conexao.prepareStatement(SELECT_BY_ID);
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return extrairDo(rs);
+            }
+            return null;
+        } catch (Exception e) {
+            throw new RuntimeException("Ocorreu um erro ao buscar o Item do orcamento. "
+                    + "Motivo: " + e.getMessage());
+        }finally {
+            ManagerDb.getInstance().fechar(ps);
+            ManagerDb.getInstance().fechar(rs);
+        }
     }
 
     @Override
     public List<ItemOrcamento> listarTodos() {
-        return List.of();
+        List<ItemOrcamento> itensOrcamentos = new ArrayList<>();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            ps = conexao.prepareStatement(SELECT_TODES);
+            rs = ps.executeQuery();
+            while(rs.next()) {
+                itensOrcamentos.add(extrairDo(rs));
+            }
+        } catch (Exception ex) {
+            throw new RuntimeException("Ocorreu um erro na listagem"
+                    + " dos itens dos orcamentos. Motivo: " + ex.getMessage());
+        } finally {
+            ManagerDb.getInstance().fechar(ps);
+            ManagerDb.getInstance().fechar(rs);
+        }
+        return itensOrcamentos;
     }
 
     private ItemOrcamento extrairDo(ResultSet rs) {
