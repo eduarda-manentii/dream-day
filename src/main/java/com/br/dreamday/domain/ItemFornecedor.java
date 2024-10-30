@@ -15,14 +15,8 @@ public class ItemFornecedor {
     public ItemFornecedor() {
     }
 
-    public ItemFornecedor(Long idFornecedor, Long idProduto, BigDecimal preco, Categoria categoria) {
+    public ItemFornecedor(Long idFornecedor, Long idProduto, BigDecimal preco, Categoria categoria, Fornecedor fornecedor, Produto produto) {
         this.id = new ItemFornecedorKey(idFornecedor, idProduto);
-        this.preco = preco;
-        this.categoria = categoria;
-    }
-
-    public ItemFornecedor(ItemFornecedorKey id, BigDecimal preco, Categoria categoria, Fornecedor fornecedor, Produto produto) {
-        this.id = id;
         this.preco = preco;
         this.categoria = categoria;
         this.fornecedor = fornecedor;
@@ -67,5 +61,22 @@ public class ItemFornecedor {
 
     public void setProduto(Produto produto) {
         this.produto = produto;
+    }
+
+    public String getCodigo() {
+        return
+                (id.getIdFornecedor() + "" + id.getIdProduto());
+    }
+
+    public String getDescricaoProduto() {
+        return produto.getNome();
+    }
+
+    public String getNomeCategoria() {
+        return categoria.getNome();
+    }
+
+    public String getDescricaoFornecedor() {
+        return fornecedor.getNome();
     }
 }

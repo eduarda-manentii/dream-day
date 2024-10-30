@@ -40,7 +40,7 @@ public class ItemFornecedorService {
             throw new IllegalArgumentException("O item deve ter um produto e um fornecedor vinculado.");
         }
 
-        boolean isPrecoInvalido = itemFornecedor.getPreco() != null
+        boolean isPrecoInvalido = itemFornecedor.getPreco() == null
                 || itemFornecedor.getPreco().signum() <= 0;
 
         if (isPrecoInvalido) {
@@ -65,15 +65,20 @@ public class ItemFornecedorService {
         this.daoItemFornecedor.excluirPor(itemFornecedorKey.getIdFornecedor(), itemFornecedorKey.getIdProduto());
     }
 
-    public List<ItemFornecedor> listarPor(String nomeProduto, String nomeFornecedor, BigDecimal valorInicial, BigDecimal valorFinal) {
-        boolean isFiltroObrigatorioInvalido = nomeProduto.isBlank() && nomeProduto.length() >= 3;
+    public List<ItemFornecedor> listarPor(String nomeProduto, String nomeFornecedor, Double valorInicial, Double valorFinal) {
+        boolean isFiltroObrigatorioInvalido = nomeProduto.isBlank() && nomeProduto.length() < 3;
 
         if (isFiltroObrigatorioInvalido) {
-            throw new IllegalArgumentException("O filtro (nome) é obrigatório e deve ter mais que 2 caracteres!");
+            throw new IllegalArgumentException("O filtro (descrição) é obrigatório e deve ter mais que 2 caracteres!");
         }
 
-        String filtro = nomeProduto + "%";
-        return daoItemFornecedor.listarPor(filtro, nomeFornecedor, valorInicial, valorFinal);
+        String filtroProduto = nomeProduto + "%";
+        String filtroFornecedor = "";
+
+        if (!nomeFornecedor.isBlank()) {
+            filtroFornecedor = nomeFornecedor + "%";
+        }
+        return daoItemFornecedor.listarPor(filtroProduto, filtroFornecedor, valorInicial, valorFinal);
     }
 
     public List<ItemFornecedor> listarPor(Long idFornecedor) {
