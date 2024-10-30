@@ -65,7 +65,6 @@ public class ConsultaOrcamentoWindow {
 
         acoesColumn.setCellFactory(column -> new TableCell<>() {
             final Button button = new Button("Detalhes");
-
             {
                 button.setOnAction(event -> {
                     Orcamento orcamento = getTableView().getItems().get(getIndex());
@@ -73,11 +72,12 @@ public class ConsultaOrcamentoWindow {
                         onButtonDetalhesClicked(orcamento);
                     }
                     catch (IOException e) {
+
                         exibirAlerta(
                                 Alert.AlertType.ERROR,
                                 "Erro ao abrir a tela de detalhes",
                                 null,
-                                "Ocorreu um erro carregar as informações da tela de detalhes"
+                                e.getMessage()
                         );
 
                     }
@@ -99,7 +99,7 @@ public class ConsultaOrcamentoWindow {
     }
 
     private void onButtonDetalhesClicked(Orcamento orcamentoSelecionado) throws IOException {
-        FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(MainViewApplication.class.getResource("detalhe-orcamento-window.fxml")));
+        FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(MainViewApplication.class.getResource("/com/br/dreamday/detalhe-orcamento-window.fxml")));
         Parent root = loader.load();
         DetalheOrcamentoWindow detalheOrcamentoWindow = loader.getController();
         detalheOrcamentoWindow.setAttributes(
@@ -113,7 +113,6 @@ public class ConsultaOrcamentoWindow {
                         orcamentoSelecionado.getObservaces()
                 )
         );
-
         Stage popupStage = new Stage();
         popupStage.setTitle("Detalhe Fornecedor");
         Scene scene = new Scene(root);

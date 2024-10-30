@@ -10,6 +10,7 @@ import com.br.dreamday.service.ItemOrcamentoService;
 import com.br.dreamday.service.OrcamentoService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -74,7 +75,8 @@ public class DetalheOrcamentoWindow {
     public void setAttributes(Orcamento orcamentoSelecionado) {
         this.orcamento = orcamentoSelecionado;
         populaCampos(orcamentoSelecionado);
-        itemOrcamentoList = FXCollections.observableArrayList(service.listarPor(orcamento.getId()));
+        itemOrcamentoList = FXCollections.observableArrayList(service.listarPor(orcamento.getId()));;
+
         codigoColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         precoColumn.setCellValueFactory(new PropertyValueFactory<>("preco"));
         fornecedorColumn.setCellValueFactory(new PropertyValueFactory<>("fornecedor.nome"));
@@ -118,4 +120,15 @@ public class DetalheOrcamentoWindow {
     }
 
 
+    @FXML
+    public void onButtonEditarClicked(ActionEvent actionEvent) {
+    }
+
+    @FXML
+    public void onButtonVincularItemClicked(ActionEvent actionEvent) {
+    }
+
+    @FXML
+    public void onButtonExcluirClicked(ActionEvent actionEvent) {
+    }
 }

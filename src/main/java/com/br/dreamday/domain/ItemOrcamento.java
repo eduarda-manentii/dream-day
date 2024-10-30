@@ -73,6 +73,13 @@ public class ItemOrcamento {
         return status;
     }
 
+    public Fornecedor getFornecedor() {
+        return itemFornecedor.getFornecedor();
+    }
+    public Produto getProduto() {
+        return itemFornecedor.getProduto();
+    }
+
     public void setStatus(ItemOrcamentoStatus status) {
         this.status = status;
     }
