@@ -8,6 +8,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -85,18 +86,27 @@ public class ConsultaCategoriaWindow {
     @FXML
     void filtrar(ActionEvent event) {
 
-        List<Categoria> categorias;
+        try {
+            List<Categoria> categorias;
 
-        if (!txtNomeFiltro.getText().isBlank()) {
-            categorias = categoriaService.listarPor(txtNomeFiltro.getText());
-        } else {
-            categorias = categoriaService.listarTodas();
+            if (!txtNomeFiltro.getText().isBlank()) {
+                categorias = categoriaService.listarPor(txtNomeFiltro.getText());
+            } else {
+                categorias = categoriaService.listarTodas();
+            }
+
+            categoriaList.clear();
+            categoriaList.addAll(categorias);
+            tableCategoria.setItems(categoriaList);
+            tableCategoria.refresh();
+        } catch (Exception ex) {
+            exibirAlerta(
+                    Alert.AlertType.ERROR,
+                    "Seleção de Categoria",
+                    null,
+                    "Ocorreu um erro na listagem das categorias: " + ex.getMessage()
+            );
         }
-
-        categoriaList.clear();
-        categoriaList.addAll(categorias);
-        tableCategoria.setItems(categoriaList);
-        tableCategoria.refresh();
     }
 
     @FXML
@@ -108,7 +118,7 @@ public class ConsultaCategoriaWindow {
                     Alert.AlertType.ERROR,
                     "Seleção de Categoria",
                     null,
-                    "É necessário selecionar uma categoria para edição!. "
+                    "É necessário selecionar uma categoria para edição!"
             );
         } else {
 
@@ -124,7 +134,11 @@ public class ConsultaCategoriaWindow {
             popupStage.centerOnScreen();
             popupStage.setResizable(false);
             popupStage.showAndWait();
-            recarregarTabela();
+
+            Categoria categoria = cadastroCategoriaWindow.getCategoria();
+            int index = categoriaList.indexOf(categoriaSelecionada);
+            categoriaList.set(index, categoria);
+
             tableCategoria.refresh();
         }
     }
@@ -143,9 +157,18 @@ public class ConsultaCategoriaWindow {
         } else {
 
             confirmationMessage(() -> {
-                categoriaService.excluirPor(categoriaSelecionada.getId());
-                categoriaList.remove(categoriaSelecionada);
-                tableCategoria.refresh();
+                try {
+                    categoriaService.excluirPor(categoriaSelecionada.getId());
+                    categoriaList.remove(categoriaSelecionada);
+                    tableCategoria.refresh();
+                } catch (Exception ex) {
+                    exibirAlerta(
+                            Alert.AlertType.ERROR,
+                            "Erro de Exclusão",
+                            null,
+                            "Ocorreu um erro ao excluir: " + ex.getMessage()
+                    );
+                }
             });
         }
     }

@@ -90,4 +90,8 @@ public class CadastroCategoriaWindow {
         txtNome.setText(categoriaSelecionada.getNome());
         isEdicaoCategoria = true;
     }
+
+    public Categoria getCategoria() {
+        return this.categoria;
+    }
 }

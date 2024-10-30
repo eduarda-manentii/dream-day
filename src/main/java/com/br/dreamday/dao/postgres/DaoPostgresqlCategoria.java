@@ -18,8 +18,11 @@ public class DaoPostgresqlCategoria implements DaoCategoria {
 
     private final String DELETE = "DELETE FROM categorias WHERE id = ?";
 
-    private final String SELECT_BY_NOME = "SELECT cat.id, cat.nome FROM categorias cat "
-            + " WHERE Upper(cat.nome) LIKE Upper(?) ORDER BY cat.nome";
+    private final String SELECT_BY_NOME = "SELECT "
+            + "cat.id, "
+            + "cat.nome "
+            + "FROM categorias cat "
+            + "WHERE Upper(cat.nome) LIKE Upper(?) ORDER BY cat.nome ";
 
     private final String SELECT_TODOS = "SELECT cat.id, cat.nome "
             + "FROM categorias cat "
@@ -99,6 +102,29 @@ public class DaoPostgresqlCategoria implements DaoCategoria {
             while(rs.next()) {
                 categorias.add(extrairDo(rs));
             }
+            return categorias;
+        } catch (Exception ex) {
+            throw new RuntimeException("Ocorreu um erro ao "
+                    + "listar as categorias. Motivo: " + ex.getMessage());
+        } finally {
+            ManagerDb.getInstance().fechar(ps);
+            ManagerDb.getInstance().fechar(rs);
+        }
+    }
+
+    public List<Categoria> listarPor(String nome, Integer limite) {
+        List<Categoria> categorias = new ArrayList<Categoria>();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            ps = conexao.prepareStatement(SELECT_BY_NOME + "LIMIT ? ");
+            ps.setString(1, nome);
+            ps.setInt(2, limite);
+            rs = ps.executeQuery();
+            while(rs.next()) {
+                categorias.add(extrairDo(rs));
+            }
+
             return categorias;
         } catch (Exception ex) {
             throw new RuntimeException("Ocorreu um erro ao "
