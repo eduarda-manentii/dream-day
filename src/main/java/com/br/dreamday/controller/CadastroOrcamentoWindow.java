@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -42,6 +43,7 @@ public class CadastroOrcamentoWindow {
     private OrcamentoService service;
     private ClienteService clienteService;
     private Long orcamentoId;
+    private Orcamento orcamentoSelecionado;
 
     public CadastroOrcamentoWindow() {
         this.orcamentoId = Long.valueOf(0);
@@ -78,9 +80,20 @@ public class CadastroOrcamentoWindow {
             if(!camposPreenchidos()) {
                 showMessage("Preencha os campos obrigatórios!");
             } else {
-                Orcamento orcamento = new Orcamento(cliente, status, dataDeCriacao, custoEstimado, BigDecimal.ZERO, observacoes);
-                orcamentoId = service.salvar(orcamento);
-                showMessage("Orçamento salvo com sucesso!");
+                if (orcamentoSelecionado == null) {
+                    Orcamento orcamento = new Orcamento(cliente, status, dataDeCriacao, custoEstimado, BigDecimal.ZERO, observacoes);
+                    orcamentoId = service.salvar(orcamento);
+                    showMessage("Orçamento salvo com sucesso!");
+                } else {
+                    orcamentoSelecionado.setCliente(cliente);
+                    orcamentoSelecionado.setCustoEstimado(custoEstimado);
+                    orcamentoSelecionado.setDataCriacao(dataDeCriacao);
+                    orcamentoSelecionado.setStatus(status);
+                    orcamentoSelecionado.setObservaces(observacoes);
+                    orcamentoId = service.salvar(orcamentoSelecionado);
+                    orcamentoSelecionado = null;
+                    showMessage("Orçamento alterado com sucesso!");
+                }
             }
         } catch (Exception e) {
             showMessage(e.getMessage());
@@ -122,6 +135,14 @@ public class CadastroOrcamentoWindow {
             return;
         }
         abrirTelaVincularItem();
+    }
+
+    public void setAttributes(Orcamento orcamentoSelecionado) {
+        this.orcamentoSelecionado = orcamentoSelecionado;
+        cbCliente.setValue(orcamentoSelecionado.getCliente());
+        cbStatus.setValue(orcamentoSelecionado.getStatus());
+        txtCustoEstimado.setText(orcamentoSelecionado.getCustoEstimado().toString());
+        txtAreaObservacoes.setText(orcamentoSelecionado.getObservaces());
     }
 
     private boolean camposPreenchidos() {

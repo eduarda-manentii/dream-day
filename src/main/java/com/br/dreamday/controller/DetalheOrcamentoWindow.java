@@ -1,10 +1,7 @@
 package com.br.dreamday.controller;
 
 import com.br.dreamday.MainViewApplication;
-import com.br.dreamday.domain.Fornecedor;
-import com.br.dreamday.domain.ItemFornecedor;
-import com.br.dreamday.domain.ItemOrcamento;
-import com.br.dreamday.domain.Orcamento;
+import com.br.dreamday.domain.*;
 import com.br.dreamday.service.FornecedorService;
 import com.br.dreamday.service.ItemFornecedorService;
 import com.br.dreamday.service.ItemOrcamentoService;
@@ -134,7 +131,17 @@ public class DetalheOrcamentoWindow {
     }
 
     @FXML
-    public void onButtonEditarClicked(ActionEvent actionEvent) {
+    public void onButtonEditarClicked(ActionEvent actionEvent) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/br/dreamday/cadastro-orcamento-window.fxml"));
+        Parent root = loader.load();
+        CadastroOrcamentoWindow orcamentoController = loader.getController();
+        orcamentoController.setAttributes(orcamentoService.buscarPor(orcamentoId));
+        Scene scene = new Scene(root);
+        Stage popup = new Stage();
+        popup.setScene(scene);
+        popup.initModality(Modality.APPLICATION_MODAL);
+        popup.showAndWait();
+        recarregarTabela();
     }
 
     @FXML
