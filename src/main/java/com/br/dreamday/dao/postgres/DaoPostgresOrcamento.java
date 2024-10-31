@@ -265,7 +265,7 @@ public class DaoPostgresOrcamento implements DaoOrcamento {
     }
 
     @Override
-    public List<Orcamento> listarPor(ItemOrcamentoStatus status) {
+    public List<Orcamento> listarPor(OrcamentoStatus status) {
         PreparedStatement ps = null;
         ResultSet rs = null;
         List<Orcamento> orcamentos = new ArrayList<Orcamento>();

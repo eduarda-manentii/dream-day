@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -45,6 +46,9 @@ public class ConsultaOrcamentoWindow {
     private TableColumn<Orcamento, String> acoesColumn;
 
     @FXML
+    private TableColumn<Orcamento, String> statusColumn;
+
+    @FXML
     private TextField txtNomeDoCliente;
 
     @FXML
@@ -65,6 +69,7 @@ public class ConsultaOrcamentoWindow {
         clienteColumn.setCellValueFactory(new PropertyValueFactory<>("cliente"));
         custoEstimadoColumn.setCellValueFactory(new PropertyValueFactory<>("custoEstimado"));
         valorTotalColumn.setCellValueFactory(new PropertyValueFactory<>("valorTotal"));
+        statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
 
         acoesColumn.setCellFactory(column -> new TableCell<>() {
             final Button button = new Button("Detalhes");
@@ -99,6 +104,14 @@ public class ConsultaOrcamentoWindow {
         });
 
         tblOrcamento.setItems(orcamentoList);
+        initializeDropDown();
+    }
+
+    private void initializeDropDown() {
+        List<OrcamentoStatus> status = Arrays.asList(OrcamentoStatus.values());
+        ObservableList<OrcamentoStatus> obListStatus = FXCollections.observableArrayList(status);
+        obListStatus.addFirst(null);
+        cbStatus.setItems(obListStatus);
     }
 
     private void onButtonDetalhesClicked(Orcamento orcamentoSelecionado) throws IOException {
@@ -145,6 +158,8 @@ public class ConsultaOrcamentoWindow {
             List<Orcamento> orcamentos;
             if (!txtNomeDoCliente.getText().isBlank() && !(cbStatus.getValue() == null)) {
                orcamentos = service.listarPor(txtNomeDoCliente.getText(), cbStatus.getValue());
+            } else if(!(cbStatus.getValue() == null)) {
+                orcamentos = service.listarPor(cbStatus.getValue());
             } else if (!txtNomeDoCliente.getText().isBlank()) {
                 orcamentos = service.listarPor(txtNomeDoCliente.getText());
             } else {

@@ -83,7 +83,7 @@ public class OrcamentoService {
         return dao.listarPor(nomeDoCliente, status);
     }
 
-    public List<Orcamento> listarPor(ItemOrcamentoStatus status) {
+    public List<Orcamento> listarPor(OrcamentoStatus status) {
         return dao.listarPor(status);
     }
 

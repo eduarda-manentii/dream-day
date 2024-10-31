@@ -21,7 +21,7 @@ public interface DaoOrcamento {
 
     public List<Orcamento> listarPor(String nomeDoCliente, OrcamentoStatus status);
 
-    public List<Orcamento> listarPor(ItemOrcamentoStatus status);
+    public List<Orcamento> listarPor(OrcamentoStatus status);
 
     public List<Orcamento> listarPor(String nomeDoCliente);
 
