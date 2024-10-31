@@ -1,5 +1,6 @@
 package com.br.dreamday.controller;
 
+import com.br.dreamday.MainViewApplication;
 import com.br.dreamday.domain.Fornecedor;
 import com.br.dreamday.domain.ItemFornecedor;
 import com.br.dreamday.domain.ItemOrcamento;
@@ -12,11 +13,17 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class DetalheOrcamentoWindow {
 
@@ -69,14 +76,17 @@ public class DetalheOrcamentoWindow {
     private final ItemOrcamentoService service;
     private final OrcamentoService orcamentoService;
     private Orcamento orcamento;
+    private Long orcamentoId;
 
     public DetalheOrcamentoWindow() {
+        this.orcamentoId = Long.valueOf(0);
         this.orcamentoService = new OrcamentoService();
         this.service = new ItemOrcamentoService();
     }
 
     public void setAttributes(Orcamento orcamentoSelecionado) {
         this.orcamento = orcamentoSelecionado;
+        orcamentoId = orcamentoSelecionado.getId();
         populaCampos(orcamentoSelecionado);
         itemOrcamentoList = FXCollections.observableArrayList(service.listarPor(orcamento.getId()));;
 
@@ -123,16 +133,53 @@ public class DetalheOrcamentoWindow {
         lblObservacoesPreencher.setText(orcamentoSelecionado.getObservaces());
     }
 
-
     @FXML
     public void onButtonEditarClicked(ActionEvent actionEvent) {
     }
 
     @FXML
-    public void onButtonVincularItemClicked(ActionEvent actionEvent) {
+    public void onButtonVincularItemClicked(ActionEvent actionEvent) throws IOException {
+        if (orcamentoId == 0) {
+            showMessage("Salve o orçamento antes de vincular um item.");
+            return;
+        }
+        abrirTelaVincularItem();
     }
 
     @FXML
     public void onButtonExcluirClicked(ActionEvent actionEvent) {
     }
+
+    private void recarregarTabela() {
+        itemOrcamentoList.clear();
+        itemOrcamentoList.addAll(service.listarPor(orcamentoId));
+    }
+
+    void abrirTelaVincularItem() throws IOException {
+        FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(MainViewApplication.class.getResource("vincular-item-window.fxml")));
+        Parent parent = loader.load();
+        VincularItemWindow controller = loader.getController();
+        controller.setOrcamentoId(orcamentoId);
+        Stage popupStage = new Stage();
+        popupStage.setTitle("Vincular Item");
+        Scene scene = new Scene(parent);
+        popupStage.setScene(scene);
+        popupStage.initModality(Modality.APPLICATION_MODAL);
+        popupStage.centerOnScreen();
+        popupStage.setResizable(false);
+        popupStage.showAndWait();
+        recarregarTabela();
+    }
+
+    private void showMessage(String mensagem) {
+        ButtonType loginButtonType = new ButtonType("Ok!", ButtonBar.ButtonData.OK_DONE);
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle("Aviso");
+        dialog.setContentText(mensagem);
+        dialog.getDialogPane().getButtonTypes().add(loginButtonType);
+        boolean desativado = false;
+        dialog.getDialogPane().lookupButton(loginButtonType).setDisable(desativado);
+        dialog.showAndWait();
+    }
+
 }

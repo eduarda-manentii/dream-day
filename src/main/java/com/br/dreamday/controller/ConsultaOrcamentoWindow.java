@@ -114,6 +114,7 @@ public class ConsultaOrcamentoWindow {
         cbStatus.setItems(obListStatus);
     }
 
+    @FXML
     private void onButtonDetalhesClicked(Orcamento orcamentoSelecionado) throws IOException {
         FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(MainViewApplication.class.getResource("/com/br/dreamday/detalhe-orcamento-window.fxml")));
         Parent root = loader.load();
