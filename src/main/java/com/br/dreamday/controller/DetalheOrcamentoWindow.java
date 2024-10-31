@@ -60,6 +60,9 @@ public class DetalheOrcamentoWindow {
     private TableColumn<ItemOrcamento, String> quantidadeColumn;
 
     @FXML
+    private TableColumn<ItemOrcamento, String> valorTotalColumn;
+
+    @FXML
     private TableColumn<ItemOrcamento, String> acoesColumn;
 
     private ObservableList<ItemOrcamento> itemOrcamentoList;
@@ -78,10 +81,11 @@ public class DetalheOrcamentoWindow {
         itemOrcamentoList = FXCollections.observableArrayList(service.listarPor(orcamento.getId()));;
 
         codigoColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-        precoColumn.setCellValueFactory(new PropertyValueFactory<>("preco"));
-        fornecedorColumn.setCellValueFactory(new PropertyValueFactory<>("fornecedor.nome"));
-        produtoColumn.setCellValueFactory(new PropertyValueFactory<>("produto.nome"));
+        precoColumn.setCellValueFactory(new PropertyValueFactory<>("precoProduto"));
+        fornecedorColumn.setCellValueFactory(new PropertyValueFactory<>("nomeFornecedor"));
+        produtoColumn.setCellValueFactory(new PropertyValueFactory<>("nomeProduto"));
         quantidadeColumn.setCellValueFactory(new PropertyValueFactory<>("quantidade"));
+        valorTotalColumn.setCellValueFactory(new PropertyValueFactory<>("totalProduto"));
         acoesColumn.setCellFactory(column -> new TableCell<>() {
             final Button editarButton = new Button("Detalhes");
             final Button excluirButton = new Button("Excluir");
