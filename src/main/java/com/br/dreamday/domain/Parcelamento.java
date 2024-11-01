@@ -20,6 +20,8 @@ public class Parcelamento {
 
     private String observacao;
 
+    private Integer qtdeParcelas;
+
     public Parcelamento() {
     }
 
@@ -29,7 +31,8 @@ public class Parcelamento {
                         LocalDateTime dataVencimento,
                         LocalDateTime dataPagamento,
                         ParcelamentoStatus status,
-                        String observacao) {
+                        String observacao,
+                        Integer qtdeParcelas) {
         this.id = id;
         this.orcamento = orcamento;
         this.valor = valor;
@@ -37,6 +40,7 @@ public class Parcelamento {
         this.dataPagamento = dataPagamento;
         this.status = status;
         this.observacao = observacao;
+        this.qtdeParcelas = qtdeParcelas;
     }
 
     public Long getId() {
@@ -95,6 +99,14 @@ public class Parcelamento {
         this.observacao = observacao;
     }
 
+    public Integer getQtdeParcelas() {
+        return qtdeParcelas;
+    }
+
+    public void setQtdeParcelas(Integer qtdeParcelas) {
+        this.qtdeParcelas = qtdeParcelas;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -108,4 +120,17 @@ public class Parcelamento {
         return Objects.hashCode(id);
     }
 
+    @Override
+    public String toString() {
+        return "Parcelamento{" +
+                "id=" + id +
+                ", orcamento=" + orcamento +
+                ", valor=" + valor +
+                ", dataVencimento=" + dataVencimento +
+                ", dataPagamento=" + dataPagamento +
+                ", status=" + status +
+                ", observacao='" + observacao + '\'' +
+                ", qtdeParcelas=" + qtdeParcelas +
+                '}';
+    }
 }

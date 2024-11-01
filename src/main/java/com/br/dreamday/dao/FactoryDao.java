@@ -36,6 +36,10 @@ public class FactoryDao {
         return new DaoPostgresItemOrcamento();
     }
 
+    public DaoParcela getDaoParcela() {
+        return new DaoPostgresParcela();
+    }
+
     public static FactoryDao getInstance() {
         if (instance == null) {
             instance = new FactoryDao();

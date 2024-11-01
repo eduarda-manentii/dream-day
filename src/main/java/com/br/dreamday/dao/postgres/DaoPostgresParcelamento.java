@@ -13,16 +13,17 @@ public class DaoPostgresParcelamento implements DaoParcelamento {
 
     private Connection conexao;
 
-    private final String INSERT = "INSERT INTO parcelas (" +
+    private final String INSERT = "INSERT INTO parcelamentos (" +
             "id_orcamento, " +
             "valor, " +
             "data_vencimento, " +
             "data_pagamento, " +
             "status, " +
-            "observacao) " +
+            "observacao," +
+            "qtde_parcelas) " +
             "VALUES(?, ?, ?, ?, ?, ?)";
 
-    private final String UPDATE = "UPDATE parcelas " +
+    private final String UPDATE = "UPDATE parcelamentos " +
             "SET " +
             "id_orcamento = ?, " +
             "valor = ?," +
@@ -30,19 +31,21 @@ public class DaoPostgresParcelamento implements DaoParcelamento {
             "data_pagamento = ?, " +
             "status = ?, " +
             "observacao = ? " +
+            "qtde_parcelas = ? " +
             "WHERE id = ?";
 
-    private final String DELETE = "DELETE FROM parcelas WHERE id = ?";
+    private final String DELETE = "DELETE FROM parcelamentos WHERE id = ?";
 
 
     private final String SELECT_BY_ID = "SELECT " +
-            "parcelas.id, " +
-            "parcelas.id_orcamento, " +
-            "parcelas.valor, " +
-            "parcelas.data_vencimento, " +
-            "parcelas.data_pagamento, " +
-            "parcelas.status as parcelas_status, " +
-            "parcelas.observacao, " +
+            "parcelamentos.id, " +
+            "parcelamentos.id_orcamento, " +
+            "parcelamentos.valor, " +
+            "parcelamentos.data_vencimento, " +
+            "parcelamentos.data_pagamento, " +
+            "parcelamentos.status as parcelas_status, " +
+            "parcelamentos.observacao, " +
+            "parcelamentos.qtde_parcelas, " +
             "orcamentos.id, " +
             "orcamentos.id_cliente, " +
             "orcamentos.status as orcamentos_status, " +
@@ -58,11 +61,11 @@ public class DaoPostgresParcelamento implements DaoParcelamento {
             "clientes.email, " +
             "clientes.cpf " +
             "FROM " +
-            "parcelas " +
-            "JOIN orcamentos ON parcelas.id_orcamento = orcamentos.id " +
+            "parcelamentos " +
+            "JOIN orcamentos ON parcelamentos.id_orcamento = orcamentos.id " +
             "JOIN clientes ON orcamentos.id_cliente = clientes.id " +
             "WHERE " +
-            "parcelas.id = ?";
+            "parcelamentos.id = ?";
 
 
     private PreparedStatement ps;
@@ -145,8 +148,9 @@ public class DaoPostgresParcelamento implements DaoParcelamento {
             LocalDateTime dataPagamento = rs.getTimestamp("data_pagamento").toLocalDateTime();
             ParcelamentoStatus status = ParcelamentoStatus.valueOf(rs.getString("parcelas_status"));
             String observacao = rs.getString("observacao");
+            Integer qtdeParcelas = rs.getInt("qtde_parcelas");
             Orcamento orcamento = extrairOrcamento(rs);
-            return new Parcelamento(id, orcamento, valor, dataVencimento, dataPagamento, status, observacao);
+            return new Parcelamento(id, orcamento, valor, dataVencimento, dataPagamento, status, observacao, qtdeParcelas);
         } catch (Exception e) {
             throw new RuntimeException("Ocorreu um erro ao extrair o orçamento. Motivo: " + e.getMessage());
         }
@@ -182,8 +186,9 @@ public class DaoPostgresParcelamento implements DaoParcelamento {
         ps.setTimestamp(4, Timestamp.valueOf(parcelamento.getDataPagamento()));
         ps.setString(5, parcelamento.getStatus().toString());
         ps.setString(6, parcelamento.getObservacao());
+        ps.setInt(7, parcelamento.getQtdeParcelas());
         if (parcelamento.getId() != null) {
-            ps.setLong(7, parcelamento.getId());
+            ps.setLong(8, parcelamento.getId());
         }
     }
 
