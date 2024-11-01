@@ -101,6 +101,7 @@ public class DetalheOrcamentoWindow {
             {
                 buttonBox.setSpacing(10);
                 excluirButton.setOnAction(event -> {
+                    //TODO: perguntar se tem certeza, recarregar valor total
                     ItemOrcamento itemOrcamento = getTableView().getItems().get(getIndex());
                     service.excluirPor(itemOrcamento.getId());
                     itemOrcamentoList.remove(itemOrcamento);
@@ -176,6 +177,19 @@ public class DetalheOrcamentoWindow {
         popupStage.setResizable(false);
         popupStage.showAndWait();
         recarregarTabela();
+    }
+
+    private void confirmationMessage(String mensagem, Runnable acao) {
+        Alert dialog = new Alert(Alert.AlertType.CONFIRMATION);
+        ButtonType btnYes = new ButtonType("Sim");
+        ButtonType btnNo = new ButtonType("Não");
+        dialog.setContentText(mensagem);
+        dialog.getButtonTypes().setAll(btnYes, btnNo);
+        dialog.showAndWait().ifPresent(b -> {
+            if (b == btnYes) {
+                acao.run();
+            }
+        });
     }
 
     private void showMessage(String mensagem) {
