@@ -20,6 +20,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Objects;
 
 public class DetalheOrcamentoWindow {
@@ -74,16 +75,18 @@ public class DetalheOrcamentoWindow {
     private final OrcamentoService orcamentoService;
     private Orcamento orcamento;
     private Long orcamentoId;
+    private ItemFornecedorService itemFornecedorService;
 
     public DetalheOrcamentoWindow() {
         this.orcamentoId = Long.valueOf(0);
         this.orcamentoService = new OrcamentoService();
         this.service = new ItemOrcamentoService();
+        this.itemFornecedorService = new ItemFornecedorService();
     }
 
     public void setAttributes(Orcamento orcamentoSelecionado) {
         this.orcamento = orcamentoSelecionado;
-        orcamentoId = orcamentoSelecionado.getId();
+        this.orcamentoId = orcamentoSelecionado.getId();
         populaCampos(orcamentoSelecionado);
         itemOrcamentoList = FXCollections.observableArrayList(service.listarPor(orcamento.getId()));;
 
@@ -101,11 +104,17 @@ public class DetalheOrcamentoWindow {
             {
                 buttonBox.setSpacing(10);
                 excluirButton.setOnAction(event -> {
-                    //TODO: perguntar se tem certeza, recarregar valor total
-                    ItemOrcamento itemOrcamento = getTableView().getItems().get(getIndex());
-                    service.excluirPor(itemOrcamento.getId());
-                    itemOrcamentoList.remove(itemOrcamento);
-                    tableItensOrcamentos.refresh();
+                    confirmationMessage("Tem certeza que deseja remover o item selecionado?", () -> {
+                        int index = getIndex();
+                        System.out.println("Index: " + index);
+                        ItemOrcamento itemOrcamento = getTableView().getItems().get(index);
+                        System.out.println("Item removido: " + itemOrcamento.getPrecoProduto());
+                        service.excluirPor(itemOrcamento.getId());
+                        itemOrcamentoList.removeIf(item -> item.getId().equals(itemOrcamento.getId()));
+                        tableItensOrcamentos.setItems(itemOrcamentoList);
+                        tableItensOrcamentos.refresh();
+                        recarregarValorTotal(itemOrcamento);
+                    });
                 });
             }
             @Override
@@ -120,6 +129,19 @@ public class DetalheOrcamentoWindow {
         });
         tableItensOrcamentos.setItems(itemOrcamentoList);
     }
+
+    private void recarregarValorTotal(ItemOrcamento itemOrcamento) {
+        BigDecimal precoProduto = new BigDecimal(itemOrcamento.getPrecoProduto());
+        BigDecimal quantidade = BigDecimal.valueOf(itemOrcamento.getQuantidade());
+        BigDecimal subtotal = quantidade.multiply(precoProduto);
+        Orcamento orcamentoAtualizado = orcamentoService.buscarPor(orcamentoId);
+        BigDecimal valorTotalAtual = orcamentoAtualizado.getValorTotal();
+        BigDecimal totalAtualizado = valorTotalAtual.subtract(subtotal);
+        orcamentoService.atualizarValorTotal(orcamentoId,  totalAtualizado);
+        lblValorTotalPreencher.setText(totalAtualizado.toString());
+        recarregarTabela();
+    }
+
 
     private void populaCampos(Orcamento orcamentoSelecionado) {
         lblDetalhesDoOrcamentoPreencher.setText(orcamentoSelecionado.getId().toString());
@@ -168,6 +190,7 @@ public class DetalheOrcamentoWindow {
         Parent parent = loader.load();
         VincularItemWindow controller = loader.getController();
         controller.setOrcamentoId(orcamentoId);
+        controller.setParentController(this);
         Stage popupStage = new Stage();
         popupStage.setTitle("Vincular Item");
         Scene scene = new Scene(parent);
@@ -177,6 +200,10 @@ public class DetalheOrcamentoWindow {
         popupStage.setResizable(false);
         popupStage.showAndWait();
         recarregarTabela();
+    }
+
+    public void atualizarCampoValorTotal(String novoValor) {
+        lblValorTotalPreencher.setText(novoValor);
     }
 
     private void confirmationMessage(String mensagem, Runnable acao) {

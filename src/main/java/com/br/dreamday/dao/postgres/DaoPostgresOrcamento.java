@@ -41,7 +41,7 @@ public class DaoPostgresOrcamento implements DaoOrcamento {
             + " WHERE o.id_cliente = c.id " +
             "   AND o.id = ? ";
 
-    private final String UPDATE_VALOR_TOTAL = "UPDATE orcamentos SET valor_total = valor_total + ? WHERE id = ?";
+    private final String UPDATE_VALOR_TOTAL = "UPDATE orcamentos SET valor_total = ? WHERE id = ?";
 
     private final String SELECT_BY_CLI_NOME = "SELECT " +
             "o.id, " +
@@ -230,10 +230,18 @@ public class DaoPostgresOrcamento implements DaoOrcamento {
     public void atualizarValorTotal(Long idOrcamento, BigDecimal subtotal) {
         PreparedStatement ps = null;
         try {
+            ManagerDb.getInstance().configurarAutoCommitDa(conexao, false);
             ps = conexao.prepareStatement(UPDATE_VALOR_TOTAL);
             ps.setBigDecimal(1, subtotal);
             ps.setLong(2, idOrcamento);
             ps.executeUpdate();
+            boolean isAlteracaoOK = ps.executeUpdate() == 1;
+            if (isAlteracaoOK) {
+                this.conexao.commit();
+            } else {
+                this.conexao.rollback();
+            }
+            ManagerDb.getInstance().configurarAutoCommitDa(conexao, true);
         } catch (Exception ex) {
             throw new RuntimeException("Erro ao atualizar o valor total do orçamento. Motivo: " + ex.getMessage());
         } finally {

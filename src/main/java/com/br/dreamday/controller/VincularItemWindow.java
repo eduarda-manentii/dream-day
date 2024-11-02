@@ -41,11 +41,16 @@ public class VincularItemWindow {
     private OrcamentoService orcamentoService;
     private ItemFornecedorService itemFornecedorService;
     private ItemOrcamentoService service;
+    private DetalheOrcamentoWindow parent;
 
     public VincularItemWindow() {
         this.service = new ItemOrcamentoService();
         this.orcamentoService = new OrcamentoService();
         this.itemFornecedorService = new ItemFornecedorService();
+    }
+
+    public void setParentController(DetalheOrcamentoWindow parent) {
+        this.parent = parent;
     }
 
     public void setOrcamentoId(Long orcamentoId) {
@@ -71,7 +76,11 @@ public class VincularItemWindow {
         ItemOrcamento itemOrcamento = new ItemOrcamento(orcamento, itemFornecedor, dataEntrega, quantidade, status);
         service.salvar(itemOrcamento);
         BigDecimal subtotal = itemFornecedor.getPreco().multiply(new BigDecimal(quantidade));
-        orcamentoService.atualizarValorTotal(orcamento.getId(), subtotal);
+        Orcamento orcamentoAtualizado = orcamentoService.buscarPor(orcamentoId);
+        BigDecimal valorTotal = orcamentoAtualizado.getValorTotal();
+        BigDecimal totalAtualizado = valorTotal.add(subtotal);
+        orcamentoService.atualizarValorTotal(orcamentoId, totalAtualizado);
+        parent.atualizarCampoValorTotal(totalAtualizado.toString());
         showMessage("Item vinculado com sucesso!");
         limparCampos();
     }
