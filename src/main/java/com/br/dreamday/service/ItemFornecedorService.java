@@ -7,10 +7,11 @@ import com.br.dreamday.dao.FactoryDao;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Objects;
 
 public class ItemFornecedorService {
 
-    private DaoItemFornecedor daoItemFornecedor;
+    private final DaoItemFornecedor daoItemFornecedor;
 
     public ItemFornecedorService() {
         this.daoItemFornecedor = FactoryDao.getInstance().getDaoItemFornecedor();
@@ -54,6 +55,15 @@ public class ItemFornecedorService {
         if (isCategoriaInvalida || isFornecedorInvalida || isProdutoInvalida) {
             throw new IllegalArgumentException("A categoria, fornecedor e produto são obrigatórios!");
         }
+
+        boolean existe = daoItemFornecedor.validarItemDuplicado(
+                itemFornecedor.getProduto().getId(),
+                itemFornecedor.getFornecedor().getId()
+        );
+
+        if (existe) {
+            throw new IllegalArgumentException("O item informado já está cadastrado para este fornecedor!");
+        }
     }
 
     public void excluirPor(ItemFornecedorKey itemFornecedorKey) {
@@ -65,20 +75,28 @@ public class ItemFornecedorService {
         this.daoItemFornecedor.excluirPor(itemFornecedorKey.getIdFornecedor(), itemFornecedorKey.getIdProduto());
     }
 
-    public List<ItemFornecedor> listarPor(String nomeProduto, String nomeFornecedor, Double valorInicial, Double valorFinal) {
+    public List<ItemFornecedor> listarPor(String nomeProduto, String nomeFornecedor, BigDecimal valorInicial, BigDecimal valorFinal) {
         boolean isFiltroObrigatorioInvalido = nomeProduto.isBlank() && nomeProduto.length() < 3;
 
         if (isFiltroObrigatorioInvalido) {
             throw new IllegalArgumentException("O filtro (descrição) é obrigatório e deve ter mais que 2 caracteres!");
         }
 
-        String filtroProduto = nomeProduto + "%";
-        String filtroFornecedor = "";
-
-        if (!nomeFornecedor.isBlank()) {
-            filtroFornecedor = nomeFornecedor + "%";
+        if (Objects.isNull(valorInicial)) {
+            valorInicial = BigDecimal.ZERO;
         }
-        return daoItemFornecedor.listarPor(filtroProduto, filtroFornecedor, valorInicial, valorFinal);
+
+        if (Objects.isNull(valorFinal)) {
+            valorFinal = BigDecimal.valueOf(1000);
+        }
+
+        nomeProduto = nomeProduto.concat("%");
+
+        if (nomeFornecedor.isBlank()) {
+            nomeFornecedor = nomeFornecedor.concat("%%");
+        }
+
+        return daoItemFornecedor.listarPor(nomeProduto, nomeFornecedor, valorInicial, valorFinal);
     }
 
     public List<ItemFornecedor> listarPor(Long idFornecedor) {

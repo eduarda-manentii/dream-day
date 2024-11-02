@@ -87,27 +87,20 @@ public class CadastroItemFornecedorWindow implements Initializable {
                         fornecedor,
                         produto
                 );
-
-                exibirAlerta(
-                        Alert.AlertType.INFORMATION,
-                        "Confirmação de Salvamento",
-                        null,
-                        "As alterações foram salvas com sucesso. "
-                );
                 limparCampos();
             } else {
                 itemFornecedor.setPreco(preco);
                 itemFornecedor.setCategoria(categoria);
-
-                exibirAlerta(
-                        Alert.AlertType.INFORMATION,
-                        "Confirmação de Alteração",
-                        null,
-                        "As alterações foram salvas com sucesso. "
-                );
             }
 
             itemFornecedorService.salvar(itemFornecedor);
+
+            exibirAlerta(
+                    Alert.AlertType.INFORMATION,
+                    "Confirmação de Alteração",
+                    null,
+                    "As alterações foram salvas com sucesso. "
+            );
 
             limparCampos();
         } catch (Exception ex) {

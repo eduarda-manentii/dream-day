@@ -64,8 +64,7 @@ public class ItemFornecedor {
     }
 
     public String getCodigo() {
-        return
-                (id.getIdFornecedor() + "" + id.getIdProduto());
+        return (id.getIdFornecedor() + "" + id.getIdProduto());
     }
 
     public String getDescricaoProduto() {

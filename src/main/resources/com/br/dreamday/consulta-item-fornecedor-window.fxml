@@ -8,9 +8,11 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane fx:id="rootPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.br.dreamday.controller.ConsultaItemFornecedorWindow">
+<AnchorPane fx:id="rootPane" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.br.dreamday.controller.ConsultaItemFornecedorWindow">
    <children>
       <Label layoutX="31.0" layoutY="73.0" text="Descrição:" />
       <MenuBar layoutY="-1.0" prefHeight="32.0" prefWidth="692.0">
@@ -42,5 +44,8 @@
       </TableView>
       <Label layoutX="26.0" layoutY="107.0" text="Fornecedor:" />
       <TextField fx:id="txtDescricaoFornecedor" layoutX="99.0" layoutY="103.0" prefHeight="25.0" prefWidth="435.0" />
+      <ImageView fx:id="imgInformation" fitHeight="17.0" fitWidth="17.0" layoutX="273.0" layoutY="143.0" onMouseEntered="#mostrarInformacaoDeFiltragem" pickOnBounds="true" preserveRatio="true">
+            <Image url="@images/img.png" />
+      </ImageView>
    </children>
 </AnchorPane>

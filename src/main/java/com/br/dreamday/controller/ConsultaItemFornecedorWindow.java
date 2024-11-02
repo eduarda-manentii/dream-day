@@ -2,16 +2,28 @@ package com.br.dreamday.controller;
 
 import com.br.dreamday.domain.ItemFornecedor;
 import com.br.dreamday.service.ItemFornecedorService;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseDragEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 
 import java.math.BigDecimal;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 public class ConsultaItemFornecedorWindow {
+
+    @FXML
+    private AnchorPane rootPane;
 
     @FXML
     private MenuItem menuItemCadastroCategoria;
@@ -49,15 +61,18 @@ public class ConsultaItemFornecedorWindow {
     @FXML
     private TextField txtValorInicial;
 
+    @FXML
+    private ImageView imgInformation;
+
     private ObservableList<ItemFornecedor> itemFornecedorList;
-    private ItemFornecedorService itemFornecedorService;
+    private final ItemFornecedorService itemFornecedorService;
 
     public ConsultaItemFornecedorWindow() {
+        itemFornecedorService = new ItemFornecedorService();
     }
 
     @FXML
     public void initialize() {
-
         configuraColunasTabela();
     }
 
@@ -67,10 +82,24 @@ public class ConsultaItemFornecedorWindow {
         try {
             String descricaoFornecedor = txtDescricaoFornecedor.getText();
             String descricaoProduto = txtDescricaoProduto.getText();
-            Double valorInicial = Double.parseDouble(txtValorFinal.getText());
-            Double valorFinal = Double.parseDouble(txtValorFinal.getText());
 
-            itemFornecedorService.listarPor(descricaoProduto, descricaoFornecedor, valorInicial, valorFinal);
+            BigDecimal valorInicial = null;
+            BigDecimal valorFinal = null;
+
+            if (!txtValorInicial.getText().isBlank()) {
+                valorInicial = BigDecimal.valueOf(Double.parseDouble(txtValorInicial.getText()));
+            }
+
+            if (!txtValorFinal.getText().isBlank()) {
+                valorFinal = BigDecimal.valueOf(Double.parseDouble(txtValorFinal.getText()));
+            }
+
+            itemFornecedorList = FXCollections.observableArrayList(
+                    itemFornecedorService.listarPor(descricaoProduto, descricaoFornecedor, valorInicial, valorFinal)
+            );
+
+            tableItemFornecedor.setItems(itemFornecedorList);
+
         } catch (Exception ex) {
             exibirAlerta(
                     Alert.AlertType.ERROR,
@@ -89,6 +118,17 @@ public class ConsultaItemFornecedorWindow {
     @FXML
     void mostrarCadastroProduto(ActionEvent event) {
 
+    }
+
+    @FXML
+    void mostrarInformacaoDeFiltragem(MouseEvent event) {
+        ImageView imageView = (ImageView) event.getSource();
+
+        Tooltip tooltip = new Tooltip("""
+                Valores padrão:\s
+                Valor Inicial: 0\s
+                Valor Final: 1000""");
+        Tooltip.install(imageView, tooltip);
     }
 
     private void configuraColunasTabela() {
