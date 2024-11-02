@@ -138,6 +138,7 @@ public class ConsultaOrcamentoWindow {
         popupStage.centerOnScreen();
         popupStage.setResizable(false);
         popupStage.showAndWait();
+        recarregarTabela();
     }
 
     @FXML
@@ -151,6 +152,7 @@ public class ConsultaOrcamentoWindow {
         popupStage.centerOnScreen();
         popupStage.setResizable(false);
         popupStage.showAndWait();
+        recarregarTabela();
     }
 
     @FXML
@@ -173,6 +175,11 @@ public class ConsultaOrcamentoWindow {
         }  catch (Exception e) {
             showMessage(e.getMessage());
         }
+    }
+
+    private void recarregarTabela() {
+        orcamentoList.clear();
+        orcamentoList.addAll(service.listarTodos());
     }
 
     public void exibirAlerta(Alert.AlertType tipo, String titulo, String cabecalho, String conteudo) {
