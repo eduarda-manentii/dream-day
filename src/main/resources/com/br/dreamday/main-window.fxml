@@ -19,7 +19,7 @@
           </Menu>
           <Menu mnemonicParsing="false" text="Orçamentos">
                <items>
-                  <MenuItem fx:id="mnGerenciamentoDeOrcamento" mnemonicParsing="false" onAction="#mostrarConsultaOrcamento" text="Gerencimaneto de Orçamentos" />
+                  <MenuItem fx:id="mnGerenciamentoDeOrcamento" mnemonicParsing="false" onAction="#mostrarConsultaOrcamento" text="Gerenciamento de Orçamentos" />
                </items></Menu>
           <Menu mnemonicParsing="false" text="Relatorios" />
         </menus>
