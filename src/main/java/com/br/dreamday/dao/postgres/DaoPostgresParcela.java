@@ -141,8 +141,8 @@ public class DaoPostgresParcela implements DaoParcela {
     private Parcelamento extrairParcelamento(ResultSet rs) throws SQLException {
         Long id = rs.getLong("parcelamento_id");
         BigDecimal valor = rs.getBigDecimal("parcelamento_valor");
-        LocalDateTime dataVencimento = rs.getTimestamp("parcelamento_data_vencimento").toLocalDateTime();
-        LocalDateTime dataPagamento = rs.getTimestamp("parcelamento_data_pagamento").toLocalDateTime();
+        LocalDate dataVencimento = rs.getDate("parcelamento_data_vencimento").toLocalDate();
+        LocalDate dataPagamento = rs.getDate("parcelamento_data_pagamento").toLocalDate();
         ParcelamentoStatus status = ParcelamentoStatus.valueOf(rs.getString("parcelamento_status"));
         String observacao = rs.getString("parcelamento_observacao");
         Integer qtdeParcelas = rs.getInt("parcelamento_qtde_parcelas");

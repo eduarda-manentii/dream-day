@@ -1,6 +1,7 @@
 package com.br.dreamday.domain;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -12,9 +13,9 @@ public class Parcelamento {
 
     private BigDecimal valor;
 
-    private LocalDateTime dataVencimento;
+    private LocalDate dataVencimento;
 
-    private LocalDateTime dataPagamento;
+    private LocalDate dataPagamento;
 
     private ParcelamentoStatus status;
 
@@ -28,8 +29,8 @@ public class Parcelamento {
     public Parcelamento(Long id,
                         Orcamento orcamento,
                         BigDecimal valor,
-                        LocalDateTime dataVencimento,
-                        LocalDateTime dataPagamento,
+                        LocalDate dataVencimento,
+                        LocalDate dataPagamento,
                         ParcelamentoStatus status,
                         String observacao,
                         Integer qtdeParcelas) {
@@ -67,19 +68,19 @@ public class Parcelamento {
         this.valor = valor;
     }
 
-    public LocalDateTime getDataVencimento() {
+    public LocalDate getDataVencimento() {
         return dataVencimento;
     }
 
-    public void setDataVencimento(LocalDateTime dataVencimento) {
+    public void setDataVencimento(LocalDate dataVencimento) {
         this.dataVencimento = dataVencimento;
     }
 
-    public LocalDateTime getDataPagamento() {
+    public LocalDate getDataPagamento() {
         return dataPagamento;
     }
 
-    public void setDataPagamento(LocalDateTime dataPagamento) {
+    public void setDataPagamento(LocalDate dataPagamento) {
         this.dataPagamento = dataPagamento;
     }
 

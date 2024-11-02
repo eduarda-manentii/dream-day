@@ -109,4 +109,16 @@ public class Orcamento {
         return id == other.id;
     }
 
+    @Override
+    public String toString() {
+        return "Orcamento{" +
+                "id=" + id +
+                ", cliente=" + cliente +
+                ", status=" + status +
+                ", dataCriacao=" + dataCriacao +
+                ", custoEstimado=" + custoEstimado +
+                ", valorTotal=" + valorTotal +
+                ", observaces='" + observaces + '\'' +
+                '}';
+    }
 }

@@ -4,6 +4,7 @@ import com.br.dreamday.dao.DaoParcelamento;
 import com.br.dreamday.dao.ManagerDb;
 import com.br.dreamday.domain.*;
 
+import javax.xml.transform.Result;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.time.LocalDate;
@@ -21,7 +22,7 @@ public class DaoPostgresParcelamento implements DaoParcelamento {
             "status, " +
             "observacao," +
             "qtde_parcelas) " +
-            "VALUES(?, ?, ?, ?, ?, ?)";
+            "VALUES(?, ?, ?, ?, ?, ?, ?)";
 
     private final String UPDATE = "UPDATE parcelamentos " +
             "SET " +
@@ -77,10 +78,12 @@ public class DaoPostgresParcelamento implements DaoParcelamento {
     @Override
     public void inserir(Parcelamento parcelamento) {
         ps = null;
+        ResultSet rs = null;
         try {
             ps = conexao.prepareStatement(INSERT);
             preparar(parcelamento);
             ps.execute();
+
         } catch (Exception e) {
             throw new RuntimeException("Ocorreu um erro ao inserir o parcelamento: " + e.getMessage());
         } finally {
@@ -144,8 +147,8 @@ public class DaoPostgresParcelamento implements DaoParcelamento {
         try {
             Long id = rs.getLong("id");
             BigDecimal valor = rs.getBigDecimal("valor");
-            LocalDateTime dataVencimento = rs.getTimestamp("data_vencimento").toLocalDateTime();
-            LocalDateTime dataPagamento = rs.getTimestamp("data_pagamento").toLocalDateTime();
+            LocalDate dataVencimento = rs.getDate("data_vencimento").toLocalDate();
+            LocalDate dataPagamento = rs.getDate("data_pagamento").toLocalDate();
             ParcelamentoStatus status = ParcelamentoStatus.valueOf(rs.getString("parcelas_status"));
             String observacao = rs.getString("observacao");
             Integer qtdeParcelas = rs.getInt("qtde_parcelas");
@@ -182,8 +185,13 @@ public class DaoPostgresParcelamento implements DaoParcelamento {
     private void preparar(Parcelamento parcelamento) throws SQLException {
         ps.setLong(1, parcelamento.getOrcamento().getId());
         ps.setBigDecimal(2, parcelamento.getValor());
-        ps.setTimestamp(3, Timestamp.valueOf(parcelamento.getDataVencimento()));
-        ps.setTimestamp(4, Timestamp.valueOf(parcelamento.getDataPagamento()));
+        ps.setDate(3, Date.valueOf(parcelamento.getDataVencimento()));
+        if (parcelamento.getDataPagamento() != null) {
+            ps.setDate(4, Date.valueOf(parcelamento.getDataPagamento()));
+        } else {
+            ps.setNull(4, Types.DATE);
+        }
+
         ps.setString(5, parcelamento.getStatus().toString());
         ps.setString(6, parcelamento.getObservacao());
         ps.setInt(7, parcelamento.getQtdeParcelas());

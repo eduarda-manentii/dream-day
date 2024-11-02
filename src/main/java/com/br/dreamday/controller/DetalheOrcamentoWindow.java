@@ -1,5 +1,6 @@
 package com.br.dreamday.controller;
 
+import com.br.dreamday.MainViewApplication;
 import com.br.dreamday.domain.Fornecedor;
 import com.br.dreamday.domain.ItemFornecedor;
 import com.br.dreamday.domain.ItemOrcamento;
@@ -12,11 +13,17 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class DetalheOrcamentoWindow {
 
@@ -130,5 +137,23 @@ public class DetalheOrcamentoWindow {
 
     @FXML
     public void onButtonExcluirClicked(ActionEvent actionEvent) {
+    }
+
+    @FXML
+    void onButtonAdicionarParcelasClicked(ActionEvent event) throws IOException {
+        FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(MainViewApplication.class.getResource("/com/br/dreamday/cadastro-parcelamento-window.fxml")));
+        Parent root = loader.load();
+        CadastroParcelamentoController cadastroParcelamentoController = loader.getController();
+        cadastroParcelamentoController.setAttributes(
+                orcamento
+        );
+        Stage popupStage = new Stage();
+        popupStage.setTitle("Detalhe Fornecedor");
+        Scene scene = new Scene(root);
+        popupStage.setScene(scene);
+        popupStage.initModality(Modality.APPLICATION_MODAL);
+        popupStage.centerOnScreen();
+        popupStage.setResizable(false);
+        popupStage.showAndWait();
     }
 }
