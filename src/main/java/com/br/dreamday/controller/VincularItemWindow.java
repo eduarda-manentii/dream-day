@@ -42,6 +42,7 @@ public class VincularItemWindow {
     private ItemFornecedorService itemFornecedorService;
     private ItemOrcamentoService service;
     private DetalheOrcamentoWindow parent;
+    private ItemOrcamento itemOrcamentoSelecionado;
 
     public VincularItemWindow() {
         this.service = new ItemOrcamentoService();
@@ -83,19 +84,28 @@ public class VincularItemWindow {
                 return;
             }
 
-            ItemOrcamento itemOrcamento = new ItemOrcamento(orcamento, itemFornecedor, dataEntrega, quantidade, status);
-            service.salvar(itemOrcamento);
+            if (itemOrcamentoSelecionado != null) {
+                itemOrcamentoSelecionado.setItemFornecedor(itemFornecedor);
+                itemOrcamentoSelecionado.setDataDeEntrega(dataEntrega);
+                itemOrcamentoSelecionado.setStatus(status);
+                itemOrcamentoSelecionado.setQuantidade(quantidade);
+                service.salvar(itemOrcamentoSelecionado);
+                itemOrcamentoSelecionado = null;
+                showMessage("Item de orçamento alterado com sucesso!");
+            } else {
+                ItemOrcamento itemOrcamento = new ItemOrcamento(orcamento, itemFornecedor, dataEntrega, quantidade, status);
+                service.salvar(itemOrcamento);
 
-            BigDecimal subtotal = itemFornecedor.getPreco().multiply(new BigDecimal(quantidade));
-            Orcamento orcamentoAtualizado = orcamentoService.buscarPor(orcamentoId);
-            BigDecimal valorTotal = orcamentoAtualizado.getValorTotal();
-            BigDecimal totalAtualizado = valorTotal.add(subtotal);
-            orcamentoService.atualizarValorTotal(orcamentoId, totalAtualizado);
+                BigDecimal subtotal = itemFornecedor.getPreco().multiply(new BigDecimal(quantidade));
+                Orcamento orcamentoAtualizado = orcamentoService.buscarPor(orcamentoId);
+                BigDecimal valorTotal = orcamentoAtualizado.getValorTotal();
+                BigDecimal totalAtualizado = valorTotal.add(subtotal);
+                orcamentoService.atualizarValorTotal(orcamentoId, totalAtualizado);
 
-            parent.atualizarCampoValorTotal(totalAtualizado.toString());
-            showMessage("Item vinculado com sucesso!");
-            limparCampos();
-
+                parent.atualizarCampoValorTotal(totalAtualizado.toString());
+                showMessage("Item vinculado com sucesso!");
+                limparCampos();
+            }
         } catch (Exception e) {
             showMessage("Erro ao vincular item: " + e.getMessage());
         }
@@ -208,6 +218,15 @@ public class VincularItemWindow {
                 acao.run();
             }
         });
+    }
+
+    public void setAttributes(ItemOrcamento itemOrcamentoSelecionado) {
+        this.itemOrcamentoSelecionado = itemOrcamentoSelecionado;
+        txtQuantidade.setText(itemOrcamentoSelecionado.getQuantidade().toString());
+        cbItem.setValue(itemOrcamentoSelecionado.getItemFornecedor());
+        cbStatus.setValue(itemOrcamentoSelecionado.getStatus());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        txtDadaDeEntrega.setText(itemOrcamentoSelecionado.getDataDeEntrega().format(formatter));
     }
 
 }

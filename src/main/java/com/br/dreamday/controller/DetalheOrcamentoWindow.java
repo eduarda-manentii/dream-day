@@ -85,7 +85,7 @@ public class DetalheOrcamentoWindow {
         this.itemFornecedorService = new ItemFornecedorService();
     }
 
-    public void setAttributes(Orcamento orcamentoSelecionado) {
+    public void setAttributes(Orcamento orcamentoSelecionado)  {
         this.orcamento = orcamentoSelecionado;
         this.orcamentoId = orcamentoSelecionado.getId();
         populaCampos(orcamentoSelecionado);
@@ -98,7 +98,7 @@ public class DetalheOrcamentoWindow {
         quantidadeColumn.setCellValueFactory(new PropertyValueFactory<>("quantidade"));
         valorTotalColumn.setCellValueFactory(new PropertyValueFactory<>("totalProduto"));
         acoesColumn.setCellFactory(column -> new TableCell<>() {
-            final Button editarButton = new Button("Detalhes");
+            final Button editarButton = new Button("Editar");
             final Button excluirButton = new Button("Excluir");
             final HBox buttonBox = new HBox(editarButton, excluirButton);
 
@@ -107,15 +107,37 @@ public class DetalheOrcamentoWindow {
                 excluirButton.setOnAction(event -> {
                     confirmationMessage("Tem certeza que deseja remover o item selecionado?", () -> {
                         int index = getIndex();
-                        System.out.println("Index: " + index);
                         ItemOrcamento itemOrcamento = getTableView().getItems().get(index);
-                        System.out.println("Item removido: " + itemOrcamento.getPrecoProduto());
                         service.excluirPor(itemOrcamento.getId());
                         itemOrcamentoList.removeIf(item -> item.getId().equals(itemOrcamento.getId()));
                         tableItensOrcamentos.setItems(itemOrcamentoList);
                         tableItensOrcamentos.refresh();
                         recarregarValorTotal(itemOrcamento);
                     });
+                });
+
+                editarButton.setOnAction(event -> {
+                    FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/br/dreamday/vincular-item-window.fxml"));
+                    Parent root;
+                    try {
+                        root = loader.load();
+                        VincularItemWindow vincularItemWindow = loader.getController();
+                        int index = getIndex();
+                        ItemOrcamento itemOrcamento = getTableView().getItems().get(index);
+                        vincularItemWindow.setAttributes(itemOrcamento);
+                        Scene scene = new Scene(root);
+                        Stage popup = new Stage();
+                        popup.setScene(scene);
+                        popup.initModality(Modality.APPLICATION_MODAL);
+                        popup.showAndWait();
+                        recarregarTabela();
+                        tableItensOrcamentos.setItems(itemOrcamentoList);
+                        tableItensOrcamentos.refresh();
+                        recarregarValorTotal(itemOrcamento);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+
                 });
             }
             @Override

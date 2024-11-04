@@ -131,7 +131,6 @@ public class ConsultaClienteWindow {
         } else {
             clienteController.setAttributes(clienteSelecionado);
             Scene scene = new Scene(root, 640, 400);
-
             Stage popup = new Stage();
             popup.setScene(scene);
             popup.initModality(Modality.APPLICATION_MODAL);
