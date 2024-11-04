@@ -2,7 +2,7 @@ package com.br.dreamday.service;
 
 import com.br.dreamday.dao.DaoOrcamento;
 import com.br.dreamday.dao.FactoryDao;
-import com.br.dreamday.domain.ItemOrcamentoStatus;
+import com.br.dreamday.domain.ItemOrcamento;
 import com.br.dreamday.domain.Orcamento;
 import com.br.dreamday.domain.OrcamentoStatus;
 
@@ -12,9 +12,11 @@ import java.util.List;
 public class OrcamentoService {
 
     private DaoOrcamento dao;
+    private ItemOrcamentoService service;
 
     public OrcamentoService() {
         this.dao = FactoryDao.getInstance().getDaoOrcamento();
+        this.service = new ItemOrcamentoService();
     }
 
     public Long salvar(Orcamento orcamento) {
@@ -61,6 +63,11 @@ public class OrcamentoService {
         } else {
             throw new IllegalArgumentException("O id para exclusão deve ser maior que zero");
         }
+    }
+
+    public void excluirOrcamentoEItensVinculados(Long orcamentoId) {
+        service.excluirItensPorOrcamentoId(orcamentoId);
+        excluirPor(orcamentoId);
     }
 
     public Orcamento buscarPor(Long id) {

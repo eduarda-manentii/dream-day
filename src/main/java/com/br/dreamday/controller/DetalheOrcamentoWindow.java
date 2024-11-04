@@ -11,6 +11,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -177,7 +178,13 @@ public class DetalheOrcamentoWindow {
     }
 
     @FXML
-    public void onButtonExcluirClicked(ActionEvent actionEvent) {
+    public void onButtonExcluirClicked(ActionEvent event) {
+        confirmationMessage("Tem certeza que deseja excluir este orçamento e todos os seus itens?", () -> {
+            orcamentoService.excluirOrcamentoEItensVinculados(orcamentoId);
+            showMessage("Orçamento e todos os itens foram excluídos com sucesso.");
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.close();
+        });
     }
 
     private void recarregarTabela() {

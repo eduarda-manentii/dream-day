@@ -33,6 +33,12 @@ public class ItemOrcamentoService {
         this.dao.excluirPor(id);
     }
 
+    public void excluirItensPorOrcamentoId(Long orcamentoId) {
+        List<ItemOrcamento> itens = listarPor(orcamentoId);
+        for (ItemOrcamento item : itens) {
+            excluirPor(item.getId());
+        }
+    }
 
     public List<ItemOrcamento> listarPor(Long id) {
         return dao.listarPor(id);
