@@ -71,33 +71,61 @@ public class CadastroOrcamentoWindow {
 
     @FXML
     void onButtonSalvarClicked() {
+        if (!validarCampos()) {
+            return;
+        }
+
         try {
             Cliente cliente = cbCliente.getValue();
             BigDecimal custoEstimado = new BigDecimal(txtCustoEstimado.getText());
             OrcamentoStatus status = cbStatus.getValue();
             String observacoes = txtAreaObservacoes.getText();
             LocalDate dataDeCriacao = LocalDate.now();
-            if(!camposPreenchidos()) {
-                showMessage("Preencha os campos obrigatórios!");
+
+            if (orcamentoSelecionado == null) {
+                Orcamento orcamento = new Orcamento(cliente, status, dataDeCriacao, custoEstimado, BigDecimal.ZERO, observacoes);
+                orcamentoId = service.salvar(orcamento);
+                showMessage("Orçamento salvo com sucesso!");
             } else {
-                if (orcamentoSelecionado == null) {
-                    Orcamento orcamento = new Orcamento(cliente, status, dataDeCriacao, custoEstimado, BigDecimal.ZERO, observacoes);
-                    orcamentoId = service.salvar(orcamento);
-                    showMessage("Orçamento salvo com sucesso!");
-                } else {
-                    orcamentoSelecionado.setCliente(cliente);
-                    orcamentoSelecionado.setCustoEstimado(custoEstimado);
-                    orcamentoSelecionado.setDataCriacao(dataDeCriacao);
-                    orcamentoSelecionado.setStatus(status);
-                    orcamentoSelecionado.setObservaces(observacoes);
-                    orcamentoId = service.salvar(orcamentoSelecionado);
-                    orcamentoSelecionado = null;
-                    showMessage("Orçamento alterado com sucesso!");
-                }
+                orcamentoSelecionado.setCliente(cliente);
+                orcamentoSelecionado.setCustoEstimado(custoEstimado);
+                orcamentoSelecionado.setDataCriacao(dataDeCriacao);
+                orcamentoSelecionado.setStatus(status);
+                orcamentoSelecionado.setObservaces(observacoes);
+                orcamentoId = service.salvar(orcamentoSelecionado);
+                orcamentoSelecionado = null;
+                showMessage("Orçamento alterado com sucesso!");
             }
         } catch (Exception e) {
-            showMessage(e.getMessage());
+            showMessage("Erro ao salvar orçamento: " + e.getMessage());
         }
+    }
+
+    private boolean validarCampos() {
+        if (cbCliente.getValue() == null) {
+            showMessage("Selecione um cliente.");
+            return false;
+        }
+        if (cbStatus.getValue() == null) {
+            showMessage("Selecione o status do orçamento.");
+            return false;
+        }
+        if (txtCustoEstimado.getText().isBlank()) {
+            showMessage("Informe o custo estimado.");
+            return false;
+        }
+        try {
+            BigDecimal custoEstimado = new BigDecimal(txtCustoEstimado.getText());
+            if (custoEstimado.compareTo(BigDecimal.ZERO) <= 0) {
+                showMessage("O custo estimado deve ser um valor positivo.");
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            showMessage("O custo estimado deve ser um número válido.");
+            return false;
+        }
+
+        return true;
     }
 
     void abrirTelaVincularItem() throws IOException {
