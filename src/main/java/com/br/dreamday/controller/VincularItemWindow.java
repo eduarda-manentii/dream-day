@@ -67,22 +67,76 @@ public class VincularItemWindow {
 
     @FXML
     void onButtonConfirmarClicked(ActionEvent event) throws IOException {
-        ItemFornecedor itemFornecedor = cbItem.getValue();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate dataEntrega = LocalDate.parse(txtDadaDeEntrega.getText(), formatter);
-        ItemOrcamentoStatus status = cbStatus.getValue();
-        double quantidade = Double.parseDouble(txtQuantidade.getText());
+        if (!validarCampos()) {
+            return;
+        }
 
-        ItemOrcamento itemOrcamento = new ItemOrcamento(orcamento, itemFornecedor, dataEntrega, quantidade, status);
-        service.salvar(itemOrcamento);
-        BigDecimal subtotal = itemFornecedor.getPreco().multiply(new BigDecimal(quantidade));
-        Orcamento orcamentoAtualizado = orcamentoService.buscarPor(orcamentoId);
-        BigDecimal valorTotal = orcamentoAtualizado.getValorTotal();
-        BigDecimal totalAtualizado = valorTotal.add(subtotal);
-        orcamentoService.atualizarValorTotal(orcamentoId, totalAtualizado);
-        parent.atualizarCampoValorTotal(totalAtualizado.toString());
-        showMessage("Item vinculado com sucesso!");
-        limparCampos();
+        try {
+            ItemFornecedor itemFornecedor = cbItem.getValue();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDate dataEntrega = LocalDate.parse(txtDadaDeEntrega.getText(), formatter);
+            ItemOrcamentoStatus status = cbStatus.getValue();
+            double quantidade = Double.parseDouble(txtQuantidade.getText());
+
+            if (quantidade <= 0) {
+                showMessage("A quantidade deve ser maior que zero.");
+                return;
+            }
+
+            ItemOrcamento itemOrcamento = new ItemOrcamento(orcamento, itemFornecedor, dataEntrega, quantidade, status);
+            service.salvar(itemOrcamento);
+
+            BigDecimal subtotal = itemFornecedor.getPreco().multiply(new BigDecimal(quantidade));
+            Orcamento orcamentoAtualizado = orcamentoService.buscarPor(orcamentoId);
+            BigDecimal valorTotal = orcamentoAtualizado.getValorTotal();
+            BigDecimal totalAtualizado = valorTotal.add(subtotal);
+            orcamentoService.atualizarValorTotal(orcamentoId, totalAtualizado);
+
+            parent.atualizarCampoValorTotal(totalAtualizado.toString());
+            showMessage("Item vinculado com sucesso!");
+            limparCampos();
+
+        } catch (Exception e) {
+            showMessage("Erro ao vincular item: " + e.getMessage());
+        }
+    }
+
+    private boolean validarCampos() {
+        if (cbItem.getValue() == null) {
+            showMessage("Selecione um item do fornecedor.");
+            return false;
+        }
+        if (cbStatus.getValue() == null) {
+            showMessage("Selecione o status do item.");
+            return false;
+        }
+        if (txtDadaDeEntrega.getText().isBlank()) {
+            showMessage("Informe a data de entrega.");
+            return false;
+        }
+        if (txtQuantidade.getText().isBlank()) {
+            showMessage("Informe a quantidade.");
+            return false;
+        }
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDate.parse(txtDadaDeEntrega.getText(), formatter);
+        } catch (Exception e) {
+            showMessage("A data de entrega deve estar no formato dd/MM/yyyy.");
+            return false;
+        }
+        try {
+            double quantidade = Double.parseDouble(txtQuantidade.getText());
+            if (quantidade <= 0) {
+                showMessage("A quantidade deve ser maior que zero.");
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            showMessage("A quantidade deve ser um número válido.");
+            return false;
+        }
+
+        return true;
     }
 
     @FXML
