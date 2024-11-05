@@ -1,28 +1,26 @@
 package com.br.dreamday.dao.postgres;
 
 import com.br.dreamday.dao.DaoParcela;
-import com.br.dreamday.dao.DaoParcelamento;
 import com.br.dreamday.dao.ManagerDb;
 import com.br.dreamday.domain.*;
 
 import java.math.BigDecimal;
 import java.sql.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public class DaoPostgresParcela implements DaoParcela {
 
     private Connection conexao;
 
     private final String INSERT = "INSERT INTO parcelas" +
-            "(valor, observacao, parcelamento_id) " +
+            "(valor, status, id_parcelamento) " +
             "VALUES(?, ?, ?);";
 
     private final String UPDATE = "UPDATE parcelas " +
             "SET " +
             "valor = ?, " +
-            "observacao = ?," +
-            "parcelamento_id = ? " +
+            "status = ?," +
+            "id_parcelamento = ? " +
             "WHERE id = ?";
 
     private final String DELETE = "DELETE FROM parcelas WHERE id = ?";
@@ -30,8 +28,8 @@ public class DaoPostgresParcela implements DaoParcela {
     private final String SELECT_BY_ID =  "SELECT " +
             "p.id AS parcela_id, " +
             "p.valor AS parcela_valor, " +
-            "p.observacao AS parcela_observacao, " +
-            "par.id AS parcelamento_id, " +
+            "p.status AS parcela_status, " +
+            "par.id AS id_parcelamento, " +
             "par.valor AS parcelamento_valor, " +
             "par.data_vencimento AS parcelamento_data_vencimento, " +
             "par.data_pagamento AS parcelamento_data_pagamento, " +
@@ -52,7 +50,7 @@ public class DaoPostgresParcela implements DaoParcela {
             "c.email AS cliente_email, " +
             "c.cpf AS cliente_cpf " +
             "FROM parcelas p " +
-            "JOIN parcelamentos par ON p.parcelamento_id = par.id " +
+            "JOIN parcelamentos par ON p.id_parcelamento = par.id " +
             "JOIN orcamentos o ON par.id_orcamento = o.id " +
             "JOIN clientes c ON c.id = o.id_cliente " +
             "WHERE p.id = ?;";
@@ -133,13 +131,13 @@ public class DaoPostgresParcela implements DaoParcela {
     private Parcela extrairParcela(ResultSet rs) throws SQLException {
         Long id = rs.getLong("parcela_id");
         BigDecimal valor = rs.getBigDecimal("parcela_valor");
-        String observacao = rs.getString("parcela_observacao");
-        return new Parcela(id, valor, observacao, extrairParcelamento(rs));
+        ParcelaStatus parcelaStatus = ParcelaStatus.valueOf(rs.getString("parcela_status"));
+        return new Parcela(id, valor, parcelaStatus, extrairParcelamento(rs));
     }
 
 
     private Parcelamento extrairParcelamento(ResultSet rs) throws SQLException {
-        Long id = rs.getLong("parcelamento_id");
+        Long id = rs.getLong("id_parcelamento");
         BigDecimal valor = rs.getBigDecimal("parcelamento_valor");
         LocalDate dataVencimento = rs.getDate("parcelamento_data_vencimento").toLocalDate();
         LocalDate dataPagamento = rs.getDate("parcelamento_data_pagamento").toLocalDate();
@@ -176,7 +174,7 @@ public class DaoPostgresParcela implements DaoParcela {
 
     private void preparar(Parcela parcela) throws SQLException {
         ps.setBigDecimal(1, parcela.getValor());
-        ps.setString(2, parcela.getObservacao());
+        ps.setString(2, parcela.getParcelaStatus().toString());
         ps.setLong(3, parcela.getParcelamento().getId());
         if (parcela.getId() != null) {
             ps.setLong(4, parcela.getId());

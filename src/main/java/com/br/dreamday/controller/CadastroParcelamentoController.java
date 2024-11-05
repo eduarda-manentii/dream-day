@@ -1,19 +1,15 @@
 package com.br.dreamday.controller;
 
-import com.br.dreamday.domain.Orcamento;
-import com.br.dreamday.domain.Parcela;
-import com.br.dreamday.domain.Parcelamento;
-import com.br.dreamday.domain.ParcelamentoStatus;
+import com.br.dreamday.domain.*;
 import com.br.dreamday.service.ParcelaService;
 import com.br.dreamday.service.ParcelamentoService;
 import com.br.dreamday.utils.MascarasFX;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.function.UnaryOperator;
@@ -27,9 +23,6 @@ public class CadastroParcelamentoController {
     private Button btnSalvar;
 
     @FXML
-    private Label lblNovoOrcamento;
-
-    @FXML
     private Label lblValorParcelas;
 
     @FXML
@@ -37,9 +30,6 @@ public class CadastroParcelamentoController {
 
     @FXML
     private TextField txtDataVencimento;
-
-    @FXML
-    private TextArea txtObservacao;
 
     @FXML
     private TextField txtQtdeParcelas;
@@ -50,76 +40,143 @@ public class CadastroParcelamentoController {
 
     private ParcelaService parcelaService;
 
+    private static final DateTimeFormatter FORMATADO_DATA = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+    private static final int MAX_PARCELAS = 24;
+    private static final int MIN_PARCELAS = 1;
+
     @FXML
     public void initialize() {
         parcelamentoService = new ParcelamentoService();
         parcelaService = new ParcelaService();
-
-        UnaryOperator<TextFormatter.Change> filter = change -> {
-            String newText = change.getControlNewText();
-            if (newText.matches("\\d*")) {
-                if (newText.isEmpty() || (Integer.parseInt(newText) >= 0 && Integer.parseInt(newText) <= 24)) {
-                    return change;
-                }
-            }
-            return null;
-        };
         MascarasFX.mascaraData(txtDataVencimento);
-
-        txtQtdeParcelas.setTextFormatter(new TextFormatter<>(filter));
+        formataQtdeParcelas();
     }
 
     @FXML
-    void onButtonCancelarClicked() {
-
+    void aoClicarCancelar() {
+        Stage stage = (Stage) btnCancelar.getScene().getWindow();
+        stage.close();
     }
 
     @FXML
-    void onButtonSalvarClicked() {
-        Parcelamento parcelamento = new Parcelamento();
-        parcelamento.setOrcamento(orcamento);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate dataVencimento = LocalDate.parse(txtDataVencimento.getText(), formatter);
+    void aoClicarSalvar() {
+        if (entradaValida()) {
+            Parcelamento parcelamento = criarParcelamento();
+            Long idParcelamento = parcelamentoService.salvar(parcelamento);
+            parcelamento.setId(idParcelamento);
 
-        parcelamento.setDataVencimento(dataVencimento);
-        parcelamento.setStatus(ParcelamentoStatus.AGUARDANDO_PAGAMENTO);
-        parcelamento.setQtdeParcelas(Integer.parseInt(txtQtdeParcelas.getText()));
-        parcelamento.setValor(orcamento.getCustoEstimado());
+            criarParcelas(parcelamento);
 
-        BigDecimal valorParcela = getValorParcela();
+            exibirMensagem("Parcelamento salvo com sucesso!");
 
-        parcelamentoService.salvar(parcelamento);
-// TODO: O erro ocorre por que ele não recupera o id do parcelamento, (retornar o id do parcelamento no service)
-//        for (int i = 0; i < parcelamento.getQtdeParcelas(); i++) {
-//            Parcela parcela = new Parcela();
-//            parcela.setParcelamento(parcelamento);
-//            parcela.setValor(valorParcela);
-//            parcela.setObservacao(parcelamento.getObservacao());
-//            parcelaService.salvar(parcela);
-//        }
-
-
-
-    }
-
-    void setAttributes(Orcamento orcamento) {
-        this.orcamento = orcamento;
-        lblValorTotalResultado.setText("R$ " + orcamento.getCustoEstimado());
+            Stage stage = (Stage) btnSalvar.getScene().getWindow();
+            stage.close();
+        }
     }
 
     @FXML
-    void onQtdeParcelasChanged() {
+    void aoAlterarQtdeParcelas() {
         try {
-            lblValorParcelas.setText("R$ " + getValorParcela());
+            lblValorParcelas.setText(formatarMoeda(calcularValorParcela()));
         } catch (NumberFormatException e) {
             lblValorParcelas.setText("Por favor, insira um número válido.");
         }
     }
 
-    private BigDecimal getValorParcela() {
+    void definirAtributos(Orcamento orcamento) {
+        this.orcamento = orcamento;
+        lblValorTotalResultado.setText(formatarMoeda(orcamento.getCustoEstimado()));
+    }
+
+    private boolean entradaValida() {
+        if (!isDataVencimentoValida()) {
+            exibirMensagem("Por favor, insira uma data válida para o vencimento.");
+            return false;
+        }
+        if (!isQtdeParcelasValida()) {
+            exibirMensagem("A quantidade de parcelas deve estar entre 1 e 24.");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean isDataVencimentoValida() {
+        try {
+            LocalDate.parse(txtDataVencimento.getText(), FORMATADO_DATA);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    private boolean isQtdeParcelasValida() {
+        try {
+            int qtdeParcelas = Integer.parseInt(txtQtdeParcelas.getText());
+            return qtdeParcelas >= MIN_PARCELAS && qtdeParcelas <= MAX_PARCELAS;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+    }
+
+    private Parcelamento criarParcelamento() {
+        Parcelamento parcelamento = new Parcelamento();
+        parcelamento.setOrcamento(orcamento);
+        parcelamento.setDataVencimento(parseDataVencimento());
+        parcelamento.setStatus(ParcelamentoStatus.AGUARDANDO_PAGAMENTO);
+        parcelamento.setQtdeParcelas(Integer.parseInt(txtQtdeParcelas.getText()));
+        parcelamento.setValor(orcamento.getCustoEstimado());
+        return parcelamento;
+    }
+
+    private LocalDate parseDataVencimento() {
+        return LocalDate.parse(txtDataVencimento.getText(), FORMATADO_DATA);
+    }
+
+    private void criarParcelas(Parcelamento parcelamento) {
+        BigDecimal valorParcela = calcularValorParcela();
+
+        for (int i = 0; i < parcelamento.getQtdeParcelas(); i++) {
+            Parcela parcela = new Parcela();
+            parcela.setParcelamento(parcelamento);
+            parcela.setValor(valorParcela);
+            parcela.setParcelaStatus(ParcelaStatus.AGUARDANDO_PAGAMENTO);
+            parcelaService.salvar(parcela);
+        }
+    }
+
+    private BigDecimal calcularValorParcela() {
         int qtdeParcelas = Integer.parseInt(txtQtdeParcelas.getText());
         BigDecimal valorTotal = orcamento.getCustoEstimado();
-        return valorTotal.divide(BigDecimal.valueOf(qtdeParcelas), 2, BigDecimal.ROUND_HALF_UP);
+        return valorTotal.divide(BigDecimal.valueOf(qtdeParcelas), 2, RoundingMode.HALF_UP);
+    }
+
+    private void formataQtdeParcelas() {
+        UnaryOperator<TextFormatter.Change> filtro = change -> {
+            String novoTexto = change.getControlNewText();
+            if (novoTexto.matches("\\d*") && !novoTexto.isEmpty()) {
+                int valor = Integer.parseInt(novoTexto);
+                if (valor >= MIN_PARCELAS && valor <= MAX_PARCELAS) {
+                    return change;
+                }
+            }
+            return null;
+        };
+
+        txtQtdeParcelas.setTextFormatter(new TextFormatter<>(filtro));
+    }
+
+    private void exibirMensagem(String mensagem) {
+        ButtonType tipoBotao = new ButtonType("Ok!", ButtonBar.ButtonData.OK_DONE);
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle("Aviso");
+        dialog.setContentText(mensagem);
+        dialog.getDialogPane().getButtonTypes().add(tipoBotao);
+        dialog.showAndWait();
+    }
+
+    private String formatarMoeda(BigDecimal valor) {
+        return "R$ " + valor.setScale(2, RoundingMode.HALF_UP);
     }
 
 }

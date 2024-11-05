@@ -4,7 +4,7 @@ import com.br.dreamday.domain.Parcelamento;
 
 public interface DaoParcelamento {
 
-    void inserir(Parcelamento parcelamento);
+    Long inserir(Parcelamento parcelamento);
 
     void alterar(Parcelamento parcelamento);
 

@@ -144,7 +144,7 @@ public class DetalheOrcamentoWindow {
         FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(MainViewApplication.class.getResource("/com/br/dreamday/cadastro-parcelamento-window.fxml")));
         Parent root = loader.load();
         CadastroParcelamentoController cadastroParcelamentoController = loader.getController();
-        cadastroParcelamentoController.setAttributes(
+        cadastroParcelamentoController.definirAtributos(
                 orcamento
         );
         Stage popupStage = new Stage();

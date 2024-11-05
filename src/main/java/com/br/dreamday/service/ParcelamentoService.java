@@ -13,12 +13,12 @@ public class ParcelamentoService {
         this.dao = FactoryDao.getInstance().getDaoParcelamento();
     }
 
-    public void salvar(Parcelamento parcelamento) {
+    public Long salvar(Parcelamento parcelamento) {
         if (parcelamento.getId() != null) {
             dao.alterar(parcelamento);
-            return;
+            return parcelamento.getId();
         }
-        dao.inserir(parcelamento);
+        return dao.inserir(parcelamento);
     }
 
     public Parcelamento buscarPor(Long id) {

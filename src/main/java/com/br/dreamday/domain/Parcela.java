@@ -9,17 +9,17 @@ public class Parcela {
 
     private BigDecimal valor;
 
-    private String observacao;
+    private ParcelaStatus parcelaStatus;
 
     private Parcelamento parcelamento;
 
     public Parcela() {
     }
 
-    public Parcela(Long id, BigDecimal valor, String observacao, Parcelamento parcelamento) {
+    public Parcela(Long id, BigDecimal valor, ParcelaStatus parcelaStatus, Parcelamento parcelamento) {
         this.id = id;
         this.valor = valor;
-        this.observacao = observacao;
+        this.parcelaStatus = parcelaStatus;
         this.parcelamento = parcelamento;
     }
 
@@ -52,12 +52,12 @@ public class Parcela {
         this.valor = valor;
     }
 
-    public String getObservacao() {
-        return observacao;
+    public ParcelaStatus getParcelaStatus() {
+        return parcelaStatus;
     }
 
-    public void setObservacao(String observacao) {
-        this.observacao = observacao;
+    public void setParcelaStatus(ParcelaStatus parcelaStatus) {
+        this.parcelaStatus = parcelaStatus;
     }
 
     public Parcelamento getParcelamento() {
@@ -73,7 +73,7 @@ public class Parcela {
         return "Parcela{" +
                 "id=" + id +
                 ", valor=" + valor +
-                ", observacao='" + observacao + '\'' +
+                ", observacao='" + parcelaStatus + '\'' +
                 ", parcelamento=" + parcelamento +
                 '}';
     }

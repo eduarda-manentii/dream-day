@@ -22,7 +22,8 @@ public class DaoPostgresParcelamento implements DaoParcelamento {
             "status, " +
             "observacao," +
             "qtde_parcelas) " +
-            "VALUES(?, ?, ?, ?, ?, ?, ?)";
+            "VALUES(?, ?, ?, ?, ?, ?, ?) " +
+            "RETURNING id";
 
     private final String UPDATE = "UPDATE parcelamentos " +
             "SET " +
@@ -76,14 +77,20 @@ public class DaoPostgresParcelamento implements DaoParcelamento {
     }
 
     @Override
-    public void inserir(Parcelamento parcelamento) {
+    public Long inserir(Parcelamento parcelamento) {
         ps = null;
         ResultSet rs = null;
         try {
             ps = conexao.prepareStatement(INSERT);
             preparar(parcelamento);
-            ps.execute();
-
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                Long idGerado = rs.getLong("id");
+                parcelamento.setId(idGerado);
+                return idGerado;
+            } else {
+                throw new RuntimeException("Falha ao inserir o orçamento: ID não encontrado após a inserção.");
+            }
         } catch (Exception e) {
             throw new RuntimeException("Ocorreu um erro ao inserir o parcelamento: " + e.getMessage());
         } finally {
