@@ -1,14 +1,10 @@
 package com.br.dreamday.controller;
 
 import com.br.dreamday.MainViewApplication;
-import com.br.dreamday.domain.Fornecedor;
-import com.br.dreamday.domain.ItemFornecedor;
-import com.br.dreamday.domain.ItemOrcamento;
-import com.br.dreamday.domain.Orcamento;
-import com.br.dreamday.service.FornecedorService;
-import com.br.dreamday.service.ItemFornecedorService;
-import com.br.dreamday.service.ItemOrcamentoService;
-import com.br.dreamday.service.OrcamentoService;
+import com.br.dreamday.component.AutoCompleteProduto;
+import com.br.dreamday.domain.*;
+import com.br.dreamday.service.*;
+import com.br.dreamday.utils.MascarasFX;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -23,7 +19,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Objects;
+import java.util.ResourceBundle;
 
 public class DetalheOrcamentoWindow {
 
@@ -41,6 +39,9 @@ public class DetalheOrcamentoWindow {
 
     @FXML
     private Label lblObservacoesPreencher;
+
+    @FXML
+    private Button btnAdicionarParcelas;
 
     @FXML
     private Label lblStatusPreencher;
@@ -72,11 +73,13 @@ public class DetalheOrcamentoWindow {
     private ObservableList<ItemOrcamento> itemOrcamentoList;
     private final ItemOrcamentoService service;
     private final OrcamentoService orcamentoService;
+    private final ParcelamentoService parcelamentoService;
     private Orcamento orcamento;
 
     public DetalheOrcamentoWindow() {
         this.orcamentoService = new OrcamentoService();
         this.service = new ItemOrcamentoService();
+        parcelamentoService = new ParcelamentoService();
     }
 
     public void setAttributes(Orcamento orcamentoSelecionado) {
@@ -114,6 +117,12 @@ public class DetalheOrcamentoWindow {
             }
         });
         tableItensOrcamentos.setItems(itemOrcamentoList);
+
+        if (orcamento.getStatus().equals(OrcamentoStatus.APROVADO)) {
+            if (!parcelamentoService.isParcelamentoExistentePeloOrcamento(orcamento.getId())) {
+                btnAdicionarParcelas.setVisible(true);
+            }
+        }
     }
 
     private void populaCampos(Orcamento orcamentoSelecionado) {
@@ -140,7 +149,7 @@ public class DetalheOrcamentoWindow {
     }
 
     @FXML
-    void onButtonAdicionarParcelasClicked(ActionEvent event) throws IOException {
+    void onButtonAdicionarParcelasClicked() throws IOException {
         FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(MainViewApplication.class.getResource("/com/br/dreamday/cadastro-parcelamento-window.fxml")));
         Parent root = loader.load();
         CadastroParcelamentoController cadastroParcelamentoController = loader.getController();

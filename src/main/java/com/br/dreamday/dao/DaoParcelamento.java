@@ -1,5 +1,6 @@
 package com.br.dreamday.dao;
 
+import com.br.dreamday.domain.Orcamento;
 import com.br.dreamday.domain.Parcelamento;
 
 public interface DaoParcelamento {
@@ -11,5 +12,7 @@ public interface DaoParcelamento {
     void excluirPor(Long id);
 
     Parcelamento buscarPor(Long id);
+
+    boolean possuiParcelamento(Long id);
 
 }

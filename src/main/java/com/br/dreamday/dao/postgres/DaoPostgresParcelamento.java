@@ -69,6 +69,7 @@ public class DaoPostgresParcelamento implements DaoParcelamento {
             "WHERE " +
             "parcelamentos.id = ?";
 
+    private final String COUNT_BY_ORCAMENTO = "SELECT count(p.id) FROM parcelamentos p WHERE p.id_orcamento = ?";
 
     private PreparedStatement ps;
 
@@ -142,6 +143,26 @@ public class DaoPostgresParcelamento implements DaoParcelamento {
                 return extrairParcelamento(rs);
             }
             return null;
+        } catch (Exception e) {
+            throw new RuntimeException("Ocorreu um erro ao buscar o parcelamento: " + e.getMessage());
+        }finally {
+            ManagerDb.getInstance().fechar(ps);
+            ManagerDb.getInstance().fechar(rs);
+        }
+    }
+
+    @Override
+    public boolean possuiParcelamento(Long id) {
+        ps = null;
+        ResultSet rs = null;
+        try {
+            ps = conexao.prepareStatement(COUNT_BY_ORCAMENTO);
+            ps.setLong(1, id);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("count") > 0;
+            }
+            return false;
         } catch (Exception e) {
             throw new RuntimeException("Ocorreu um erro ao buscar o parcelamento: " + e.getMessage());
         }finally {

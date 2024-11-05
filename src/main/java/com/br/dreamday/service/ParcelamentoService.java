@@ -38,4 +38,8 @@ public class ParcelamentoService {
         return parcelamento;
     }
 
+    public boolean isParcelamentoExistentePeloOrcamento(Long idOrcamento) {
+        return dao.possuiParcelamento(idOrcamento);
+    }
+
 }

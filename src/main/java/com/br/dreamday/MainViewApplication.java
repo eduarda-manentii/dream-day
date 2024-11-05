@@ -26,19 +26,6 @@ public class MainViewApplication extends Application {
     }
 
     public static void main(String[] args) {
-        ParcelamentoService service = new ParcelamentoService();
-        OrcamentoService orcamentoService = new OrcamentoService();
-        Orcamento o = orcamentoService.buscarPor(1L);
-        Parcelamento p = new Parcelamento();
-        p.setDataVencimento(LocalDate.now());
-        p.setOrcamento(o);
-        p.setObservacao("Obs");
-        p.setStatus(ParcelamentoStatus.AGUARDANDO_PAGAMENTO);
-        p.setQtdeParcelas(12);
-
-        Long id = service.salvar(p);
-        System.out.println(id);
-
         launch();
     }
 }
