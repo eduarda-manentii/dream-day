@@ -9,22 +9,14 @@ import java.util.List;
 
 public interface DaoOrcamento {
 
-    public Long inserir(Orcamento orcamento);
-
-    public void alterar(Orcamento orcamento);
-
-    public void excluirPor(Long id);
-
-    public Orcamento buscarPor(Long id);
-
-    public void atualizarValorTotal(Long idOrcamento, BigDecimal subtotal);
-
-    public List<Orcamento> listarPor(String nomeDoCliente, OrcamentoStatus status);
-
-    public List<Orcamento> listarPor(OrcamentoStatus status);
-
-    public List<Orcamento> listarPor(String nomeDoCliente);
-
-    public List<Orcamento> listarTodos();
+    Long inserir(Orcamento orcamento);
+    void alterar(Orcamento orcamento);
+    void excluirPor(Long id);
+    Orcamento buscarPor(Long id);
+    void atualizarValorTotal(Long idOrcamento, BigDecimal subtotal);
+    List<Orcamento> listarPor(String nomeDoCliente, OrcamentoStatus status);
+    List<Orcamento> listarPor(OrcamentoStatus status);
+    List<Orcamento> listarPor(String nomeDoCliente);
+    List<Orcamento> listarTodos();
 
 }

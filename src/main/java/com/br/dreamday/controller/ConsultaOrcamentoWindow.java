@@ -4,6 +4,7 @@ import com.br.dreamday.MainViewApplication;
 import com.br.dreamday.domain.*;
 import com.br.dreamday.service.FornecedorService;
 import com.br.dreamday.service.OrcamentoService;
+import com.br.dreamday.utils.Mensagens;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -80,14 +81,7 @@ public class ConsultaOrcamentoWindow {
                         onButtonDetalhesClicked(orcamento);
                     }
                     catch (IOException e) {
-
-                        exibirAlerta(
-                                Alert.AlertType.ERROR,
-                                "Erro ao abrir a tela de detalhes",
-                                null,
-                                e.getMessage()
-                        );
-
+                        Mensagens.exibirMensagemInformativa("Erro ao abrir a tela de detalhes");
                     }
                 });
             }
@@ -173,32 +167,13 @@ public class ConsultaOrcamentoWindow {
             tblOrcamento.setItems(orcamentoList);
             tblOrcamento.refresh();
         }  catch (Exception e) {
-            showMessage(e.getMessage());
+            Mensagens.exibirMensagemInformativa(e.getMessage());
         }
     }
 
     private void recarregarTabela() {
         orcamentoList.clear();
         orcamentoList.addAll(service.listarTodos());
-    }
-
-    public void exibirAlerta(Alert.AlertType tipo, String titulo, String cabecalho, String conteudo) {
-        Alert alert = new Alert(tipo);
-        alert.setTitle(titulo);
-        alert.setHeaderText(cabecalho);
-        alert.setContentText(conteudo);
-        alert.showAndWait().filter(response -> response == ButtonType.OK);
-    }
-
-    private void showMessage(String mensagem) {
-        ButtonType loginButtonType = new ButtonType("Ok!", ButtonBar.ButtonData.OK_DONE);
-        Dialog<String> dialog = new Dialog<>();
-        dialog.setTitle("Aviso");
-        dialog.setContentText(mensagem);
-        dialog.getDialogPane().getButtonTypes().add(loginButtonType);
-        boolean desativado = false;
-        dialog.getDialogPane().lookupButton(loginButtonType).setDisable(desativado);
-        dialog.showAndWait();
     }
 
 }

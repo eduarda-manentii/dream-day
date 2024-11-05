@@ -4,13 +4,13 @@ import com.br.dreamday.MainViewApplication;
 import com.br.dreamday.domain.Cliente;
 import com.br.dreamday.service.ClienteService;
 import com.br.dreamday.utils.MascarasFX;
+import com.br.dreamday.utils.Mensagens;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -114,9 +114,9 @@ public class ConsultaClienteWindow {
             tableCliente.setItems(clienteList);
             tableCliente.refresh();
         }  catch (DateTimeException ex) {
-            showMessage("Digite um valor para a hora válido.");
+            Mensagens.exibirMensagemInformativa("Digite um valor para a hora válido.");
         } catch (Exception e) {
-            showMessage(e.getMessage());
+            Mensagens.exibirMensagemInformativa(e.getMessage());
         }
     }
 
@@ -124,10 +124,10 @@ public class ConsultaClienteWindow {
     public void onButtonEditarClicked(ActionEvent actionEvent) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/br/dreamday/cadastro-cliente-window.fxml"));
         Parent root = loader.load();
-        CadastroClienteWindowController clienteController = loader.getController();
+        CadastroClienteWindow clienteController = loader.getController();
         Cliente clienteSelecionado = tableCliente.getSelectionModel().getSelectedItem();
         if (clienteSelecionado == null) {
-            warningMessage();
+            Mensagens.exibirMensagemDeAviso("Selecione um cliente");
         } else {
             clienteController.setAttributes(clienteSelecionado);
             Scene scene = new Scene(root, 640, 400);
@@ -143,7 +143,7 @@ public class ConsultaClienteWindow {
     public void onButtonExcluirClicked(ActionEvent actionEvent) {
         Cliente clienteSelecionado = tableCliente.getSelectionModel().getSelectedItem();
         if (clienteSelecionado == null) {
-            warningMessage();
+            Mensagens.exibirMensagemDeAviso("Selecione um cliente");
         } else {
             confirmationMessage("Tem certeza que deseja remover o item selecionado?", () -> {
                 service.excluirPor(clienteSelecionado.getId());
@@ -182,14 +182,4 @@ public class ConsultaClienteWindow {
         });
     }
 
-    private void warningMessage() {
-        ButtonType loginButtonType = new ButtonType("Ok!", ButtonBar.ButtonData.OK_DONE);
-        Dialog<String> dialog = new Dialog<>();
-        dialog.setTitle("Aviso!");
-        dialog.setContentText("Selecione um cliente.");
-        dialog.getDialogPane().getButtonTypes().add(loginButtonType);
-        boolean disabled = false;
-        dialog.getDialogPane().lookupButton(loginButtonType).setDisable(disabled);
-        dialog.showAndWait();
-    }
 }

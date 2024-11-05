@@ -5,6 +5,7 @@ import com.br.dreamday.domain.*;
 import com.br.dreamday.service.ClienteService;
 import com.br.dreamday.service.OrcamentoService;
 import com.br.dreamday.utils.MascarasFX;
+import com.br.dreamday.utils.Mensagens;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -85,7 +86,7 @@ public class CadastroOrcamentoWindow {
             if (orcamentoSelecionado == null) {
                 Orcamento orcamento = new Orcamento(cliente, status, dataDeCriacao, custoEstimado, BigDecimal.ZERO, observacoes);
                 orcamentoId = service.salvar(orcamento);
-                showMessage("Orçamento salvo com sucesso!");
+                Mensagens.exibirMensagemInformativa("Orçamento salvo com sucesso!");
             } else {
                 orcamentoSelecionado.setCliente(cliente);
                 orcamentoSelecionado.setCustoEstimado(custoEstimado);
@@ -94,34 +95,34 @@ public class CadastroOrcamentoWindow {
                 orcamentoSelecionado.setObservaces(observacoes);
                 orcamentoId = service.salvar(orcamentoSelecionado);
                 orcamentoSelecionado = null;
-                showMessage("Orçamento alterado com sucesso!");
+                Mensagens.exibirMensagemInformativa("Orçamento alterado com sucesso!");
             }
         } catch (Exception e) {
-            showMessage("Erro ao salvar orçamento: " + e.getMessage());
+            Mensagens.exibirMensagemInformativa("Erro ao salvar orçamento: " + e.getMessage());
         }
     }
 
     private boolean validarCampos() {
         if (cbCliente.getValue() == null) {
-            showMessage("Selecione um cliente.");
+            Mensagens.exibirMensagemInformativa("Selecione um cliente.");
             return false;
         }
         if (cbStatus.getValue() == null) {
-            showMessage("Selecione o status do orçamento.");
+            Mensagens.exibirMensagemInformativa("Selecione o status do orçamento.");
             return false;
         }
         if (txtCustoEstimado.getText().isBlank()) {
-            showMessage("Informe o custo estimado.");
+            Mensagens.exibirMensagemInformativa("Informe o custo estimado.");
             return false;
         }
         try {
             BigDecimal custoEstimado = new BigDecimal(txtCustoEstimado.getText());
             if (custoEstimado.compareTo(BigDecimal.ZERO) <= 0) {
-                showMessage("O custo estimado deve ser um valor positivo.");
+                Mensagens.exibirMensagemInformativa("O custo estimado deve ser um valor positivo.");
                 return false;
             }
         } catch (NumberFormatException e) {
-            showMessage("O custo estimado deve ser um número válido.");
+            Mensagens.exibirMensagemInformativa("O custo estimado deve ser um número válido.");
             return false;
         }
 
@@ -146,7 +147,7 @@ public class CadastroOrcamentoWindow {
     @FXML
     void onButtonCancelarClicked(ActionEvent event) {
         if (camposPreenchidos()) {
-            confirmationMessage("Tem certeza que deseja cancelar a inserção?", () -> {
+            Mensagens.exibirMensagemDeConfirmacao("Tem certeza que deseja cancelar a inserção?", () -> {
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 stage.close();
             });
@@ -159,7 +160,7 @@ public class CadastroOrcamentoWindow {
     @FXML
     void onButtonVincularItemClicked(ActionEvent event) throws IOException {
         if (orcamentoId == 0) {
-            showMessage("Salve o orçamento antes de vincular um item.");
+            Mensagens.exibirMensagemInformativa("Salve o orçamento antes de vincular um item.");
             return;
         }
         abrirTelaVincularItem();
@@ -178,27 +179,4 @@ public class CadastroOrcamentoWindow {
         return cbCliente.getValue() != null || !custoEstimado.isBlank() ||  cbStatus.getValue() != null;
     }
 
-    private void showMessage(String mensagem) {
-        ButtonType loginButtonType = new ButtonType("Ok!", ButtonBar.ButtonData.OK_DONE);
-        Dialog<String> dialog = new Dialog<>();
-        dialog.setTitle("Aviso");
-        dialog.setContentText(mensagem);
-        dialog.getDialogPane().getButtonTypes().add(loginButtonType);
-        boolean desativado = false;
-        dialog.getDialogPane().lookupButton(loginButtonType).setDisable(desativado);
-        dialog.showAndWait();
-    }
-
-    private void confirmationMessage(String mensagem, Runnable acao) {
-        Alert dialog = new Alert(Alert.AlertType.CONFIRMATION);
-        ButtonType btnYes = new ButtonType("Sim");
-        ButtonType btnNo = new ButtonType("Não");
-        dialog.setContentText(mensagem);
-        dialog.getButtonTypes().setAll(btnYes, btnNo);
-        dialog.showAndWait().ifPresent(b -> {
-            if (b == btnYes) {
-                acao.run();
-            }
-        });
-    }
 }

@@ -3,6 +3,7 @@ package com.br.dreamday.controller;
 import com.br.dreamday.domain.Cliente;
 import com.br.dreamday.service.ClienteService;
 import com.br.dreamday.utils.MascarasFX;
+import com.br.dreamday.utils.Mensagens;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
@@ -16,7 +17,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 
-public class CadastroClienteWindowController {
+public class CadastroClienteWindow {
 
     @FXML
     private TextField txtCpf;
@@ -40,7 +41,7 @@ public class CadastroClienteWindowController {
 
     private Cliente clienteSelecionado;
 
-    public CadastroClienteWindowController() {
+    public CadastroClienteWindow() {
         this.service = new ClienteService();
     }
 
@@ -76,27 +77,27 @@ public class CadastroClienteWindowController {
                     clienteSelecionado.setDataCasamento(dataDoCasamentoDT);
                     service.salvar(clienteSelecionado);
                     clienteSelecionado = null;
-                    showMessage("Cliente alterado com sucesso!");
+                    Mensagens.exibirMensagemInformativa("Cliente alterado com sucesso!");
                 } else {
                     Cliente cliente = new Cliente(nomeCompleto, nomeConjugue, dataDoCasamentoDT, telefone, email, cpf);
                     service.salvar(cliente);
-                    showMessage("Cliente cadastrado com sucesso!");
+                    Mensagens.exibirMensagemInformativa("Cliente cadastrado com sucesso!");
                 }
                 limparCampos();
             } else {
-                showMessage("Todos os campos são obrigatórios!");
+                Mensagens.exibirMensagemInformativa("Todos os campos são obrigatórios!");
             }
         }  catch (DateTimeException ex) {
-            showMessage("Digite um valor para a hora válido.");
+            Mensagens.exibirMensagemInformativa("Digite um valor para a hora válido.");
         } catch (Exception e) {
-            showMessage(e.getMessage());
+            Mensagens.exibirMensagemInformativa(e.getMessage());
         }
     }
 
     @FXML
     void onButtonCancelarClicked(ActionEvent event) {
         if (camposPreenchidos()) {
-            confirmationMessage("Tem certeza que deseja cancelar a inserção?", () -> {
+            Mensagens.exibirMensagemDeConfirmacao("Tem certeza que deseja cancelar a inserção?", () -> {
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 stage.close();
             });
@@ -106,7 +107,7 @@ public class CadastroClienteWindowController {
     @FXML
     void onButtonVoltarClicked(ActionEvent event) {
         if (camposPreenchidos()) {
-            confirmationMessage("Tem certeza que deseja cancelar a inserção?", () -> {
+            Mensagens.exibirMensagemDeConfirmacao("Tem certeza que deseja cancelar a inserção?", () -> {
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 stage.close();
             });
@@ -135,30 +136,6 @@ public class CadastroClienteWindowController {
         txtEmail.setText("");
         txtTelefone.setText("");
         txtDataCasamento.setText("");
-    }
-
-    private void showMessage(String mensagem) {
-        ButtonType loginButtonType = new ButtonType("Ok!", ButtonBar.ButtonData.OK_DONE);
-        Dialog<String> dialog = new Dialog<>();
-        dialog.setTitle("Aviso");
-        dialog.setContentText(mensagem);
-        dialog.getDialogPane().getButtonTypes().add(loginButtonType);
-        boolean desativado = false;
-        dialog.getDialogPane().lookupButton(loginButtonType).setDisable(desativado);
-        dialog.showAndWait();
-    }
-
-    private void confirmationMessage(String mensagem, Runnable acao) {
-        Alert dialog = new Alert(Alert.AlertType.CONFIRMATION);
-        ButtonType btnYes = new ButtonType("Sim");
-        ButtonType btnNo = new ButtonType("Não");
-        dialog.setContentText(mensagem);
-        dialog.getButtonTypes().setAll(btnYes, btnNo);
-        dialog.showAndWait().ifPresent(b -> {
-            if (b == btnYes) {
-                acao.run();
-            }
-        });
     }
 
     public void setAttributes(Cliente clienteSelecionado) {

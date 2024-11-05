@@ -1,11 +1,11 @@
 package com.br.dreamday.controller;
 
 import com.br.dreamday.domain.*;
-import com.br.dreamday.service.ClienteService;
 import com.br.dreamday.service.ItemFornecedorService;
 import com.br.dreamday.service.ItemOrcamentoService;
 import com.br.dreamday.service.OrcamentoService;
 import com.br.dreamday.utils.MascarasFX;
+import com.br.dreamday.utils.Mensagens;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -80,7 +80,7 @@ public class VincularItemWindow {
             int quantidade = Integer.parseInt(txtQuantidade.getText());
 
             if (quantidade <= 0) {
-                showMessage("A quantidade deve ser maior que zero.");
+                Mensagens.exibirMensagemInformativa("A quantidade deve ser maior que zero.");
                 return;
             }
 
@@ -103,7 +103,7 @@ public class VincularItemWindow {
                 parent.atualizarCampoValorTotal(totalAtualizado.toString());
 
                 itemOrcamentoSelecionado = null;
-                showMessage("Item de orçamento alterado com sucesso!");
+                Mensagens.exibirMensagemInformativa("Item de orçamento alterado com sucesso!");
             } else {
                 ItemOrcamento itemOrcamento = new ItemOrcamento(orcamento, itemFornecedor, dataEntrega, quantidade, status);
                 service.salvar(itemOrcamento);
@@ -115,46 +115,46 @@ public class VincularItemWindow {
                 orcamentoService.atualizarValorTotal(orcamentoId, totalAtualizado);
 
                 parent.atualizarCampoValorTotal(totalAtualizado.toString());
-                showMessage("Item vinculado com sucesso!");
+                Mensagens.exibirMensagemInformativa("Item vinculado com sucesso!");
                 limparCampos();
             }
         } catch (Exception e) {
-            showMessage("Erro ao vincular item: " + e.getMessage());
+            Mensagens.exibirMensagemInformativa("Erro ao vincular item: " + e.getMessage());
         }
     }
 
     private boolean validarCampos() {
         if (cbItem.getValue() == null) {
-            showMessage("Selecione um item do fornecedor.");
+            Mensagens.exibirMensagemInformativa("Selecione um item do fornecedor.");
             return false;
         }
         if (cbStatus.getValue() == null) {
-            showMessage("Selecione o status do item.");
+            Mensagens.exibirMensagemInformativa("Selecione o status do item.");
             return false;
         }
         if (txtDadaDeEntrega.getText().isBlank()) {
-            showMessage("Informe a data de entrega.");
+            Mensagens.exibirMensagemInformativa("Informe a data de entrega.");
             return false;
         }
         if (txtQuantidade.getText().isBlank()) {
-            showMessage("Informe a quantidade.");
+            Mensagens.exibirMensagemInformativa("Informe a quantidade.");
             return false;
         }
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             LocalDate.parse(txtDadaDeEntrega.getText(), formatter);
         } catch (Exception e) {
-            showMessage("A data de entrega deve estar no formato dd/MM/yyyy.");
+            Mensagens.exibirMensagemInformativa("A data de entrega deve estar no formato dd/MM/yyyy.");
             return false;
         }
         try {
             double quantidade = Double.parseDouble(txtQuantidade.getText());
             if (quantidade <= 0) {
-                showMessage("A quantidade deve ser maior que zero.");
+                Mensagens.exibirMensagemInformativa("A quantidade deve ser maior que zero.");
                 return false;
             }
         } catch (NumberFormatException e) {
-            showMessage("A quantidade deve ser um número válido.");
+            Mensagens.exibirMensagemInformativa("A quantidade deve ser um número válido.");
             return false;
         }
 
@@ -184,7 +184,7 @@ public class VincularItemWindow {
     @FXML
     void onButtonCancelarClicked(ActionEvent event) throws IOException {
         if (camposPreenchidos()) {
-            confirmationMessage("Tem certeza que deseja cancelar a inserção?", () -> {
+            Mensagens.exibirMensagemDeConfirmacao("Tem certeza que deseja cancelar a inserção?", () -> {
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 stage.close();
             });
@@ -206,30 +206,6 @@ public class VincularItemWindow {
         txtQuantidade.setText("");
         cbItem.setValue(null);
         cbStatus.setValue(null);
-    }
-
-    private void showMessage(String mensagem) {
-        ButtonType loginButtonType = new ButtonType("Ok!", ButtonBar.ButtonData.OK_DONE);
-        Dialog<String> dialog = new Dialog<>();
-        dialog.setTitle("Aviso");
-        dialog.setContentText(mensagem);
-        dialog.getDialogPane().getButtonTypes().add(loginButtonType);
-        boolean desativado = false;
-        dialog.getDialogPane().lookupButton(loginButtonType).setDisable(desativado);
-        dialog.showAndWait();
-    }
-
-    private void confirmationMessage(String mensagem, Runnable acao) {
-        Alert dialog = new Alert(Alert.AlertType.CONFIRMATION);
-        ButtonType btnYes = new ButtonType("Sim");
-        ButtonType btnNo = new ButtonType("Não");
-        dialog.setContentText(mensagem);
-        dialog.getButtonTypes().setAll(btnYes, btnNo);
-        dialog.showAndWait().ifPresent(b -> {
-            if (b == btnYes) {
-                acao.run();
-            }
-        });
     }
 
     public void setAttributes(ItemOrcamento itemOrcamentoSelecionado) {

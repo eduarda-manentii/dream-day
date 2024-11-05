@@ -11,4 +11,5 @@ public interface DaoCategoria {
     void excluirPor(Long id);
     List<Categoria> listarPor(String nome);
     List<Categoria> listarTodas();
+
 }

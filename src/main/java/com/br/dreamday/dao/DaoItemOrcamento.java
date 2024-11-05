@@ -9,16 +9,11 @@ import java.util.List;
 
 public interface DaoItemOrcamento {
 
-    public void inserir(ItemOrcamento itemOrcamento);
-
-    public void alterar(ItemOrcamento itemOrcamento);
-
-    public void excluirPor(Long id);
-
-    public ItemOrcamento buscarPor(int id);
-
+    void inserir(ItemOrcamento itemOrcamento);
+    void alterar(ItemOrcamento itemOrcamento);
+    void excluirPor(Long id);
+    ItemOrcamento buscarPor(int id);
     List<ItemOrcamento> listarPor(Long idOrcamento);
-
-    public List<ItemOrcamento> listarTodos();
+    List<ItemOrcamento> listarTodos();
 
 }
