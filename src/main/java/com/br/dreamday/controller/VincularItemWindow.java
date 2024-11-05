@@ -85,11 +85,23 @@ public class VincularItemWindow {
             }
 
             if (itemOrcamentoSelecionado != null) {
+                double quantidadeAntiga = itemOrcamentoSelecionado.getQuantidade();
+
                 itemOrcamentoSelecionado.setItemFornecedor(itemFornecedor);
                 itemOrcamentoSelecionado.setDataDeEntrega(dataEntrega);
                 itemOrcamentoSelecionado.setStatus(status);
                 itemOrcamentoSelecionado.setQuantidade(quantidade);
                 service.salvar(itemOrcamentoSelecionado);
+
+                BigDecimal subtotalAntigo = itemFornecedor.getPreco().multiply(new BigDecimal(quantidadeAntiga));
+                BigDecimal subtotalNovo = itemFornecedor.getPreco().multiply(new BigDecimal(quantidade));
+
+                Orcamento orcamentoAtualizado = orcamentoService.buscarPor(orcamentoId);
+                BigDecimal valorTotal = orcamentoAtualizado.getValorTotal();
+                BigDecimal totalAtualizado = valorTotal.subtract(subtotalAntigo).add(subtotalNovo);
+                orcamentoService.atualizarValorTotal(orcamentoId, totalAtualizado);
+                parent.atualizarCampoValorTotal(totalAtualizado.toString());
+
                 itemOrcamentoSelecionado = null;
                 showMessage("Item de orçamento alterado com sucesso!");
             } else {

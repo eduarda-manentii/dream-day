@@ -122,6 +122,8 @@ public class DetalheOrcamentoWindow {
                     try {
                         root = loader.load();
                         VincularItemWindow vincularItemWindow = loader.getController();
+                        vincularItemWindow.setParentController(DetalheOrcamentoWindow.this);
+                        vincularItemWindow.setOrcamentoId(orcamentoId);
                         int index = getIndex();
                         ItemOrcamento itemOrcamento = getTableView().getItems().get(index);
                         vincularItemWindow.setAttributes(itemOrcamento);
@@ -133,7 +135,6 @@ public class DetalheOrcamentoWindow {
                         recarregarTabela();
                         tableItensOrcamentos.setItems(itemOrcamentoList);
                         tableItensOrcamentos.refresh();
-                        recarregarValorTotal(itemOrcamento);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
