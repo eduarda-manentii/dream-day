@@ -77,7 +77,7 @@ public class VincularItemWindow {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             LocalDate dataEntrega = LocalDate.parse(txtDadaDeEntrega.getText(), formatter);
             ItemOrcamentoStatus status = cbStatus.getValue();
-            double quantidade = Double.parseDouble(txtQuantidade.getText());
+            int quantidade = Integer.parseInt(txtQuantidade.getText());
 
             if (quantidade <= 0) {
                 showMessage("A quantidade deve ser maior que zero.");
@@ -222,7 +222,7 @@ public class VincularItemWindow {
 
     public void setAttributes(ItemOrcamento itemOrcamentoSelecionado) {
         this.itemOrcamentoSelecionado = itemOrcamentoSelecionado;
-        txtQuantidade.setText(itemOrcamentoSelecionado.getQuantidade().toString());
+        txtQuantidade.setText(String.valueOf(itemOrcamentoSelecionado.getQuantidade()));
         cbItem.setValue(itemOrcamentoSelecionado.getItemFornecedor());
         cbStatus.setValue(itemOrcamentoSelecionado.getStatus());
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
