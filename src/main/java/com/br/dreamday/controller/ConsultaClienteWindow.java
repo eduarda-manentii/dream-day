@@ -141,15 +141,19 @@ public class ConsultaClienteWindow {
 
     @FXML
     public void onButtonExcluirClicked(ActionEvent actionEvent) {
-        Cliente clienteSelecionado = tableCliente.getSelectionModel().getSelectedItem();
-        if (clienteSelecionado == null) {
-            Mensagens.exibirMensagemDeAviso("Selecione um cliente");
-        } else {
-            Mensagens.exibirMensagemDeConfirmacao("Tem certeza que deseja remover o item selecionado?", () -> {
-                service.excluirPor(clienteSelecionado.getId());
-                recarregarTabela();
-                tableCliente.refresh();
-            });
+        try {
+            Cliente clienteSelecionado = tableCliente.getSelectionModel().getSelectedItem();
+            if (clienteSelecionado == null) {
+                Mensagens.exibirMensagemDeAviso("Selecione um cliente");
+            } else {
+                Mensagens.exibirMensagemDeConfirmacao("Tem certeza que deseja remover o item selecionado?", () -> {
+                    service.excluirPor(clienteSelecionado.getId());
+                    recarregarTabela();
+                    tableCliente.refresh();
+                });
+            }
+        } catch (Exception e) {
+            Mensagens.exibirMensagemDeErro(e.getMessage());
         }
     }
 

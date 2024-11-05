@@ -123,6 +123,8 @@ public class DaoPostgresOrcamento implements DaoOrcamento {
             "WHERE o.id_cliente = c.id "
             + "ORDER BY o.id";
 
+    private final String SELECT_COUNT_CLIENTES = "SELECT COUNT(*) FROM orcamentos WHERE id_cliente = ?";
+
     private Connection conexao;
 
     public DaoPostgresOrcamento() {
@@ -335,6 +337,19 @@ public class DaoPostgresOrcamento implements DaoOrcamento {
             ManagerDb.getInstance().fechar(rs);
         }
         return orcamentos;
+    }
+
+    public int contarOrcamentosPorClienteId(int clienteId) {
+        try (PreparedStatement ps = conexao.prepareStatement(SELECT_COUNT_CLIENTES)) {
+            ps.setInt(1, clienteId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao contar orçamentos do cliente: " + e.getMessage());
+        }
+        return 0;
     }
 
     private Orcamento extrairDo(ResultSet rs) {
