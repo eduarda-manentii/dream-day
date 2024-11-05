@@ -155,6 +155,8 @@ public class ConsultaFornecedorWindow {
         popupStage.centerOnScreen();
         popupStage.setResizable(false);
         popupStage.showAndWait();
+        recarregarTabela();
+        tableFornecedor.refresh();
     }
 
     public void exibirAlerta(Alert.AlertType tipo, String titulo, String cabecalho, String conteudo) {

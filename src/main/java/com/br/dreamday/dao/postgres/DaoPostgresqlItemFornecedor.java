@@ -1,14 +1,18 @@
 package com.br.dreamday.dao.postgres;
 
-import com.br.dreamday.domain.*;
+import com.br.dreamday.domain.Fornecedor;
+import com.br.dreamday.domain.ItemFornecedor;
+import com.br.dreamday.domain.Produto;
 import com.br.dreamday.dao.DaoItemFornecedor;
 import com.br.dreamday.dao.ManagerDb;
+import com.br.dreamday.domain.Categoria;
 import com.br.dreamday.domain.key.ItemFornecedorKey;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,10 +58,10 @@ public class DaoPostgresqlItemFornecedor implements DaoItemFornecedor {
             + "if.id_produto, "
             + "if.preco "
             + "FROM itens_fornecedores if "
-            + "JOIN categorias c ON c.id = if.id_categoria "
-            + "JOIN fornecedores f ON f.id = if.id_fornecedor "
-            + "JOIN produtos p ON p.id = if.id_produto "
-            + "WHERE UPPER(p.nome) LIKE UPPER(?)";
+            + "join categorias c on c.id = if.id_categoria "
+            + "join fornecedores f on f.id = if.id_fornecedor "
+            + "join produtos p on p.id = if.id_produto "
+            + "WHERE Upper(p.nome) LIKE Upper(?) ";
 
     private final String SELECT_ID_EXISTENTE = "SELECT COUNT (itens_fornecedores.id_categoria) as qtde "
             + "FROM itens_fornecedores " + "WHERE itens_fornecedores.id_fornecedor = ? AND itens_fornecedores.id_produto = ?";
@@ -69,8 +73,14 @@ public class DaoPostgresqlItemFornecedor implements DaoItemFornecedor {
             + "FROM itens_fornecedores " + "WHERE itens_fornecedores.id_produto = ?";
 
     private final String SELECT_ID_FORN_EXISTENTE = "SELECT COUNT (itens_fornecedores.id_fornecedor) as qtde "
-            + "FROM itens_fornecedores "
-            + "WHERE itens_fornecedores.id_fornecedor = ?";
+            + "FROM itens_fornecedores " + "WHERE itens_fornecedores.id_fornecedor = ?";
+
+    private final String SELECT_ITEM_DUPLICADO = "SELECT EXISTS ("
+            + "SELECT 1 "
+            + "FROM itens_fornecedores i "
+            + "WHERE i.id_produto = ? "
+            + "AND i.id_fornecedor = ? "
+            + ") AS existe";
 
     private final String SELECT_TODES = "SELECT "
             + "ifs.id_fornecedor, "
@@ -97,8 +107,8 @@ public class DaoPostgresqlItemFornecedor implements DaoItemFornecedor {
         PreparedStatement ps = null;
         try {
             ps = conexao.prepareStatement(INSERT);
-            ps.setLong(1, itemFornecedor.getFornecedor().getId());
-            ps.setLong(2, itemFornecedor.getProduto().getId());
+            ps.setLong(1, itemFornecedor.getId().getIdFornecedor());
+            ps.setLong(2, itemFornecedor.getId().getIdProduto());
             ps.setBigDecimal(3, itemFornecedor.getPreco());
             ps.setLong(4, itemFornecedor.getCategoria().getId());
             ps.execute();
@@ -169,13 +179,16 @@ public class DaoPostgresqlItemFornecedor implements DaoItemFornecedor {
                 consulta.append("AND Upper(f.nome) LIKE Upper(?) ");
             }
 
-            if (valorInicial != null) {
-                consulta.append("AND if.preco >= ? ");
-            }
+            consulta.append("AND Upper(f.nome) LIKE Upper(?) ");
+            consulta.append("AND if.preco >= ? ");
+            consulta.append("AND if.preco <= ? ");
+            consulta.append("ORDER BY p.nome ");
+            ps = conexao.prepareStatement(consulta.toString());
 
-            if (valorFinal != null) {
-                consulta.append("AND if.preco <= ? ");
-            }
+            ps.setString(1, nomeProduto);
+            ps.setString(2, nomeFornecedor);
+            ps.setBigDecimal(3, valorInicial);
+            ps.setBigDecimal(4, valorFinal);
 
             consulta.append(" ORDER BY p.nome ");
 
@@ -217,28 +230,7 @@ public class DaoPostgresqlItemFornecedor implements DaoItemFornecedor {
         }
     }
 
-    @Override
-    public List<ItemFornecedor> listarTodos() {
-        List<ItemFornecedor> itensFornecedores = new ArrayList<>();
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            ps = conexao.prepareStatement(SELECT_TODES);
-            rs = ps.executeQuery();
-            while(rs.next()) {
-                itensFornecedores.add(extrairDo(rs));
-            }
-        } catch (Exception ex) {
-            throw new RuntimeException("Ocorreu um erro na listagem"
-                    + " dos itens de fornecedores. Motivo: " + ex.getMessage());
-        } finally {
-            ManagerDb.getInstance().fechar(ps);
-            ManagerDb.getInstance().fechar(rs);
-        }
-        return itensFornecedores;
-    }
-
-    @Override
+   @Override
     public boolean validarEdicao(Long idFornecedor, Long idProduto) {
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -255,6 +247,51 @@ public class DaoPostgresqlItemFornecedor implements DaoItemFornecedor {
         } catch (Exception ex) {
             throw new RuntimeException(
                     "Ocorreu um erro na validação " + "de id para edição do item. Motivo: " + ex.getMessage());
+        } finally {
+            ManagerDb.getInstance().fechar(ps);
+            ManagerDb.getInstance().fechar(rs);
+        }
+    }
+
+    @Override
+    public List<ItemFornecedor> listarTodos() {
+        List<ItemFornecedor> itensFornecedores = new ArrayList<>();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            ps = conexao.prepareStatement(SELECT_TODES);
+            rs = ps.executeQuery();
+            while(rs.next()) {
+                itensFornecedores.add(extrairDo(rs));
+            }
+            return isValidaoOk;
+        } catch (Exception ex) {
+            throw new RuntimeException("Ocorreu um erro na listagem"
+                    + " dos itens de fornecedores. Motivo: " + ex.getMessage());
+        } finally {
+            ManagerDb.getInstance().fechar(ps);
+            ManagerDb.getInstance().fechar(rs);
+        }
+        return itensFornecedores;
+    }
+
+    @Override
+    public boolean validarItemDuplicado(Long idProduto, Long idFornecedor) {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            ps = conexao.prepareStatement(SELECT_ITEM_DUPLICADO);
+            ps.setLong(1, idProduto);
+            ps.setLong(2, idFornecedor);
+            boolean isValidaoOk = false;
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                isValidaoOk = rs.getBoolean("existe");
+            }
+            return isValidaoOk;
+        } catch (Exception ex) {
+            throw new RuntimeException(
+                    "Ocorreu um erro na validação de id para edição do item. Motivo: " + ex.getMessage());
         } finally {
             ManagerDb.getInstance().fechar(ps);
             ManagerDb.getInstance().fechar(rs);

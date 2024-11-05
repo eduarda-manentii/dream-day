@@ -54,6 +54,7 @@ public class CadastroFornecedorWindow {
 
             if (!isEdicaoFornecedor) {
                 fornecedor = new Fornecedor(null, nome, telefone, email);
+                limparCampos();
             } else {
                 fornecedor.setNome(nome);
                 fornecedor.setTelefone(telefone);
@@ -68,7 +69,6 @@ public class CadastroFornecedorWindow {
                     null,
                     "As alterações foram salvas com sucesso. "
             );
-            limparCampos();
         } catch (Exception ex) {
             exibirAlerta(
                     Alert.AlertType.ERROR,
@@ -103,5 +103,9 @@ public class CadastroFornecedorWindow {
         txtNome.setText(fornecedorSelecionado.getNome());
         txtTelefone.setText(fornecedorSelecionado.getTelefone());
         txtEmail.setText(fornecedorSelecionado.getEmail());
+    }
+
+    public Fornecedor getFornecedor() {
+        return fornecedor;
     }
 }

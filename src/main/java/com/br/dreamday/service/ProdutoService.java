@@ -42,11 +42,11 @@ public class ProdutoService {
                 + " entre 3 a 100 caracteres.");
         }
 
-        boolean isDescricaoInvalido = produto.getDescricao().isBlank()
-                || produto.getDescricao().length() > 255
+        boolean isDescricaoInvalida = produto.getDescricao().isBlank()
+                || produto.getDescricao().length() > 100
                 || produto.getDescricao().length() < 3;
 
-        if (isDescricaoInvalido) {
+        if (isDescricaoInvalida) {
             throw new IllegalArgumentException("A descrição do produto deve possuir entre 3 e 100 caracteres!");
         }
     }
@@ -77,6 +77,13 @@ public class ProdutoService {
         String filtro = nome + "%";
         return daoProduto.listarPor(filtro);
     }
+
+    public List<Produto> listarPor(String nome, Integer limite) {
+
+        String filtro = "%" + nome + "%";
+        return daoProduto.listarPor(filtro, limite);
+    }
+
 
     public List<Produto> listarTodos() {
         return daoProduto.listarTodos();
