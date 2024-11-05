@@ -98,31 +98,31 @@ public class CadastroOrcamentoWindow {
                 Mensagens.exibirMensagemInformativa("Orçamento alterado com sucesso!");
             }
         } catch (Exception e) {
-            Mensagens.exibirMensagemInformativa("Erro ao salvar orçamento: " + e.getMessage());
+            Mensagens.exibirMensagemDeErro("Erro ao salvar orçamento: " + e.getMessage());
         }
     }
 
     private boolean validarCampos() {
         if (cbCliente.getValue() == null) {
-            Mensagens.exibirMensagemInformativa("Selecione um cliente.");
+            Mensagens.exibirMensagemDeAviso("Selecione um cliente.");
             return false;
         }
         if (cbStatus.getValue() == null) {
-            Mensagens.exibirMensagemInformativa("Selecione o status do orçamento.");
+            Mensagens.exibirMensagemDeAviso("Selecione o status do orçamento.");
             return false;
         }
         if (txtCustoEstimado.getText().isBlank()) {
-            Mensagens.exibirMensagemInformativa("Informe o custo estimado.");
+            Mensagens.exibirMensagemDeAviso("Informe o custo estimado.");
             return false;
         }
         try {
             BigDecimal custoEstimado = new BigDecimal(txtCustoEstimado.getText());
             if (custoEstimado.compareTo(BigDecimal.ZERO) <= 0) {
-                Mensagens.exibirMensagemInformativa("O custo estimado deve ser um valor positivo.");
+                Mensagens.exibirMensagemDeAviso("O custo estimado deve ser um valor positivo.");
                 return false;
             }
         } catch (NumberFormatException e) {
-            Mensagens.exibirMensagemInformativa("O custo estimado deve ser um número válido.");
+            Mensagens.exibirMensagemDeErro("O custo estimado deve ser um número válido.");
             return false;
         }
 

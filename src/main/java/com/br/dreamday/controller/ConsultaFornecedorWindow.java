@@ -3,6 +3,7 @@ package com.br.dreamday.controller;
 import com.br.dreamday.MainViewApplication;
 import com.br.dreamday.domain.Fornecedor;
 import com.br.dreamday.service.FornecedorService;
+import com.br.dreamday.utils.Mensagens;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -68,13 +69,7 @@ public class ConsultaFornecedorWindow {
                     try {
                         mostrarTelaDetalhe(fornecedor);
                     } catch (IOException e) {
-                        exibirAlerta(
-                                Alert.AlertType.ERROR,
-                                "Erro ao abrir a tela de detalhes",
-                                null,
-                                "Ocorreu um erro carregar as informações da tela de detalhes"
-                        );
-
+                        Mensagens.exibirMensagemDeErro("Ocorreu um erro carregar as informações da tela de detalhes.");
                     }
                 });
             }
@@ -157,14 +152,6 @@ public class ConsultaFornecedorWindow {
         popupStage.showAndWait();
         recarregarTabela();
         tableFornecedor.refresh();
-    }
-
-    public void exibirAlerta(Alert.AlertType tipo, String titulo, String cabecalho, String conteudo) {
-        Alert alert = new Alert(tipo);
-        alert.setTitle(titulo);
-        alert.setHeaderText(cabecalho);
-        alert.setContentText(conteudo);
-        alert.showAndWait().filter(response -> response == ButtonType.OK);
     }
 
     public void recarregarTabela() {

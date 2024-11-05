@@ -4,6 +4,7 @@ import com.br.dreamday.MainViewApplication;
 import com.br.dreamday.domain.Categoria;
 import com.br.dreamday.domain.Produto;
 import com.br.dreamday.service.ProdutoService;
+import com.br.dreamday.utils.Mensagens;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -71,14 +72,8 @@ public class ConsultaProdutoWindow {
     @FXML
     void editar(ActionEvent event) throws IOException {
         Produto produtoSelecionado = tableProduto.getSelectionModel().getSelectedItem();
-
         if (produtoSelecionado == null) {
-            exibirAlerta(
-                    Alert.AlertType.ERROR,
-                    "Seleção de Produto",
-                    null,
-                    "É necessário selecionar um produto para edição!. "
-            );
+            Mensagens.exibirMensagemDeAviso("É necessário selecionar um produto para edição!.");
         } else {
 
             FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(MainViewApplication.class.getResource("cadastro-produto-window.fxml")));
@@ -109,17 +104,10 @@ public class ConsultaProdutoWindow {
     @FXML
     void excluir(ActionEvent event) {
         Produto produtoSelecionado = tableProduto.getSelectionModel().getSelectedItem();
-
         if (produtoSelecionado == null) {
-            exibirAlerta(
-                    Alert.AlertType.ERROR,
-                    "Seleção de Produto",
-                    null,
-                    "É necessário selecionar um produto para excluir!. "
-            );
+            Mensagens.exibirMensagemDeAviso("É necessário selecionar um produto para excluir!.");
         } else {
-
-            confirmationMessage(() -> {
+            Mensagens.exibirMensagemDeConfirmacao("Tem certeza que deseja remover?", () -> {
                 produtoService.excluirPor(produtoSelecionado.getId());
                 produtoList.remove(produtoSelecionado);
                 tableProduto.refresh();
@@ -153,29 +141,9 @@ public class ConsultaProdutoWindow {
 
     }
 
-    public void exibirAlerta(Alert.AlertType tipo, String titulo, String cabecalho, String conteudo) {
-        Alert alert = new Alert(tipo);
-        alert.setTitle(titulo);
-        alert.setHeaderText(cabecalho);
-        alert.setContentText(conteudo);
-        alert.showAndWait().filter(response -> response == ButtonType.OK);
-    }
-
     public void recarregarTabela() {
         produtoList.clear();
         produtoList.addAll(produtoService.listarTodos());
     }
 
-    private void confirmationMessage(Runnable action) {
-        Alert dialog = new Alert(Alert.AlertType.CONFIRMATION);
-        ButtonType btnYes = new ButtonType("Sim");
-        ButtonType btnNo = new ButtonType("Não");
-        dialog.setContentText("Tem certeza que deseja remover?");
-        dialog.getButtonTypes().setAll(btnYes, btnNo);
-        dialog.showAndWait().ifPresent(b -> {
-            if (b == btnYes) {
-                action.run();
-            }
-        });
-    }
 }

@@ -2,6 +2,7 @@ package com.br.dreamday.controller;
 
 import com.br.dreamday.domain.ItemFornecedor;
 import com.br.dreamday.service.ItemFornecedorService;
+import com.br.dreamday.utils.Mensagens;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -61,9 +62,6 @@ public class ConsultaItemFornecedorWindow {
     @FXML
     private TextField txtValorInicial;
 
-    @FXML
-    private ImageView imgInformation;
-
     private ObservableList<ItemFornecedor> itemFornecedorList;
     private final ItemFornecedorService itemFornecedorService;
 
@@ -101,12 +99,7 @@ public class ConsultaItemFornecedorWindow {
             tableItemFornecedor.setItems(itemFornecedorList);
 
         } catch (Exception ex) {
-            exibirAlerta(
-                    Alert.AlertType.ERROR,
-                    "Listagem de Item Fornecedor",
-                    null,
-                    "Ocorreu um erro na listagem dos itens: " + ex.getMessage()
-            );
+            Mensagens.exibirMensagemDeErro("Ocorreu um erro na listagem dos itens: " + ex.getMessage());
         }
     }
 
@@ -138,11 +131,4 @@ public class ConsultaItemFornecedorWindow {
         descricaoFornecedorColumn.setCellValueFactory(new PropertyValueFactory<>("descricaoFornecedor"));
     }
 
-    public void exibirAlerta(Alert.AlertType tipo, String titulo, String cabecalho, String conteudo) {
-        Alert alert = new Alert(tipo);
-        alert.setTitle(titulo);
-        alert.setHeaderText(cabecalho);
-        alert.setContentText(conteudo);
-        alert.showAndWait().filter(response -> response == ButtonType.OK);
-    }
 }

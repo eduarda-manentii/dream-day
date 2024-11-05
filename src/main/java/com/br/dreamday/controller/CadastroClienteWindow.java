@@ -85,12 +85,12 @@ public class CadastroClienteWindow {
                 }
                 limparCampos();
             } else {
-                Mensagens.exibirMensagemInformativa("Todos os campos são obrigatórios!");
+                Mensagens.exibirMensagemDeAviso("Todos os campos são obrigatórios!");
             }
         }  catch (DateTimeException ex) {
-            Mensagens.exibirMensagemInformativa("Digite um valor para a hora válido.");
+            Mensagens.exibirMensagemDeErro("Digite um valor para a hora válido.");
         } catch (Exception e) {
-            Mensagens.exibirMensagemInformativa(e.getMessage());
+            Mensagens.exibirMensagemDeErro(e.getMessage());
         }
     }
 

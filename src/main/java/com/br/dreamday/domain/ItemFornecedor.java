@@ -91,10 +91,13 @@ public class ItemFornecedor {
 
     public String getDescricaoFornecedor() {
         return fornecedor.getNome();
+    }
 
     @Override
-    public String toString() {
+    public String toString () {
         return "Fornecedor:" + fornecedor.getNome() +
                 ", Produto:" + produto.getNome();
+
     }
+
 }

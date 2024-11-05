@@ -2,6 +2,7 @@ package com.br.dreamday.controller;
 
 import com.br.dreamday.domain.Fornecedor;
 import com.br.dreamday.service.FornecedorService;
+import com.br.dreamday.utils.Mensagens;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -62,20 +63,9 @@ public class CadastroFornecedorWindow {
             }
 
             fornecedorService.salvar(fornecedor);
-
-            exibirAlerta(
-                    Alert.AlertType.INFORMATION,
-                    "Seu registro foi salvo",
-                    null,
-                    "As alterações foram salvas com sucesso. "
-            );
+            Mensagens.exibirMensagemInformativa("As alterações foram salvas com sucesso.");
         } catch (Exception ex) {
-            exibirAlerta(
-                    Alert.AlertType.ERROR,
-                    "Erro de Validação",
-                    null,
-                    "Ocorreu um erro ao salvar as informações: " + ex.getMessage()
-            );
+            Mensagens.exibirMensagemDeErro("Ocorreu um erro ao salvar as informações: " + ex.getMessage());
         }
     }
 
@@ -83,14 +73,6 @@ public class CadastroFornecedorWindow {
         txtNome.clear();
         txtTelefone.clear();
         txtEmail.clear();
-    }
-
-    public void exibirAlerta(Alert.AlertType tipo, String titulo, String cabecalho, String conteudo) {
-        Alert alert = new Alert(tipo);
-        alert.setTitle(titulo);
-        alert.setHeaderText(cabecalho);
-        alert.setContentText(conteudo);
-        alert.showAndWait().filter(response -> response == ButtonType.OK);
     }
 
     public void setAttributes(Fornecedor fornecedorSelecionado) {

@@ -2,6 +2,7 @@ package com.br.dreamday.controller;
 
 import com.br.dreamday.service.CategoriaService;
 import com.br.dreamday.domain.Categoria;
+import com.br.dreamday.utils.Mensagens;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -43,46 +44,21 @@ public class CadastroCategoriaWindow {
 
             if (!isEdicaoCategoria) {
                 categoria = new Categoria(null, nome);
-
-                exibirAlerta(
-                        Alert.AlertType.INFORMATION,
-                        "Confirmação de Salvamento",
-                        null,
-                        "As alterações foram salvas com sucesso. "
-                );
+                Mensagens.exibirMensagemInformativa("As alterações foram salvas com sucesso.");
                 limparCampos();
             } else {
                 categoria.setNome(nome);
-
-                exibirAlerta(
-                        Alert.AlertType.INFORMATION,
-                        "Confirmação de Alteração",
-                        null,
-                        "As alterações foram salvas com sucesso. "
-                );
+                Mensagens.exibirMensagemInformativa("As alterações foram salvas com sucesso.");
             }
 
             categoriaService.salvar(categoria);
         } catch (Exception ex) {
-            exibirAlerta(
-                    Alert.AlertType.ERROR,
-                    "Erro de Validação",
-                    null,
-                    "Ocorreu um erro ao salvar as informações: " + ex.getMessage()
-            );
+            Mensagens.exibirMensagemDeErro("Ocorreu um erro ao salvar as informações: " + ex.getMessage());
         }
     }
 
     private void limparCampos() {
         txtNome.clear();
-    }
-
-    public void exibirAlerta(Alert.AlertType tipo, String titulo, String cabecalho, String conteudo) {
-        Alert alert = new Alert(tipo);
-        alert.setTitle(titulo);
-        alert.setHeaderText(cabecalho);
-        alert.setContentText(conteudo);
-        alert.showAndWait().filter(response -> response == ButtonType.OK);
     }
 
     public void setAttributes(Categoria categoriaSelecionada) {

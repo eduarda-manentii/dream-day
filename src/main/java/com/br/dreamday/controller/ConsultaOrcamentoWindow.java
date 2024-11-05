@@ -81,7 +81,7 @@ public class ConsultaOrcamentoWindow {
                         onButtonDetalhesClicked(orcamento);
                     }
                     catch (IOException e) {
-                        Mensagens.exibirMensagemInformativa("Erro ao abrir a tela de detalhes");
+                        Mensagens.exibirMensagemDeErro("Erro ao abrir a tela de detalhes");
                     }
                 });
             }

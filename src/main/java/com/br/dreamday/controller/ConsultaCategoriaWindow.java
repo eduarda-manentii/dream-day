@@ -3,6 +3,7 @@ package com.br.dreamday.controller;
 import com.br.dreamday.MainViewApplication;
 import com.br.dreamday.service.CategoriaService;
 import com.br.dreamday.domain.Categoria;
+import com.br.dreamday.utils.Mensagens;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -82,12 +83,7 @@ public class ConsultaCategoriaWindow {
             tableCategoria.setItems(categoriaList);
             tableCategoria.refresh();
         } catch (Exception ex) {
-            exibirAlerta(
-                    Alert.AlertType.ERROR,
-                    "Seleção de Categoria",
-                    null,
-                    "Ocorreu um erro na listagem das categorias: " + ex.getMessage()
-            );
+            Mensagens.exibirMensagemDeAviso( "Ocorreu um erro na listagem das categorias: " + ex.getMessage());
         }
     }
 
@@ -96,12 +92,7 @@ public class ConsultaCategoriaWindow {
         Categoria categoriaSelecionada = tableCategoria.getSelectionModel().getSelectedItem();
 
         if (categoriaSelecionada == null) {
-            exibirAlerta(
-                    Alert.AlertType.ERROR,
-                    "Seleção de Categoria",
-                    null,
-                    "É necessário selecionar uma categoria para edição!"
-            );
+            Mensagens.exibirMensagemDeAviso( "É necessário selecionar uma categoria para edição!");
         } else {
 
             FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(MainViewApplication.class.getResource("cadastro-categoria-window.fxml")));
@@ -130,26 +121,15 @@ public class ConsultaCategoriaWindow {
         Categoria categoriaSelecionada = tableCategoria.getSelectionModel().getSelectedItem();
 
         if (categoriaSelecionada == null) {
-            exibirAlerta(
-                    Alert.AlertType.ERROR,
-                    "Seleção de Categoria",
-                    null,
-                    "É necessário selecionar uma categoria para excluir!. "
-            );
+            Mensagens.exibirMensagemDeAviso("É necessário selecionar uma categoria para excluir.");
         } else {
-
-            confirmationMessage(() -> {
+            Mensagens.exibirMensagemDeConfirmacao("Tem certeza que deseja remover?", () -> {
                 try {
                     categoriaService.excluirPor(categoriaSelecionada.getId());
                     categoriaList.remove(categoriaSelecionada);
                     tableCategoria.refresh();
                 } catch (Exception ex) {
-                    exibirAlerta(
-                            Alert.AlertType.ERROR,
-                            "Erro de Exclusão",
-                            null,
-                            "Ocorreu um erro ao excluir: " + ex.getMessage()
-                    );
+                    Mensagens.exibirMensagemDeErro("Ocorreu um erro ao excluir: " + ex.getMessage());
                 }
             });
         }
@@ -165,29 +145,9 @@ public class ConsultaCategoriaWindow {
 
     }
 
-    public void exibirAlerta(Alert.AlertType tipo, String titulo, String cabecalho, String conteudo) {
-        Alert alert = new Alert(tipo);
-        alert.setTitle(titulo);
-        alert.setHeaderText(cabecalho);
-        alert.setContentText(conteudo);
-        alert.showAndWait().filter(response -> response == ButtonType.OK);
-    }
-
     public void recarregarTabela() {
         categoriaList.clear();
         categoriaList.addAll(categoriaService.listarTodas());
     }
 
-    private void confirmationMessage(Runnable action) {
-        Alert dialog = new Alert(Alert.AlertType.CONFIRMATION);
-        ButtonType btnYes = new ButtonType("Sim");
-        ButtonType btnNo = new ButtonType("Não");
-        dialog.setContentText("Tem certeza que deseja remover?");
-        dialog.getButtonTypes().setAll(btnYes, btnNo);
-        dialog.showAndWait().ifPresent(b -> {
-            if (b == btnYes) {
-                action.run();
-            }
-        });
-    }
 }

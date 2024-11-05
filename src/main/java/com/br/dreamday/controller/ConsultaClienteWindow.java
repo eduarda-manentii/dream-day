@@ -114,9 +114,9 @@ public class ConsultaClienteWindow {
             tableCliente.setItems(clienteList);
             tableCliente.refresh();
         }  catch (DateTimeException ex) {
-            Mensagens.exibirMensagemInformativa("Digite um valor para a hora válido.");
+            Mensagens.exibirMensagemDeAviso("Digite um valor para a hora válido.");
         } catch (Exception e) {
-            Mensagens.exibirMensagemInformativa(e.getMessage());
+            Mensagens.exibirMensagemDeErro(e.getMessage());
         }
     }
 
@@ -145,7 +145,7 @@ public class ConsultaClienteWindow {
         if (clienteSelecionado == null) {
             Mensagens.exibirMensagemDeAviso("Selecione um cliente");
         } else {
-            confirmationMessage("Tem certeza que deseja remover o item selecionado?", () -> {
+            Mensagens.exibirMensagemDeConfirmacao("Tem certeza que deseja remover o item selecionado?", () -> {
                 service.excluirPor(clienteSelecionado.getId());
                 recarregarTabela();
                 tableCliente.refresh();
@@ -156,30 +156,6 @@ public class ConsultaClienteWindow {
     private void recarregarTabela() {
         clienteList.clear();
         clienteList.addAll(service.listarTodos());
-    }
-
-    private void showMessage(String mensagem) {
-        ButtonType loginButtonType = new ButtonType("Ok!", ButtonBar.ButtonData.OK_DONE);
-        Dialog<String> dialog = new Dialog<>();
-        dialog.setTitle("Aviso");
-        dialog.setContentText(mensagem);
-        dialog.getDialogPane().getButtonTypes().add(loginButtonType);
-        boolean desativado = false;
-        dialog.getDialogPane().lookupButton(loginButtonType).setDisable(desativado);
-        dialog.showAndWait();
-    }
-
-    private void confirmationMessage(String mensagem, Runnable acao) {
-        Alert dialog = new Alert(Alert.AlertType.CONFIRMATION);
-        ButtonType btnYes = new ButtonType("Sim");
-        ButtonType btnNo = new ButtonType("Não");
-        dialog.setContentText(mensagem);
-        dialog.getButtonTypes().setAll(btnYes, btnNo);
-        dialog.showAndWait().ifPresent(b -> {
-            if (b == btnYes) {
-                acao.run();
-            }
-        });
     }
 
 }

@@ -39,8 +39,11 @@ public class DaoPostgresqlItemFornecedor implements DaoItemFornecedor {
             + "c.nome nome_categoria, "
             + "ifs.id_fornecedor, "
             + "ifs.id_produto, "
-            + "ifs.preco "
+            + "ifs.preco, "
+            + "f.id id_fornecedor, "
+            + "f.nome nome_fornecedor "
             + "FROM itens_fornecedores ifs "
+            + "join fornecedores f on f.id = ifs.id_fornecedor "
             + "join categorias c on c.id = ifs.id_categoria "
             + "join produtos p on p.id = ifs.id_produto "
             + "WHERE ifs.id_fornecedor = ? "
@@ -264,7 +267,6 @@ public class DaoPostgresqlItemFornecedor implements DaoItemFornecedor {
             while(rs.next()) {
                 itensFornecedores.add(extrairDo(rs));
             }
-            return isValidaoOk;
         } catch (Exception ex) {
             throw new RuntimeException("Ocorreu um erro na listagem"
                     + " dos itens de fornecedores. Motivo: " + ex.getMessage());

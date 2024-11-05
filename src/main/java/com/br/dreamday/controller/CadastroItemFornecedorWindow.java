@@ -9,11 +9,10 @@ import com.br.dreamday.domain.Produto;
 import com.br.dreamday.service.CategoriaService;
 import com.br.dreamday.service.ItemFornecedorService;
 import com.br.dreamday.service.ProdutoService;
+import com.br.dreamday.utils.Mensagens;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
@@ -23,7 +22,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 public class CadastroItemFornecedorWindow implements Initializable {
-
 
     @FXML
     private AnchorPane rootPane;
@@ -94,22 +92,10 @@ public class CadastroItemFornecedorWindow implements Initializable {
             }
 
             itemFornecedorService.salvar(itemFornecedor);
-
-            exibirAlerta(
-                    Alert.AlertType.INFORMATION,
-                    "Confirmação de Alteração",
-                    null,
-                    "As alterações foram salvas com sucesso. "
-            );
-
+            Mensagens.exibirMensagemDeErro("As alterações foram salvas com sucesso.");
             limparCampos();
         } catch (Exception ex) {
-            exibirAlerta(
-                    Alert.AlertType.ERROR,
-                    "Erro de Validação",
-                    null,
-                    "Ocorreu um erro ao salvar as informações: " + ex.getMessage()
-            );
+            Mensagens.exibirMensagemDeErro("Ocorreu um erro ao salvar as informações: " + ex.getMessage());
         }
     }
 
@@ -117,14 +103,6 @@ public class CadastroItemFornecedorWindow implements Initializable {
         txtPreco.clear();
         autoTxtCategoria.limparAutoComplete();
         autoTxtProduto.limparAutoComplete();
-    }
-
-    public void exibirAlerta(Alert.AlertType tipo, String titulo, String cabecalho, String conteudo) {
-        Alert alert = new Alert(tipo);
-        alert.setTitle(titulo);
-        alert.setHeaderText(cabecalho);
-        alert.setContentText(conteudo);
-        alert.showAndWait().filter(response -> response == ButtonType.OK);
     }
 
     public void setAttributesInsercao(Fornecedor fornecedor) {
