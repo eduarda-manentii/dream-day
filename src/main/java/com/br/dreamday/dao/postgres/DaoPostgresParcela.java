@@ -7,6 +7,8 @@ import com.br.dreamday.domain.*;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DaoPostgresParcela implements DaoParcela {
 
@@ -54,6 +56,36 @@ public class DaoPostgresParcela implements DaoParcela {
             "JOIN orcamentos o ON par.id_orcamento = o.id " +
             "JOIN clientes c ON c.id = o.id_cliente " +
             "WHERE p.id = ?;";
+
+    private final String LIST_BY_PARCELAMENTO =  "SELECT " +
+            "p.id AS parcela_id, " +
+            "p.valor AS parcela_valor, " +
+            "p.status AS parcela_status, " +
+            "par.id AS id_parcelamento, " +
+            "par.valor AS parcelamento_valor, " +
+            "par.data_vencimento AS parcelamento_data_vencimento, " +
+            "par.data_pagamento AS parcelamento_data_pagamento, " +
+            "par.status AS parcelamento_status, " +
+            "par.observacao AS parcelamento_observacao, " +
+            "par.qtde_parcelas AS parcelamento_qtde_parcelas, " +
+            "o.id AS orcamento_id, " +
+            "o.status AS orcamento_status, " +
+            "o.observacoes AS orcamento_observacoes, " +
+            "o.data_criacao AS orcamento_data_criacao, " +
+            "o.custo_estimado AS orcamento_custo_estimado, " +
+            "o.valor_total AS orcamento_valor_total, " +
+            "c.id AS cliente_id, " +
+            "c.nome AS cliente_nome, " +
+            "c.conjugue AS cliente_conjugue, " +
+            "c.data_casamento AS cliente_data_casamento, " +
+            "c.telefone AS cliente_telefone, " +
+            "c.email AS cliente_email, " +
+            "c.cpf AS cliente_cpf " +
+            "FROM parcelas p " +
+            "JOIN parcelamentos par ON p.id_parcelamento = par.id " +
+            "JOIN orcamentos o ON par.id_orcamento = o.id " +
+            "JOIN clientes c ON c.id = o.id_cliente " +
+            "WHERE p.id_parcelamento = ?;";
 
 
     private PreparedStatement ps;
@@ -122,6 +154,27 @@ public class DaoPostgresParcela implements DaoParcela {
             return null;
         } catch (Exception e) {
             throw new RuntimeException("Ocorreu um erro ao buscar o parcelamento: " + e.getMessage());
+        }finally {
+            ManagerDb.getInstance().fechar(ps);
+            ManagerDb.getInstance().fechar(rs);
+        }
+    }
+
+    @Override
+    public List<Parcela> listarPor(Long parcelamentoId) {
+        ps = null;
+        ResultSet rs = null;
+        try {
+            ps = conexao.prepareStatement(LIST_BY_PARCELAMENTO);
+            ps.setLong(1, parcelamentoId);
+            rs = ps.executeQuery();
+            List<Parcela> parcelas = new ArrayList<>();
+            while (rs.next()) {
+                parcelas.add(extrairParcela(rs));
+            }
+            return parcelas;
+        } catch (Exception e) {
+            throw new RuntimeException("Ocorreu um erro ao buscar as parcelas: " + e.getMessage());
         }finally {
             ManagerDb.getInstance().fechar(ps);
             ManagerDb.getInstance().fechar(rs);

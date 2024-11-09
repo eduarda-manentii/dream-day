@@ -4,6 +4,8 @@ import com.br.dreamday.dao.DaoParcela;
 import com.br.dreamday.dao.FactoryDao;
 import com.br.dreamday.domain.Parcela;
 
+import java.util.List;
+
 public class ParcelaService {
 
     private DaoParcela dao;
@@ -35,6 +37,10 @@ public class ParcelaService {
         Parcela parcela = buscarPor(id);
         dao.excluirPor(id);
         return parcela;
+    }
+
+    public List<Parcela> listarPorParcelamento(Long parcelamentoId) {
+        return dao.listarPor(parcelamentoId);
     }
 
 }

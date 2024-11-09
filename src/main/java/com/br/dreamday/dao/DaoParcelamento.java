@@ -13,6 +13,8 @@ public interface DaoParcelamento {
 
     Parcelamento buscarPor(Long id);
 
+    Parcelamento buscarPorOrcamento(Long orcamentoId);
+
     boolean possuiParcelamento(Long id);
 
 }

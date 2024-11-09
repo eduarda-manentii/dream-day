@@ -1,10 +1,8 @@
 package com.br.dreamday.controller;
 
 import com.br.dreamday.MainViewApplication;
-import com.br.dreamday.component.AutoCompleteProduto;
 import com.br.dreamday.domain.*;
 import com.br.dreamday.service.*;
-import com.br.dreamday.utils.MascarasFX;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -19,9 +17,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.Objects;
-import java.util.ResourceBundle;
 
 public class DetalheOrcamentoWindow {
 
@@ -69,6 +65,9 @@ public class DetalheOrcamentoWindow {
 
     @FXML
     private TableColumn<ItemOrcamento, String> acoesColumn;
+
+    @FXML
+    private Button btnVerParcelas;
 
     private ObservableList<ItemOrcamento> itemOrcamentoList;
     private final ItemOrcamentoService service;
@@ -158,6 +157,28 @@ public class DetalheOrcamentoWindow {
         );
         Stage popupStage = new Stage();
         popupStage.setTitle("Detalhe Fornecedor");
+        Scene scene = new Scene(root);
+        popupStage.setScene(scene);
+        popupStage.initModality(Modality.APPLICATION_MODAL);
+        popupStage.centerOnScreen();
+        popupStage.setResizable(false);
+        popupStage.showAndWait();
+    }
+
+    @FXML
+    void onButtonVerParcelas() throws IOException {
+        FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/com/br/dreamday/parcelas-window.fxml")));
+        Parent root = loader.load();
+        ParcelasControllerWindow parcelasController = loader.getController();
+        parcelamentoService.isParcelamentoExistentePeloOrcamento(orcamento.getId());
+        Parcelamento parcelamento = parcelamentoService.buscarPorOrcamento(orcamento.getId());
+
+        parcelasController.definirAtributos(
+            parcelamento
+        );
+
+        Stage popupStage = new Stage();
+        popupStage.setTitle("Parcelas");
         Scene scene = new Scene(root);
         popupStage.setScene(scene);
         popupStage.initModality(Modality.APPLICATION_MODAL);

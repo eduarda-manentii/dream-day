@@ -2,6 +2,8 @@ package com.br.dreamday.dao;
 
 import com.br.dreamday.domain.Parcela;
 
+import java.util.List;
+
 public interface DaoParcela {
 
     void inserir(Parcela parcela);
@@ -11,5 +13,7 @@ public interface DaoParcela {
     void excluirPor(Long id);
 
     Parcela buscarPor(Long id);
+
+    List<Parcela> listarPor(Long parcelamentoId);
 
 }

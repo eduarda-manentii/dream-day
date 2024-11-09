@@ -42,4 +42,7 @@ public class ParcelamentoService {
         return dao.possuiParcelamento(idOrcamento);
     }
 
+    public Parcelamento buscarPorOrcamento(Long id) {
+        return dao.buscarPorOrcamento(id);
+    }
 }

@@ -69,7 +69,44 @@ public class DaoPostgresParcelamento implements DaoParcelamento {
             "WHERE " +
             "parcelamentos.id = ?";
 
-    private final String COUNT_BY_ORCAMENTO = "SELECT count(p.id) FROM parcelamentos p WHERE p.id_orcamento = ?";
+    private final String COUNT_BY_ORCAMENTO = "SELECT " +
+            "count(p.id) " +
+            "FROM " +
+            "parcelamentos p " +
+            "WHERE " +
+            "p.id_orcamento = ?";
+
+    private final String SELECT_BY_ORCAMENTO = "SELECT " +
+            "parcelamentos.id, " +
+            "parcelamentos.id_orcamento, " +
+            "parcelamentos.valor, " +
+            "parcelamentos.data_vencimento, " +
+            "parcelamentos.data_pagamento, " +
+            "parcelamentos.status as parcelas_status, " +
+            "parcelamentos.observacao, " +
+            "parcelamentos.qtde_parcelas, " +
+            "orcamentos.id, " +
+            "orcamentos.id_cliente, " +
+            "orcamentos.status as orcamentos_status, " +
+            "orcamentos.observacoes, " +
+            "orcamentos.data_criacao, " +
+            "orcamentos.custo_estimado, " +
+            "orcamentos.valor_total, " +
+            "clientes.id, " +
+            "clientes.nome, " +
+            "clientes.conjugue, " +
+            "clientes.data_casamento, " +
+            "clientes.telefone, " +
+            "clientes.email, " +
+            "clientes.cpf " +
+            "FROM " +
+            "parcelamentos " +
+            "JOIN orcamentos ON parcelamentos.id_orcamento = orcamentos.id " +
+            "JOIN clientes ON orcamentos.id_cliente = clientes.id " +
+            "WHERE " +
+            "parcelamentos.id_orcamento = ?";
+
+
 
     private PreparedStatement ps;
 
@@ -152,6 +189,26 @@ public class DaoPostgresParcelamento implements DaoParcelamento {
     }
 
     @Override
+    public Parcelamento buscarPorOrcamento(Long orcamentoId) {
+        ps = null;
+        ResultSet rs = null;
+        try {
+            ps = conexao.prepareStatement(SELECT_BY_ORCAMENTO);
+            ps.setLong(1, orcamentoId);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return extrairParcelamento(rs);
+            }
+            return null;
+        } catch (Exception e) {
+            throw new RuntimeException("Ocorreu um erro ao buscar o parcelamento: " + e.getMessage());
+        }finally {
+            ManagerDb.getInstance().fechar(ps);
+            ManagerDb.getInstance().fechar(rs);
+        }
+    }
+
+    @Override
     public boolean possuiParcelamento(Long id) {
         ps = null;
         ResultSet rs = null;
@@ -176,7 +233,16 @@ public class DaoPostgresParcelamento implements DaoParcelamento {
             Long id = rs.getLong("id");
             BigDecimal valor = rs.getBigDecimal("valor");
             LocalDate dataVencimento = rs.getDate("data_vencimento").toLocalDate();
-            LocalDate dataPagamento = rs.getDate("data_pagamento").toLocalDate();
+
+            LocalDate dataPagamento;
+            try {
+                dataPagamento = rs.getDate("data_pagamento").toLocalDate();
+            } catch (Exception e) {
+                dataPagamento = null;
+            }
+
+
+
             ParcelamentoStatus status = ParcelamentoStatus.valueOf(rs.getString("parcelas_status"));
             String observacao = rs.getString("observacao");
             Integer qtdeParcelas = rs.getInt("qtde_parcelas");
