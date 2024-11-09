@@ -1,7 +1,6 @@
 package com.br.dreamday.controller;
 
 import com.br.dreamday.MainViewApplication;
-import com.br.dreamday.domain.Categoria;
 import com.br.dreamday.domain.Produto;
 import com.br.dreamday.service.ProdutoService;
 import javafx.collections.FXCollections;
@@ -20,7 +19,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
-public class ConsultaProdutoWindow {
+public class ConsultaProdutoWindowController {
 
     @FXML
     private TableView<Produto> tableProduto;
@@ -37,7 +36,7 @@ public class ConsultaProdutoWindow {
     private ObservableList<Produto> produtoList;
     private final ProdutoService produtoService;
 
-    public ConsultaProdutoWindow() {
+    public ConsultaProdutoWindowController() {
         this.produtoService = new ProdutoService();
     }
 
@@ -83,8 +82,8 @@ public class ConsultaProdutoWindow {
 
             FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(MainViewApplication.class.getResource("cadastro-produto-window.fxml")));
             Parent root = loader.load();
-            CadastroProdutoWindow cadastroProdutoWindow = loader.getController();
-            cadastroProdutoWindow.setAttributes(new Produto(
+            CadastroProdutoWindowController cadastroProdutoWindowController = loader.getController();
+            cadastroProdutoWindowController.setAttributes(new Produto(
                     produtoSelecionado.getId(),
                     produtoSelecionado.getNome(),
                     produtoSelecionado.getDescricao()
@@ -98,7 +97,7 @@ public class ConsultaProdutoWindow {
             popupStage.setResizable(false);
             popupStage.showAndWait();
 
-            Produto produto = cadastroProdutoWindow.getProduto();
+            Produto produto = cadastroProdutoWindowController.getProduto();
             int index = produtoList.indexOf(produtoSelecionado);
             produtoList.set(index, produto);
 

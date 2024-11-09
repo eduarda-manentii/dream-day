@@ -1,7 +1,6 @@
 package com.br.dreamday.controller;
 
 import com.br.dreamday.domain.*;
-import com.br.dreamday.service.ClienteService;
 import com.br.dreamday.service.ItemFornecedorService;
 import com.br.dreamday.service.ItemOrcamentoService;
 import com.br.dreamday.service.OrcamentoService;
@@ -22,7 +21,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 
-public class VincularItemWindow {
+public class VincularItemWindowController {
 
     @FXML
     private ComboBox<ItemFornecedor> cbItem;
@@ -42,7 +41,7 @@ public class VincularItemWindow {
     private ItemFornecedorService itemFornecedorService;
     private ItemOrcamentoService service;
 
-    public VincularItemWindow() {
+    public VincularItemWindowController() {
         this.service = new ItemOrcamentoService();
         this.orcamentoService = new OrcamentoService();
         this.itemFornecedorService = new ItemFornecedorService();
@@ -90,10 +89,11 @@ public class VincularItemWindow {
         obListStatus.addFirst(null);
         cbStatus.setItems(obListStatus);
 
-        List<ItemFornecedor> itensFornecedires = itemFornecedorService.listarTodos();
-        ObservableList<ItemFornecedor> obListClientes = FXCollections.observableArrayList(itensFornecedires);
-        obListClientes.addFirst(null);
-        cbItem.setItems(obListClientes);
+        //TODO tem que ver essa parte porque não existe mais listarTodos() do itemFornecedor
+//        List<ItemFornecedor> itensFornecedores = itemFornecedorService.listarTodos();
+//        ObservableList<ItemFornecedor> obListClientes = FXCollections.observableArrayList(itensFornecedires);
+//        obListClientes.addFirst(null);
+//        cbItem.setItems(obListClientes);
     }
 
     @FXML

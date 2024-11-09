@@ -7,7 +7,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.br.dreamday.controller.ConsultaClienteWindow">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.br.dreamday.controller.ConsultaClienteWindowController">
    <children>
       <Button fx:id="btnAdicionar" layoutX="467.0" layoutY="33.0" mnemonicParsing="false" onAction="#onButtonAdicionarCLicked" prefHeight="28.0" prefWidth="100.0" text="Adicionar" />
       <TextField fx:id="txtNomeDoCliente" layoutX="27.0" layoutY="108.0" prefHeight="28.0" prefWidth="215.0" />

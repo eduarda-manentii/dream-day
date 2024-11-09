@@ -21,12 +21,11 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class CadastroOrcamentoWindow {
+public class CadastroOrcamentoWindowController {
 
     @FXML
     private ComboBox<OrcamentoStatus> cbStatus;
@@ -45,7 +44,7 @@ public class CadastroOrcamentoWindow {
     private Long orcamentoId;
     private Orcamento orcamentoSelecionado;
 
-    public CadastroOrcamentoWindow() {
+    public CadastroOrcamentoWindowController() {
         this.orcamentoId = Long.valueOf(0);
         this.service = new OrcamentoService();
         this.clienteService = new ClienteService();
@@ -103,7 +102,7 @@ public class CadastroOrcamentoWindow {
     void abrirTelaVincularItem() throws IOException {
         FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(MainViewApplication.class.getResource("vincular-item-window.fxml")));
         Parent parent = loader.load();
-        VincularItemWindow controller = loader.getController();
+        VincularItemWindowController controller = loader.getController();
         controller.setOrcamentoId(orcamentoId);
         Stage popupStage = new Stage();
         popupStage.setTitle("Vincular Item");

@@ -3,6 +3,7 @@ package com.br.dreamday.controller;
 import com.br.dreamday.MainViewApplication;
 import com.br.dreamday.domain.Fornecedor;
 import com.br.dreamday.service.FornecedorService;
+import com.br.dreamday.utils.WindowUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -19,7 +20,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
-public class ConsultaFornecedorWindow {
+public class ConsultaFornecedorWindowController {
 
     @FXML
     private TableView<Fornecedor> tableFornecedor;
@@ -45,8 +46,33 @@ public class ConsultaFornecedorWindow {
     private ObservableList<Fornecedor> fornecedorList;
     private final FornecedorService fornecedorService;
 
-    public ConsultaFornecedorWindow() {
+    public ConsultaFornecedorWindowController() {
         this.fornecedorService = new FornecedorService();
+    }
+
+    @FXML
+    void mostrarConsultaCategoria() throws IOException {
+        WindowUtils.abrirTelaConsultaCategoria();
+    }
+
+    @FXML
+    void mostrarConsultaProduto() throws IOException {
+        WindowUtils.abrirTelaConsultaFornecedor();
+    }
+
+    @FXML
+    void mostrarConsultaCliente() throws IOException {
+        WindowUtils.abrirTelaConsultaCliente();
+    }
+
+    @FXML
+    void mostrarConsultaOrcamento() throws IOException {
+        WindowUtils.abrirTelaConsultaOrcamento();
+    }
+
+    @FXML
+    void mostrarConsultaFornecedor() throws IOException {
+        WindowUtils.abrirTelaConsultaFornecedor();
     }
 
     @FXML
@@ -124,21 +150,11 @@ public class ConsultaFornecedorWindow {
         tableFornecedor.refresh();
     }
 
-    @FXML
-    void mostrarCadastroCategoria(ActionEvent event) {
-
-    }
-
-    @FXML
-    void mostrarCadastroProduto(ActionEvent event) {
-
-    }
-
     private void mostrarTelaDetalhe(Fornecedor fornecedorSelecionado) throws IOException {
         FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(MainViewApplication.class.getResource("detalhe-fornecedor-window.fxml")));
         Parent root = loader.load();
-        DetalheFornecedorWindow detalheFornecedorWindow = loader.getController();
-        detalheFornecedorWindow.setAttributes(
+        DetalheFornecedorWindowController detalheFornecedorWindowController = loader.getController();
+        detalheFornecedorWindowController.setAttributes(
                 new Fornecedor(
                         fornecedorSelecionado.getId(),
                         fornecedorSelecionado.getNome(),

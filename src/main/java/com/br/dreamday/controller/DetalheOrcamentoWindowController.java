@@ -2,8 +2,6 @@ package com.br.dreamday.controller;
 
 import com.br.dreamday.MainViewApplication;
 import com.br.dreamday.domain.*;
-import com.br.dreamday.service.FornecedorService;
-import com.br.dreamday.service.ItemFornecedorService;
 import com.br.dreamday.service.ItemOrcamentoService;
 import com.br.dreamday.service.OrcamentoService;
 import javafx.collections.FXCollections;
@@ -22,7 +20,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.Objects;
 
-public class DetalheOrcamentoWindow {
+public class DetalheOrcamentoWindowController {
 
     @FXML
     private Label lblClientePreencher;
@@ -75,7 +73,7 @@ public class DetalheOrcamentoWindow {
     private Orcamento orcamento;
     private Long orcamentoId;
 
-    public DetalheOrcamentoWindow() {
+    public DetalheOrcamentoWindowController() {
         this.orcamentoId = Long.valueOf(0);
         this.orcamentoService = new OrcamentoService();
         this.service = new ItemOrcamentoService();
@@ -135,7 +133,7 @@ public class DetalheOrcamentoWindow {
     public void onButtonEditarClicked(ActionEvent actionEvent) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/br/dreamday/cadastro-orcamento-window.fxml"));
         Parent root = loader.load();
-        CadastroOrcamentoWindow orcamentoController = loader.getController();
+        CadastroOrcamentoWindowController orcamentoController = loader.getController();
         orcamentoController.setAttributes(orcamentoService.buscarPor(orcamentoId));
         Scene scene = new Scene(root);
         Stage popup = new Stage();
@@ -166,7 +164,7 @@ public class DetalheOrcamentoWindow {
     void abrirTelaVincularItem() throws IOException {
         FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(MainViewApplication.class.getResource("vincular-item-window.fxml")));
         Parent parent = loader.load();
-        VincularItemWindow controller = loader.getController();
+        VincularItemWindowController controller = loader.getController();
         controller.setOrcamentoId(orcamentoId);
         Stage popupStage = new Stage();
         popupStage.setTitle("Vincular Item");

@@ -22,7 +22,7 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class CadastroItemFornecedorWindow implements Initializable {
+public class CadastroItemFornecedorWindowController implements Initializable {
 
 
     @FXML
@@ -45,7 +45,7 @@ public class CadastroItemFornecedorWindow implements Initializable {
     private final CategoriaService categoriaService;
     private final ItemFornecedorService itemFornecedorService;
 
-    public CadastroItemFornecedorWindow() {
+    public CadastroItemFornecedorWindowController() {
         this.produtoService = new ProdutoService();
         this.categoriaService = new CategoriaService();
         this.itemFornecedorService = new ItemFornecedorService();

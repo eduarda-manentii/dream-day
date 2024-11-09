@@ -10,7 +10,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -25,7 +24,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 
-public class ConsultaClienteWindow {
+public class ConsultaClienteWindowController {
 
     @FXML
     private TextField txtNomeDoCliente;
@@ -54,7 +53,7 @@ public class ConsultaClienteWindow {
     private ObservableList<Cliente> clienteList;
     private final ClienteService service;
 
-    public ConsultaClienteWindow() {
+    public ConsultaClienteWindowController() {
         this.service = new ClienteService();
     }
 

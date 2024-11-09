@@ -1,29 +1,32 @@
 package com.br.dreamday.controller;
 
-import com.br.dreamday.domain.Produto;
-import com.br.dreamday.service.ProdutoService;
+import com.br.dreamday.service.CategoriaService;
+import com.br.dreamday.domain.Categoria;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-public class CadastroProdutoWindow {
+public class CadastroCategoriaWindowController {
 
     @FXML
     private Button btnCancelar;
 
     @FXML
-    private TextArea txaDescricao;
+    private Button btnSalvar;
 
     @FXML
     private TextField txtNome;
 
-    private ProdutoService produtoService;
-    private boolean isEdicaoProduto;
-    private Produto produto;
+    private CategoriaService categoriaService;
+    private boolean isEdicaoCategoria;
+    private Categoria categoria;
 
-    public CadastroProdutoWindow() {
-        this.produtoService = new ProdutoService();
+    public CadastroCategoriaWindowController() {
+        this.categoriaService = new CategoriaService();
     }
 
     @FXML
@@ -34,12 +37,12 @@ public class CadastroProdutoWindow {
 
     @FXML
     void salvar(ActionEvent event) {
+
         try {
             String nome = txtNome.getText();
-            String descricao = txaDescricao.getText();
 
-            if (!isEdicaoProduto) {
-                produto = new Produto(null, nome, descricao);
+            if (!isEdicaoCategoria) {
+                categoria = new Categoria(null, nome);
 
                 exibirAlerta(
                         Alert.AlertType.INFORMATION,
@@ -49,8 +52,7 @@ public class CadastroProdutoWindow {
                 );
                 limparCampos();
             } else {
-                produto.setNome(nome);
-                produto.setDescricao(descricao);
+                categoria.setNome(nome);
 
                 exibirAlerta(
                         Alert.AlertType.INFORMATION,
@@ -60,7 +62,7 @@ public class CadastroProdutoWindow {
                 );
             }
 
-            produtoService.salvar(produto);
+            categoriaService.salvar(categoria);
         } catch (Exception ex) {
             exibirAlerta(
                     Alert.AlertType.ERROR,
@@ -71,6 +73,10 @@ public class CadastroProdutoWindow {
         }
     }
 
+    private void limparCampos() {
+        txtNome.clear();
+    }
+
     public void exibirAlerta(Alert.AlertType tipo, String titulo, String cabecalho, String conteudo) {
         Alert alert = new Alert(tipo);
         alert.setTitle(titulo);
@@ -79,19 +85,13 @@ public class CadastroProdutoWindow {
         alert.showAndWait().filter(response -> response == ButtonType.OK);
     }
 
-    private void limparCampos() {
-        txtNome.clear();
-        txaDescricao.clear();
+    public void setAttributes(Categoria categoriaSelecionada) {
+        this.categoria = categoriaSelecionada;
+        txtNome.setText(categoriaSelecionada.getNome());
+        isEdicaoCategoria = true;
     }
 
-    public void setAttributes(Produto produtoSelecionado) {
-        this.produto = produtoSelecionado;
-        txtNome.setText(produtoSelecionado.getNome());
-        txaDescricao.setText(produtoSelecionado.getDescricao());
-        isEdicaoProduto = true;
-    }
-
-    public Produto getProduto() {
-        return this.produto;
+    public Categoria getCategoria() {
+        return this.categoria;
     }
 }

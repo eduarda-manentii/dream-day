@@ -7,7 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
-public class CadastroFornecedorWindow {
+public class CadastroFornecedorWindowController {
 
     @FXML
     private Button btnCancelar;
@@ -25,7 +25,7 @@ public class CadastroFornecedorWindow {
     private boolean isEdicaoFornecedor;
     private Fornecedor fornecedor;
 
-    public CadastroFornecedorWindow() {
+    public CadastroFornecedorWindowController() {
         this.fornecedorService = new FornecedorService();
     }
 
@@ -33,16 +33,6 @@ public class CadastroFornecedorWindow {
     void cancelar(ActionEvent event) {
         Stage stage = (Stage) btnCancelar.getScene().getWindow();
         stage.close();
-    }
-
-    @FXML
-    void mostrarCadastroCategoria(ActionEvent event) {
-
-    }
-
-    @FXML
-    void mostrarCadastroProduto(ActionEvent event) {
-
     }
 
     @FXML

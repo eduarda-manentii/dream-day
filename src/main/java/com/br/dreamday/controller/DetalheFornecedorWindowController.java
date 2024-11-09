@@ -1,7 +1,6 @@
 package com.br.dreamday.controller;
 
 import com.br.dreamday.MainViewApplication;
-import com.br.dreamday.domain.Categoria;
 import com.br.dreamday.domain.Fornecedor;
 import com.br.dreamday.domain.ItemFornecedor;
 import com.br.dreamday.service.FornecedorService;
@@ -23,7 +22,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.Objects;
 
-public class DetalheFornecedorWindow {
+public class DetalheFornecedorWindowController {
 
     @FXML
     private AnchorPane anchor;
@@ -72,7 +71,7 @@ public class DetalheFornecedorWindow {
     private final FornecedorService fornecedorService;
     private Fornecedor fornecedor;
 
-    public DetalheFornecedorWindow() {
+    public DetalheFornecedorWindowController() {
         this.fornecedorService = new FornecedorService();
         this.itemFornecedorService = new ItemFornecedorService();
     }
@@ -82,8 +81,8 @@ public class DetalheFornecedorWindow {
 
         FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(MainViewApplication.class.getResource("cadastro-fornecedor-window.fxml")));
         Parent root = loader.load();
-        CadastroFornecedorWindow cadastroFornecedorWindow = loader.getController();
-        cadastroFornecedorWindow.setAttributes(
+        CadastroFornecedorWindowController cadastroFornecedorWindowController = loader.getController();
+        cadastroFornecedorWindowController.setAttributes(
                 new Fornecedor(fornecedor.getId(), fornecedor.getNome(), fornecedor.getTelefone(), fornecedor.getEmail())
         );
 
@@ -96,7 +95,7 @@ public class DetalheFornecedorWindow {
         popupStage.setResizable(false);
         popupStage.showAndWait();
 
-        populaCampos(cadastroFornecedorWindow.getFornecedor());
+        populaCampos(cadastroFornecedorWindowController.getFornecedor());
     }
 
     @FXML
@@ -132,8 +131,8 @@ public class DetalheFornecedorWindow {
     void vincularItem(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(MainViewApplication.class.getResource("cadastro-item-fornecedor-window.fxml")));
         Parent root = loader.load();
-        CadastroItemFornecedorWindow cadastroItemFornecedorWindow = loader.getController();
-        cadastroItemFornecedorWindow.setAttributesInsercao(
+        CadastroItemFornecedorWindowController cadastroItemFornecedorWindowController = loader.getController();
+        cadastroItemFornecedorWindowController.setAttributesInsercao(
                 new Fornecedor(fornecedor.getId(), fornecedor.getNome(), fornecedor.getTelefone(), fornecedor.getEmail())
         );
 
@@ -152,8 +151,8 @@ public class DetalheFornecedorWindow {
     private void mostrarTelaCadastroItemFornecedor(ItemFornecedor itemFornecedorSelecionado) throws IOException {
         FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(MainViewApplication.class.getResource("cadastro-item-fornecedor-window.fxml")));
         Parent root = loader.load();
-        CadastroItemFornecedorWindow cadastroItemFornecedorWindow = loader.getController();
-        cadastroItemFornecedorWindow.setAttributesAlteracao(itemFornecedorSelecionado);
+        CadastroItemFornecedorWindowController cadastroItemFornecedorWindowController = loader.getController();
+        cadastroItemFornecedorWindowController.setAttributesAlteracao(itemFornecedorSelecionado);
 
         Stage popupStage = new Stage();
         popupStage.setTitle("Alterar Item Fornecedor");

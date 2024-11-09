@@ -2,7 +2,6 @@ package com.br.dreamday.controller;
 
 import com.br.dreamday.MainViewApplication;
 import com.br.dreamday.domain.*;
-import com.br.dreamday.service.FornecedorService;
 import com.br.dreamday.service.OrcamentoService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,14 +17,11 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.time.DateTimeException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class ConsultaOrcamentoWindow {
+public class ConsultaOrcamentoWindowController {
 
     @FXML
     private TableView<Orcamento> tblOrcamento;
@@ -57,7 +53,7 @@ public class ConsultaOrcamentoWindow {
     private ObservableList<Orcamento> orcamentoList;
     private final OrcamentoService service;
 
-    public ConsultaOrcamentoWindow() {
+    public ConsultaOrcamentoWindowController() {
         this.service = new OrcamentoService();
     }
 
@@ -118,8 +114,8 @@ public class ConsultaOrcamentoWindow {
     private void onButtonDetalhesClicked(Orcamento orcamentoSelecionado) throws IOException {
         FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(MainViewApplication.class.getResource("/com/br/dreamday/detalhe-orcamento-window.fxml")));
         Parent root = loader.load();
-        DetalheOrcamentoWindow detalheOrcamentoWindow = loader.getController();
-        detalheOrcamentoWindow.setAttributes(
+        DetalheOrcamentoWindowController detalheOrcamentoWindowController = loader.getController();
+        detalheOrcamentoWindowController.setAttributes(
                 new Orcamento(
                         orcamentoSelecionado.getId(),
                         orcamentoSelecionado.getCliente(),

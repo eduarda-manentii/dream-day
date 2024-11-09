@@ -102,10 +102,4 @@ public class ItemFornecedorService {
     public List<ItemFornecedor> listarPor(Long idFornecedor) {
         return daoItemFornecedor.listarPor(idFornecedor);
     }
-
-
-    public List<ItemFornecedor> listarTodos() {
-        return daoItemFornecedor.listarTodos();
-    }
-
 }

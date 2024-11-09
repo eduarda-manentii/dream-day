@@ -320,9 +320,8 @@ public class DaoPostgresItemOrcamento implements DaoItemOrcamento {
             String cpfCliente = rs.getString("cliente_cpf");
             Cliente cliente = new Cliente(idCliente, nomeCliente, conjugue, dataCasamento, telefoneCliente, emailCliente, cpfCliente);
 
-            ItemFornecedorKey id = new ItemFornecedorKey(idFornecedor, idProduto);
             BigDecimal preco_item = rs.getBigDecimal("item_preco");
-            ItemFornecedor itemFornecedor = new ItemFornecedor(id, preco_item, categoria, fornecedor, produto);
+            ItemFornecedor itemFornecedor = new ItemFornecedor(idFornecedor, idProduto, preco_item, categoria, fornecedor, produto);
 
             Long idItemOrcamento = rs.getLong("id");
             String observacoes = rs.getString("observacoes");
