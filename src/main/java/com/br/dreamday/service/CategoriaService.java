@@ -34,12 +34,12 @@ public class CategoriaService {
         }
 
         boolean isNomeInvalido = categoria.getNome().isBlank()
-                || categoria.getNome().length() > 100
+                || categoria.getNome().length() > 60
                 || categoria.getNome().length() < 3;
 
         if (isNomeInvalido) {
             throw new IllegalArgumentException("O nome da categoria deve possuir"
-                    + " entre 3 a 100 caracteres.");
+                    + " entre 3 a 60 caracteres.");
         }
     }
 
@@ -68,6 +68,12 @@ public class CategoriaService {
 
         String filtro = nome + "%";
         return daoCategoria.listarPor(filtro);
+    }
+
+    public List<Categoria> listarPor(String nome, Integer limite) {
+
+        String filtro = "%" + nome + "%";
+        return daoCategoria.listarPor(filtro, limite);
     }
 
     public List<Categoria> listarTodas() {

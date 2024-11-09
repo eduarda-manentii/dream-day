@@ -25,7 +25,17 @@ public class MainViewController {
 
     @FXML
     void mostrarCadastroCategoria(ActionEvent event) throws IOException {
-        Parent parent = FXMLLoader.load(Objects.requireNonNull(MainViewApplication.class.getResource("consulta-categoria-window.fxml")));
+//        Parent parent = FXMLLoader.load(Objects.requireNonNull(MainViewApplication.class.getResource("consulta-categoria-window.fxml")));
+//        Stage popupStage = new Stage();
+//        popupStage.setTitle("Consulta Categoria");
+//        Scene scene = new Scene(parent);
+//        popupStage.setScene(scene);
+//        popupStage.initModality(Modality.APPLICATION_MODAL);
+//        popupStage.centerOnScreen();
+//        popupStage.setResizable(false);
+//        popupStage.showAndWait();
+
+        Parent parent = FXMLLoader.load(Objects.requireNonNull(MainViewApplication.class.getResource("consulta-item-fornecedor-window.fxml")));
         Stage popupStage = new Stage();
         popupStage.setTitle("Consulta Categoria");
         Scene scene = new Scene(parent);
@@ -86,6 +96,7 @@ public class MainViewController {
         popupStage.centerOnScreen();
         popupStage.setResizable(false);
         popupStage.showAndWait();
+
     }
 
 }

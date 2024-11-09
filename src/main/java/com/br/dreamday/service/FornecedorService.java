@@ -34,12 +34,12 @@ public class FornecedorService {
         }
 
         boolean isNomeInvalido = fornecedor.getNome().isBlank()
-                || fornecedor.getNome().length() > 255
+                || fornecedor.getNome().length() > 100
                 || fornecedor.getNome().length() < 3;
 
         if (isNomeInvalido) {
             throw new IllegalArgumentException("O nome do fornecedor deve possuir"
-                    + " entre 3 a 255 caracteres.");
+                    + " entre 3 a 100 caracteres.");
         }
 
         boolean isTelefoneInvalido = fornecedor.getTelefone().isBlank()
@@ -57,7 +57,7 @@ public class FornecedorService {
 
         if (isEmailInvalido) {
             throw new IllegalArgumentException("O email do fornecedor deve possuir"
-                    + " entre 3 e 255 e conter @.");
+                    + " entre 3 e 100 e conter @.");
         }
     }
 
@@ -71,8 +71,8 @@ public class FornecedorService {
         boolean isRemocaoInvalida = daoItemFornecedor.validarRemocaoFornecedor(idFornecedor);
 
         if (isRemocaoInvalida) {
-            throw new IllegalArgumentException("Nao é possível remover uma"
-                    + " categoria vinculada a um restaurante.");
+            throw new IllegalArgumentException("Nao é possível remover um"
+                    + " fornecedor vinculado a um item.");
         }
 
         this.daoFornecedor.excluirPor(idFornecedor);

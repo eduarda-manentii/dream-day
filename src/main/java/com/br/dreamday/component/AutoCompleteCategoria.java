@@ -1,6 +1,8 @@
 package com.br.dreamday.component;
 
+import com.br.dreamday.domain.Categoria;
 import com.br.dreamday.domain.Produto;
+import com.br.dreamday.service.CategoriaService;
 import com.br.dreamday.service.ProdutoService;
 import javafx.geometry.Side;
 import javafx.scene.control.ContextMenu;
@@ -11,13 +13,13 @@ import javafx.scene.control.TextField;
 import java.util.LinkedList;
 import java.util.List;
 
-public class AutoCompleteProduto extends TextField {
+public class AutoCompleteCategoria extends TextField {
 
     private final ContextMenu entriesPopup;
-    private Produto produtoSelecionado;
+    private Categoria categoriaSelecionada;
     private static final int LIMITADOR = 6;
 
-    public AutoCompleteProduto(ProdutoService produtoService) {
+    public AutoCompleteCategoria(CategoriaService categoriaService) {
         super();
         entriesPopup = new ContextMenu();
 
@@ -25,11 +27,11 @@ public class AutoCompleteProduto extends TextField {
             if (newText.length() < 3) {
                 entriesPopup.hide();
             } else {
-                List<Produto> resultadosEncontrados = produtoService.listarPor(newText, LIMITADOR);
+                List<Categoria> resultadosEncontrados = categoriaService.listarPor(newText, LIMITADOR);
                 if (!resultadosEncontrados.isEmpty()) {
                     popularPopup(resultadosEncontrados);
                     if (!entriesPopup.isShowing()) {
-                        entriesPopup.show(AutoCompleteProduto.this, Side.BOTTOM, 0, 0);
+                        entriesPopup.show(AutoCompleteCategoria.this, Side.BOTTOM, 0, 0);
                     }
                 } else {
                     entriesPopup.hide();
@@ -40,31 +42,31 @@ public class AutoCompleteProduto extends TextField {
         focusedProperty().addListener((observableValue, aBoolean, aBoolean2) -> entriesPopup.hide());
     }
 
-    public Produto getProdutoSelecionado() {
-        return this.produtoSelecionado;
+    public Categoria getCategoriaSelecionada() {
+        return this.categoriaSelecionada;
     }
 
-    public void setProdutoSelecionado(Produto produto) {
-        setText(produto.getNome());
-        this.produtoSelecionado = produto;
+    public void setCategoriaSelecionado(Categoria categoria) {
+        setText(categoria.getNome());
+        this.categoriaSelecionada = categoria;
     }
 
     public void limparAutoComplete() {
-        this.produtoSelecionado = null;
+        this.categoriaSelecionada = null;
     }
 
-    private void popularPopup(List<Produto> resultadosEncontrados) {
+    private void popularPopup(List<Categoria> resultadosEncontrados) {
         entriesPopup.getItems().clear();
         List<CustomMenuItem> menuItems = new LinkedList<>();
         int maxEntries = 10;
         int count = Math.min(resultadosEncontrados.size(), maxEntries);
         for (int i = 0; i < count; i++) {
-            final Produto produto = resultadosEncontrados.get(i);
-            Label entryLabel = new Label(produto.getNome());
+            final Categoria categoria = resultadosEncontrados.get(i);
+            Label entryLabel = new Label(categoria.getNome());
             CustomMenuItem item = new CustomMenuItem(entryLabel, true);
             item.setOnAction(actionEvent -> {
-                setText(produto.getNome());
-                produtoSelecionado = produto;
+                setText(categoria.getNome());
+                categoriaSelecionada = categoria;
                 entriesPopup.hide();
             });
             menuItems.add(item);

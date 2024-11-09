@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,22 +70,14 @@ public class DaoPostgresqlItemFornecedor implements DaoItemFornecedor {
             + "FROM itens_fornecedores " + "WHERE itens_fornecedores.id_produto = ?";
 
     private final String SELECT_ID_FORN_EXISTENTE = "SELECT COUNT (itens_fornecedores.id_fornecedor) as qtde "
-            + "FROM itens_fornecedores "
-            + "WHERE itens_fornecedores.id_fornecedor = ?";
+            + "FROM itens_fornecedores " + "WHERE itens_fornecedores.id_fornecedor = ?";
 
-    private final String SELECT_TODES = "SELECT "
-            + "ifs.id_fornecedor, "
-            + "f.nome AS nome_fornecedor, "
-            + "p.id AS id_produto, "
-            + "p.nome AS nome_produto, "
-            + "c.id AS id_categoria, "
-            + "c.nome AS nome_categoria, "
-            + "ifs.preco "
-            + "FROM itens_fornecedores ifs "
-            + "JOIN fornecedores f ON f.id = ifs.id_fornecedor "
-            + "JOIN produtos p ON p.id = ifs.id_produto "
-            + "JOIN categorias c ON c.id = ifs.id_categoria "
-            + "ORDER BY LOWER(f.nome)";
+    private final String SELECT_ITEM_DUPLICADO = "SELECT EXISTS ("
+            + "SELECT 1 "
+            + "FROM itens_fornecedores i "
+            + "WHERE i.id_produto = ? "
+            + "AND i.id_fornecedor = ? "
+            + ") AS existe";
 
     private final Connection conexao;
 
@@ -165,21 +158,18 @@ public class DaoPostgresqlItemFornecedor implements DaoItemFornecedor {
         ResultSet rs = null;
         try {
             StringBuilder consulta = new StringBuilder(SELECT_BY_NOME_PRECO_FORN);
-            if (!nomeFornecedor.isBlank()) {
-                consulta.append("AND Upper(f.nome) LIKE Upper(?) ");
-            }
 
-            if (valorInicial != null) {
-                consulta.append("AND if.preco >= ? ");
-            }
-
-            if (valorFinal != null) {
-                consulta.append("AND if.preco <= ? ");
-            }
-
-            consulta.append(" ORDER BY p.nome ");
-
+            consulta.append("AND Upper(f.nome) LIKE Upper(?) ");
+            consulta.append("AND if.preco >= ? ");
+            consulta.append("AND if.preco <= ? ");
+            consulta.append("ORDER BY p.nome ");
             ps = conexao.prepareStatement(consulta.toString());
+
+            ps.setString(1, nomeProduto);
+            ps.setString(2, nomeFornecedor);
+            ps.setBigDecimal(3, valorInicial);
+            ps.setBigDecimal(4, valorFinal);
+
             rs = ps.executeQuery();
             while (rs.next()) {
                 itens.add(extrairDo(rs));
@@ -218,27 +208,6 @@ public class DaoPostgresqlItemFornecedor implements DaoItemFornecedor {
     }
 
     @Override
-    public List<ItemFornecedor> listarTodos() {
-        List<ItemFornecedor> itensFornecedores = new ArrayList<>();
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            ps = conexao.prepareStatement(SELECT_TODES);
-            rs = ps.executeQuery();
-            while(rs.next()) {
-                itensFornecedores.add(extrairDo(rs));
-            }
-        } catch (Exception ex) {
-            throw new RuntimeException("Ocorreu um erro na listagem"
-                    + " dos itens de fornecedores. Motivo: " + ex.getMessage());
-        } finally {
-            ManagerDb.getInstance().fechar(ps);
-            ManagerDb.getInstance().fechar(rs);
-        }
-        return itensFornecedores;
-    }
-
-    @Override
     public boolean validarEdicao(Long idFornecedor, Long idProduto) {
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -255,6 +224,29 @@ public class DaoPostgresqlItemFornecedor implements DaoItemFornecedor {
         } catch (Exception ex) {
             throw new RuntimeException(
                     "Ocorreu um erro na validação " + "de id para edição do item. Motivo: " + ex.getMessage());
+        } finally {
+            ManagerDb.getInstance().fechar(ps);
+            ManagerDb.getInstance().fechar(rs);
+        }
+    }
+
+    @Override
+    public boolean validarItemDuplicado(Long idProduto, Long idFornecedor) {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            ps = conexao.prepareStatement(SELECT_ITEM_DUPLICADO);
+            ps.setLong(1, idProduto);
+            ps.setLong(2, idFornecedor);
+            boolean isValidaoOk = false;
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                isValidaoOk = rs.getBoolean("existe");
+            }
+            return isValidaoOk;
+        } catch (Exception ex) {
+            throw new RuntimeException(
+                    "Ocorreu um erro na validação de id para edição do item. Motivo: " + ex.getMessage());
         } finally {
             ManagerDb.getInstance().fechar(ps);
             ManagerDb.getInstance().fechar(rs);
@@ -333,10 +325,20 @@ public class DaoPostgresqlItemFornecedor implements DaoItemFornecedor {
             String nomeProduto = rs.getString("nome_produto");
 
             Long idFornecedor = rs.getLong("id_fornecedor");
-            String nomeFornecedor = rs.getString("nome_fornecedor");
 
-            Long idCategoria = rs.getLong("id_fornecedor");
-            String nomeCategoria = rs.getString("nome_fornecedor");
+            String nomeFornecedor = null;
+
+            ResultSetMetaData metaData = rs.getMetaData();
+            int columnCount = metaData.getColumnCount();
+            for (int i = 1; i <= columnCount; i++) {
+                if ("nome_fornecedor".equalsIgnoreCase(metaData.getColumnName(i))) {
+                    nomeFornecedor = rs.getString("nome_fornecedor");
+                    break;
+                }
+            }
+
+            Long idCategoria = rs.getLong("id_categoria");
+            String nomeCategoria = rs.getString("nome_categoria");
 
             BigDecimal preco = rs.getBigDecimal("preco");
 
@@ -351,9 +353,7 @@ public class DaoPostgresqlItemFornecedor implements DaoItemFornecedor {
                 fornecedor = new Fornecedor();
             }
 
-            ItemFornecedorKey id = new ItemFornecedorKey(idFornecedor, idProduto);
-
-            return new ItemFornecedor(id, preco, categoria, fornecedor, produto);
+            return new ItemFornecedor(idFornecedor, idProduto, preco, categoria, fornecedor, produto);
         } catch (Exception ex) {
             throw new RuntimeException("Ocorreu um erro ao " + "extrair o item. Motivo: " + ex.getMessage());
         }
