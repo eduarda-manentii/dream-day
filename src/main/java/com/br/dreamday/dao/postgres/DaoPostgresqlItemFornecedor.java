@@ -60,6 +60,20 @@ public class DaoPostgresqlItemFornecedor implements DaoItemFornecedor {
             + "JOIN produtos p ON p.id = if.id_produto "
             + "WHERE UPPER(p.nome) LIKE UPPER(?)";
 
+    private final String SELECT_TODOS = "SELECT "
+            + "ifs.id_fornecedor, "
+            + "f.nome AS nome_fornecedor, "
+            + "p.id AS id_produto, "
+            + "p.nome AS nome_produto, "
+            + "c.id AS id_categoria, "
+            + "c.nome AS nome_categoria, "
+            + "ifs.preco "
+            + "FROM itens_fornecedores ifs "
+            + "JOIN fornecedores f ON f.id = ifs.id_fornecedor "
+            + "JOIN produtos p ON p.id = ifs.id_produto "
+            + "JOIN categorias c ON c.id = ifs.id_categoria "
+            + "ORDER BY LOWER(f.nome)";
+
     private final String SELECT_ID_EXISTENTE = "SELECT COUNT (itens_fornecedores.id_categoria) as qtde "
             + "FROM itens_fornecedores " + "WHERE itens_fornecedores.id_fornecedor = ? AND itens_fornecedores.id_produto = ?";
 
@@ -205,6 +219,27 @@ public class DaoPostgresqlItemFornecedor implements DaoItemFornecedor {
             ManagerDb.getInstance().fechar(ps);
             ManagerDb.getInstance().fechar(rs);
         }
+    }
+
+    @Override
+    public List<ItemFornecedor> listarTodos() {
+        List<ItemFornecedor> itensFornecedores = new ArrayList<>();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            ps = conexao.prepareStatement(SELECT_TODOS);
+            rs = ps.executeQuery();
+            while(rs.next()) {
+                itensFornecedores.add(extrairDo(rs));
+            }
+        } catch (Exception ex) {
+            throw new RuntimeException("Ocorreu um erro na listagem"
+                    + " dos itens de fornecedores. Motivo: " + ex.getMessage());
+        } finally {
+            ManagerDb.getInstance().fechar(ps);
+            ManagerDb.getInstance().fechar(rs);
+        }
+        return itensFornecedores;
     }
 
     @Override

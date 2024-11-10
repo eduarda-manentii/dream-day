@@ -56,12 +56,32 @@ public class DaoPostgresOrcamento implements DaoOrcamento {
             "o.observacoes, " +
             "o.data_criacao, " +
             "o.custo_estimado, " +
-            "o.valor_total "
-            + " FROM orcamentos o," +
-            "       clientes c " +
+            "o.valor_total " +
+            "FROM orcamentos o, " +
+            "clientes c " +
             "WHERE o.id_cliente = c.id " +
-            "AND c.nome = ? "
-            + "ORDER BY c.nome";
+            "AND c.nome = ? " +
+            "ORDER BY c.nome ";
+
+    private final String SELECT_BY_MES = "SELECT " +
+            "o.id, " +
+            "c.id id_cliente, " +
+            "c.nome, " +
+            "c.conjugue, " +
+            "c.data_casamento, " +
+            "c.telefone, " +
+            "c.email, " +
+            "c.cpf, " +
+            "o.status, " +
+            "o.observacoes, " +
+            "o.data_criacao, " +
+            "o.custo_estimado, " +
+            "o.valor_total " +
+            "FROM orcamentos o, " +
+            "clientes c " +
+            "WHERE o.id_cliente = c.id " +
+            "AND EXTRACT(MONTH FROM o.data_criacao) = ? " +
+            "ORDER BY c.nome ";
 
     private final String SELECT_BY_CLI_NOME_AND_STATUS = "SELECT " +
             "o.id, " +
@@ -294,6 +314,28 @@ public class DaoPostgresOrcamento implements DaoOrcamento {
         try {
             ps = conexao.prepareStatement(SELECT_BY_CLI_NOME);
             ps.setString(1, nomeDoCliente);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                orcamentos.add(extrairDo(rs));
+            }
+            return orcamentos;
+        } catch (Exception e) {
+            throw new RuntimeException("Ocorreu um erro ao listar os orcamentos. "
+                    + "Motivo: " + e.getMessage());
+        } finally {
+            ManagerDb.getInstance().fechar(ps);
+            ManagerDb.getInstance().fechar(rs);
+        }
+    }
+
+    @Override
+    public List<Orcamento> listarPor(LocalDate data) {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        List<Orcamento> orcamentos = new ArrayList<Orcamento>();
+        try {
+            ps = conexao.prepareStatement(SELECT_BY_MES);
+            ps.setInt(1, data.getMonth().getValue());
             rs = ps.executeQuery();
             while (rs.next()) {
                 orcamentos.add(extrairDo(rs));

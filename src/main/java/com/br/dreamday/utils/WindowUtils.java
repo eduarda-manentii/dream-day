@@ -34,6 +34,10 @@ public class WindowUtils {
         abrirTela("consulta-fornecedor");
     }
 
+    public static void abrirTelaCalendarioOrcamento() throws IOException {
+        abrirTela("orcamento-calendario");
+    }
+
     public static void exibirAlerta(Alert.AlertType tipo, String titulo, String conteudo) {
         Alert alert = new Alert(tipo);
         alert.setTitle(titulo);

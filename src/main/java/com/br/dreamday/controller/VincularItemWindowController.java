@@ -92,10 +92,10 @@ public class VincularItemWindowController {
         cbStatus.setItems(obListStatus);
 
         //TODO tem que ver essa parte porque não existe mais listarTodos() do itemFornecedor
-//        List<ItemFornecedor> itensFornecedores = itemFornecedorService.listarTodos();
-//        ObservableList<ItemFornecedor> obListClientes = FXCollections.observableArrayList(itensFornecedires);
-//        obListClientes.addFirst(null);
-//        cbItem.setItems(obListClientes);
+        List<ItemFornecedor> itensFornecedores = itemFornecedorService.listarTodos();
+        ObservableList<ItemFornecedor> obListClientes = FXCollections.observableArrayList(itensFornecedores);
+        obListClientes.addFirst(null);
+        cbItem.setItems(obListClientes);
     }
 
     @FXML

@@ -40,4 +40,8 @@ public class MainViewController {
         WindowUtils.abrirTelaConsultaFornecedor();
     }
 
+    @FXML
+    void mostrarCalendarioOrcamento() throws IOException {
+        WindowUtils.abrirTelaCalendarioOrcamento();
+    }
 }
