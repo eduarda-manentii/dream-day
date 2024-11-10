@@ -21,7 +21,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-public class OrcamentoCalendarioWindow implements Initializable {
+public class OrcamentoCalendarioWindowController implements Initializable {
 
     @FXML
     private Text ano;
@@ -36,7 +36,7 @@ public class OrcamentoCalendarioWindow implements Initializable {
     private ZonedDateTime hoje;
     private final OrcamentoService orcamentoService;
 
-    public OrcamentoCalendarioWindow() {
+    public OrcamentoCalendarioWindowController() {
         this.orcamentoService = new OrcamentoService();
     }
 
