@@ -21,6 +21,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
+import static com.br.dreamday.utils.WindowUtils.exibirAlerta;
+
 public class ConsultaOrcamentoWindowController {
 
     @FXML
@@ -80,7 +82,6 @@ public class ConsultaOrcamentoWindowController {
                         exibirAlerta(
                                 Alert.AlertType.ERROR,
                                 "Erro ao abrir a tela de detalhes",
-                                null,
                                 e.getMessage()
                         );
 
@@ -169,14 +170,6 @@ public class ConsultaOrcamentoWindowController {
         }  catch (Exception e) {
             showMessage(e.getMessage());
         }
-    }
-
-    public void exibirAlerta(Alert.AlertType tipo, String titulo, String cabecalho, String conteudo) {
-        Alert alert = new Alert(tipo);
-        alert.setTitle(titulo);
-        alert.setHeaderText(cabecalho);
-        alert.setContentText(conteudo);
-        alert.showAndWait().filter(response -> response == ButtonType.OK);
     }
 
     private void showMessage(String mensagem) {

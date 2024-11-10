@@ -5,7 +5,6 @@ import com.br.dreamday.domain.Produto;
 import com.br.dreamday.service.ProdutoService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -18,6 +17,9 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
+
+import static com.br.dreamday.utils.WindowUtils.deleteConfirmationMessage;
+import static com.br.dreamday.utils.WindowUtils.exibirAlerta;
 
 public class ConsultaProdutoWindowController {
 
@@ -54,7 +56,7 @@ public class ConsultaProdutoWindowController {
     }
 
     @FXML
-    void adicionar(ActionEvent event) throws IOException {
+    void adicionar() throws IOException {
         Parent parent = FXMLLoader.load(Objects.requireNonNull(MainViewApplication.class.getResource("cadastro-produto-window.fxml")));
         Stage popupStage = new Stage();
         popupStage.setTitle("Cadastro Produto");
@@ -68,14 +70,13 @@ public class ConsultaProdutoWindowController {
     }
 
     @FXML
-    void editar(ActionEvent event) throws IOException {
+    void editar() throws IOException {
         Produto produtoSelecionado = tableProduto.getSelectionModel().getSelectedItem();
 
         if (produtoSelecionado == null) {
             exibirAlerta(
                     Alert.AlertType.ERROR,
                     "Seleção de Produto",
-                    null,
                     "É necessário selecionar um produto para edição!. "
             );
         } else {
@@ -106,19 +107,18 @@ public class ConsultaProdutoWindowController {
     }
 
     @FXML
-    void excluir(ActionEvent event) {
+    void excluir() {
         Produto produtoSelecionado = tableProduto.getSelectionModel().getSelectedItem();
 
         if (produtoSelecionado == null) {
             exibirAlerta(
                     Alert.AlertType.ERROR,
                     "Seleção de Produto",
-                    null,
                     "É necessário selecionar um produto para excluir!. "
             );
         } else {
 
-            confirmationMessage(() -> {
+            deleteConfirmationMessage(() -> {
                 produtoService.excluirPor(produtoSelecionado.getId());
                 produtoList.remove(produtoSelecionado);
                 tableProduto.refresh();
@@ -127,7 +127,7 @@ public class ConsultaProdutoWindowController {
     }
 
     @FXML
-    void filtrar(ActionEvent event) {
+    void filtrar() {
         List<Produto> produtos;
 
         if (!txtNomeFiltro.getText().isBlank()) {
@@ -142,39 +142,8 @@ public class ConsultaProdutoWindowController {
         tableProduto.refresh();
     }
 
-    @FXML
-    void mostrarCadastroCategoria(ActionEvent event) {
-
-    }
-
-    @FXML
-    void mostrarCadastroProduto(ActionEvent event) {
-
-    }
-
-    public void exibirAlerta(Alert.AlertType tipo, String titulo, String cabecalho, String conteudo) {
-        Alert alert = new Alert(tipo);
-        alert.setTitle(titulo);
-        alert.setHeaderText(cabecalho);
-        alert.setContentText(conteudo);
-        alert.showAndWait().filter(response -> response == ButtonType.OK);
-    }
-
     public void recarregarTabela() {
         produtoList.clear();
         produtoList.addAll(produtoService.listarTodos());
-    }
-
-    private void confirmationMessage(Runnable action) {
-        Alert dialog = new Alert(Alert.AlertType.CONFIRMATION);
-        ButtonType btnYes = new ButtonType("Sim");
-        ButtonType btnNo = new ButtonType("Não");
-        dialog.setContentText("Tem certeza que deseja remover?");
-        dialog.getButtonTypes().setAll(btnYes, btnNo);
-        dialog.showAndWait().ifPresent(b -> {
-            if (b == btnYes) {
-                action.run();
-            }
-        });
     }
 }

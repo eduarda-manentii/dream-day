@@ -130,7 +130,7 @@ public class DetalheOrcamentoWindowController {
     }
 
     @FXML
-    public void onButtonEditarClicked(ActionEvent actionEvent) throws IOException {
+    public void onButtonEditarClicked() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/br/dreamday/cadastro-orcamento-window.fxml"));
         Parent root = loader.load();
         CadastroOrcamentoWindowController orcamentoController = loader.getController();
@@ -144,7 +144,7 @@ public class DetalheOrcamentoWindowController {
     }
 
     @FXML
-    public void onButtonVincularItemClicked(ActionEvent actionEvent) throws IOException {
+    public void onButtonVincularItemClicked() throws IOException {
         if (orcamentoId == 0) {
             showMessage("Salve o orçamento antes de vincular um item.");
             return;
@@ -175,19 +175,6 @@ public class DetalheOrcamentoWindowController {
         popupStage.setResizable(false);
         popupStage.showAndWait();
         recarregarTabela();
-    }
-
-    private void confirmationMessage(String mensagem, Runnable acao) {
-        Alert dialog = new Alert(Alert.AlertType.CONFIRMATION);
-        ButtonType btnYes = new ButtonType("Sim");
-        ButtonType btnNo = new ButtonType("Não");
-        dialog.setContentText(mensagem);
-        dialog.getButtonTypes().setAll(btnYes, btnNo);
-        dialog.showAndWait().ifPresent(b -> {
-            if (b == btnYes) {
-                acao.run();
-            }
-        });
     }
 
     private void showMessage(String mensagem) {

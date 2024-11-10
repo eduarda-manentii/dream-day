@@ -20,6 +20,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
+import static com.br.dreamday.utils.WindowUtils.exibirAlerta;
+
 public class ConsultaFornecedorWindowController {
 
     @FXML
@@ -51,31 +53,6 @@ public class ConsultaFornecedorWindowController {
     }
 
     @FXML
-    void mostrarConsultaCategoria() throws IOException {
-        WindowUtils.abrirTelaConsultaCategoria();
-    }
-
-    @FXML
-    void mostrarConsultaProduto() throws IOException {
-        WindowUtils.abrirTelaConsultaFornecedor();
-    }
-
-    @FXML
-    void mostrarConsultaCliente() throws IOException {
-        WindowUtils.abrirTelaConsultaCliente();
-    }
-
-    @FXML
-    void mostrarConsultaOrcamento() throws IOException {
-        WindowUtils.abrirTelaConsultaOrcamento();
-    }
-
-    @FXML
-    void mostrarConsultaFornecedor() throws IOException {
-        WindowUtils.abrirTelaConsultaFornecedor();
-    }
-
-    @FXML
     public void initialize() {
         fornecedorList = FXCollections.observableArrayList(fornecedorService.listarTodas());
 
@@ -97,7 +74,6 @@ public class ConsultaFornecedorWindowController {
                         exibirAlerta(
                                 Alert.AlertType.ERROR,
                                 "Erro ao abrir a tela de detalhes",
-                                null,
                                 "Ocorreu um erro carregar as informações da tela de detalhes"
                         );
 
@@ -172,15 +148,6 @@ public class ConsultaFornecedorWindowController {
         popupStage.setResizable(false);
         popupStage.showAndWait();
         recarregarTabela();
-        tableFornecedor.refresh();
-    }
-
-    public void exibirAlerta(Alert.AlertType tipo, String titulo, String cabecalho, String conteudo) {
-        Alert alert = new Alert(tipo);
-        alert.setTitle(titulo);
-        alert.setHeaderText(cabecalho);
-        alert.setContentText(conteudo);
-        alert.showAndWait().filter(response -> response == ButtonType.OK);
     }
 
     public void recarregarTabela() {

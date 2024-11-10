@@ -7,14 +7,12 @@ import com.br.dreamday.service.FornecedorService;
 import com.br.dreamday.service.ItemFornecedorService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -22,19 +20,10 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.Objects;
 
+import static com.br.dreamday.utils.WindowUtils.deleteConfirmationMessage;
+import static com.br.dreamday.utils.WindowUtils.exibirAlerta;
+
 public class DetalheFornecedorWindowController {
-
-    @FXML
-    private AnchorPane anchor;
-
-    @FXML
-    private Button btnEditar;
-
-    @FXML
-    private Button btnExcluir;
-
-    @FXML
-    private Button btnVincularItem;
 
     @FXML
     private TableView<ItemFornecedor> tableItens;
@@ -77,7 +66,7 @@ public class DetalheFornecedorWindowController {
     }
 
     @FXML
-    void editar(ActionEvent event) throws IOException {
+    void editar() throws IOException {
 
         FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(MainViewApplication.class.getResource("cadastro-fornecedor-window.fxml")));
         Parent root = loader.load();
@@ -99,9 +88,9 @@ public class DetalheFornecedorWindowController {
     }
 
     @FXML
-    void excluir(ActionEvent event) {
+    void excluir() {
 
-        confirmationMessage(() -> {
+        deleteConfirmationMessage(() -> {
             try {
                 fornecedorService.excluirPor(fornecedor.getId());
                 Stage stage = (Stage) tableItens.getScene().getWindow();
@@ -110,7 +99,6 @@ public class DetalheFornecedorWindowController {
                 exibirAlerta(
                         Alert.AlertType.ERROR,
                         "Erro ao deletar fornecedor",
-                        null,
                         "Ocorreu um erro na exclusão do : " + ex.getMessage()
                 );
             }
@@ -118,17 +106,7 @@ public class DetalheFornecedorWindowController {
     }
 
     @FXML
-    void mostrarCadastroCategoria(ActionEvent event) {
-
-    }
-
-    @FXML
-    void mostrarCadastroProduto(ActionEvent event) {
-
-    }
-
-    @FXML
-    void vincularItem(ActionEvent event) throws IOException {
+    void vincularItem() throws IOException {
         FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(MainViewApplication.class.getResource("cadastro-item-fornecedor-window.fxml")));
         Parent root = loader.load();
         CadastroItemFornecedorWindowController cadastroItemFornecedorWindowController = loader.getController();
@@ -162,14 +140,6 @@ public class DetalheFornecedorWindowController {
         popupStage.centerOnScreen();
         popupStage.setResizable(false);
         popupStage.showAndWait();
-    }
-
-    public void exibirAlerta(Alert.AlertType tipo, String titulo, String cabecalho, String conteudo) {
-        Alert alert = new Alert(tipo);
-        alert.setTitle(titulo);
-        alert.setHeaderText(cabecalho);
-        alert.setContentText(conteudo);
-        alert.showAndWait().filter(response -> response == ButtonType.OK);
     }
 
     public void setAttributes(Fornecedor fornecedorSelecionado) {
@@ -208,13 +178,12 @@ public class DetalheFornecedorWindowController {
                         exibirAlerta(
                                 Alert.AlertType.ERROR,
                                 "Erro ao abrir a tela de item fornecedor",
-                                null,
                                 "Ocorreu um erro carregar as informações da tela de edição: " + e.getMessage()
                         );
                     }
                 });
 
-                excluirButton.setOnAction(event -> confirmationMessage(() -> {
+                excluirButton.setOnAction(event -> deleteConfirmationMessage(() -> {
                     try {
                         ItemFornecedor itemFornecedor = getTableView().getItems().get(getIndex());
                         itemFornecedorService.excluirPor(itemFornecedor.getId());
@@ -224,7 +193,6 @@ public class DetalheFornecedorWindowController {
                         exibirAlerta(
                                 Alert.AlertType.ERROR,
                                 "Exclusão de Item Fornecedor",
-                                null,
                                 "Ocorreu um erro ao deletar o item: " + ex.getMessage()
                         );
                     }
@@ -248,19 +216,6 @@ public class DetalheFornecedorWindowController {
         lblNomeFornecedor.setText(fornecedorSelecionado.getNome());
         lblTelefoneFornecedor.setText(fornecedorSelecionado.getTelefone());
         lblEmailFornecedor.setText(fornecedorSelecionado.getEmail());
-    }
-
-    private void confirmationMessage(Runnable action) {
-        Alert dialog = new Alert(Alert.AlertType.CONFIRMATION);
-        ButtonType btnYes = new ButtonType("Sim");
-        ButtonType btnNo = new ButtonType("Não");
-        dialog.setContentText("Tem certeza que deseja remover?");
-        dialog.getButtonTypes().setAll(btnYes, btnNo);
-        dialog.showAndWait().ifPresent(b -> {
-            if (b == btnYes) {
-                action.run();
-            }
-        });
     }
 
     public void recarregarTabela() {

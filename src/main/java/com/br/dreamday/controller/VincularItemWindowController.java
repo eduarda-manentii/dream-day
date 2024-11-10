@@ -21,6 +21,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.br.dreamday.utils.WindowUtils.confirmationMessage;
+
 public class VincularItemWindowController {
 
     @FXML
@@ -133,18 +135,4 @@ public class VincularItemWindowController {
         dialog.getDialogPane().lookupButton(loginButtonType).setDisable(desativado);
         dialog.showAndWait();
     }
-
-    private void confirmationMessage(String mensagem, Runnable acao) {
-        Alert dialog = new Alert(Alert.AlertType.CONFIRMATION);
-        ButtonType btnYes = new ButtonType("Sim");
-        ButtonType btnNo = new ButtonType("Não");
-        dialog.setContentText(mensagem);
-        dialog.getButtonTypes().setAll(btnYes, btnNo);
-        dialog.showAndWait().ifPresent(b -> {
-            if (b == btnYes) {
-                acao.run();
-            }
-        });
-    }
-
 }

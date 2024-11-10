@@ -2,13 +2,13 @@ package com.br.dreamday.controller;
 
 import com.br.dreamday.service.CategoriaService;
 import com.br.dreamday.domain.Categoria;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+
+import static com.br.dreamday.utils.WindowUtils.exibirAlerta;
 
 public class CadastroCategoriaWindowController {
 
@@ -30,44 +30,35 @@ public class CadastroCategoriaWindowController {
     }
 
     @FXML
-    void cancelar(ActionEvent event) {
+    void cancelar() {
         Stage stage = (Stage) btnCancelar.getScene().getWindow();
         stage.close();
     }
 
     @FXML
-    void salvar(ActionEvent event) {
+    void salvar() {
 
         try {
             String nome = txtNome.getText();
 
             if (!isEdicaoCategoria) {
                 categoria = new Categoria(null, nome);
-
-                exibirAlerta(
-                        Alert.AlertType.INFORMATION,
-                        "Confirmação de Salvamento",
-                        null,
-                        "As alterações foram salvas com sucesso. "
-                );
                 limparCampos();
             } else {
                 categoria.setNome(nome);
-
-                exibirAlerta(
-                        Alert.AlertType.INFORMATION,
-                        "Confirmação de Alteração",
-                        null,
-                        "As alterações foram salvas com sucesso. "
-                );
             }
 
             categoriaService.salvar(categoria);
+
+            exibirAlerta(
+                    Alert.AlertType.INFORMATION,
+                    "Confirmação de Salvamento",
+                    "As alterações foram salvas com sucesso. "
+            );
         } catch (Exception ex) {
             exibirAlerta(
                     Alert.AlertType.ERROR,
                     "Erro de Validação",
-                    null,
                     "Ocorreu um erro ao salvar as informações: " + ex.getMessage()
             );
         }
@@ -75,14 +66,6 @@ public class CadastroCategoriaWindowController {
 
     private void limparCampos() {
         txtNome.clear();
-    }
-
-    public void exibirAlerta(Alert.AlertType tipo, String titulo, String cabecalho, String conteudo) {
-        Alert alert = new Alert(tipo);
-        alert.setTitle(titulo);
-        alert.setHeaderText(cabecalho);
-        alert.setContentText(conteudo);
-        alert.showAndWait().filter(response -> response == ButtonType.OK);
     }
 
     public void setAttributes(Categoria categoriaSelecionada) {

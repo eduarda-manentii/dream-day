@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
+import static com.br.dreamday.utils.WindowUtils.*;
+
 public class ConsultaCategoriaWindowController {
 
     @FXML
@@ -132,12 +134,11 @@ public class ConsultaCategoriaWindowController {
             exibirAlerta(
                     Alert.AlertType.ERROR,
                     "Seleção de Categoria",
-                    null,
                     "É necessário selecionar uma categoria para excluir!. "
             );
         } else {
 
-            confirmationMessage(() -> {
+            deleteConfirmationMessage(() -> {
                 try {
                     categoriaService.excluirPor(categoriaSelecionada.getId());
                     categoriaList.remove(categoriaSelecionada);
@@ -146,7 +147,6 @@ public class ConsultaCategoriaWindowController {
                     exibirAlerta(
                             Alert.AlertType.ERROR,
                             "Erro de Exclusão",
-                            null,
                             "Ocorreu um erro ao excluir: " + ex.getMessage()
                     );
                 }
@@ -154,29 +154,10 @@ public class ConsultaCategoriaWindowController {
         }
     }
 
-    public void exibirAlerta(Alert.AlertType tipo, String titulo, String cabecalho, String conteudo) {
-        Alert alert = new Alert(tipo);
-        alert.setTitle(titulo);
-        alert.setHeaderText(cabecalho);
-        alert.setContentText(conteudo);
-        alert.showAndWait().filter(response -> response == ButtonType.OK);
-    }
-
     public void recarregarTabela() {
         categoriaList.clear();
         categoriaList.addAll(categoriaService.listarTodas());
     }
 
-    private void confirmationMessage(Runnable action) {
-        Alert dialog = new Alert(Alert.AlertType.CONFIRMATION);
-        ButtonType btnYes = new ButtonType("Sim");
-        ButtonType btnNo = new ButtonType("Não");
-        dialog.setContentText("Tem certeza que deseja remover?");
-        dialog.getButtonTypes().setAll(btnYes, btnNo);
-        dialog.showAndWait().ifPresent(b -> {
-            if (b == btnYes) {
-                action.run();
-            }
-        });
-    }
+
 }

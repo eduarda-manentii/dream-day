@@ -22,6 +22,8 @@ import java.math.BigDecimal;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import static com.br.dreamday.utils.WindowUtils.exibirAlerta;
+
 public class CadastroItemFornecedorWindowController implements Initializable {
 
 
@@ -56,21 +58,13 @@ public class CadastroItemFornecedorWindowController implements Initializable {
         autoTxtProduto = new AutoCompleteProduto(produtoService);
         autoTxtCategoria = new AutoCompleteCategoria(categoriaService);
 
-        autoTxtProduto.setLayoutX(156.0);
-        autoTxtProduto.setLayoutY(119.0);
-        autoTxtProduto.setPrefHeight(25.0);
-        autoTxtProduto.setPrefWidth(407.0);
-
-        autoTxtCategoria.setLayoutX(156.0);
-        autoTxtCategoria.setLayoutY(179.0);
-        autoTxtCategoria.setPrefHeight(25.0);
-        autoTxtCategoria.setPrefWidth(407.0);
-
+        definirPosicaoAutoCompleteProd();
+        definirPosicaoAutoCompleteCateg();
         rootPane.getChildren().addAll(autoTxtCategoria, autoTxtProduto);
     }
 
     @FXML
-    void salvar(ActionEvent event) {
+    void salvar() {
         try {
 
             Categoria categoria = autoTxtCategoria.getCategoriaSelecionada();
@@ -98,16 +92,12 @@ public class CadastroItemFornecedorWindowController implements Initializable {
             exibirAlerta(
                     Alert.AlertType.INFORMATION,
                     "Confirmação de Alteração",
-                    null,
                     "As alterações foram salvas com sucesso. "
             );
-
-            limparCampos();
         } catch (Exception ex) {
             exibirAlerta(
                     Alert.AlertType.ERROR,
                     "Erro de Validação",
-                    null,
                     "Ocorreu um erro ao salvar as informações: " + ex.getMessage()
             );
         }
@@ -117,14 +107,6 @@ public class CadastroItemFornecedorWindowController implements Initializable {
         txtPreco.clear();
         autoTxtCategoria.limparAutoComplete();
         autoTxtProduto.limparAutoComplete();
-    }
-
-    public void exibirAlerta(Alert.AlertType tipo, String titulo, String cabecalho, String conteudo) {
-        Alert alert = new Alert(tipo);
-        alert.setTitle(titulo);
-        alert.setHeaderText(cabecalho);
-        alert.setContentText(conteudo);
-        alert.showAndWait().filter(response -> response == ButtonType.OK);
     }
 
     public void setAttributesInsercao(Fornecedor fornecedor) {
@@ -139,5 +121,19 @@ public class CadastroItemFornecedorWindowController implements Initializable {
         this.autoTxtProduto.setProdutoSelecionado(itemFornecedor.getProduto());
         this.txtPreco.setText(itemFornecedor.getPreco().toString());
         isEdicaoItem = true;
+    }
+
+    private void definirPosicaoAutoCompleteProd() {
+        autoTxtProduto.setLayoutX(156.0);
+        autoTxtProduto.setLayoutY(119.0);
+        autoTxtProduto.setPrefHeight(25.0);
+        autoTxtProduto.setPrefWidth(407.0);
+    }
+
+    private void definirPosicaoAutoCompleteCateg() {
+        autoTxtCategoria.setLayoutX(156.0);
+        autoTxtCategoria.setLayoutY(179.0);
+        autoTxtCategoria.setPrefHeight(25.0);
+        autoTxtCategoria.setPrefWidth(407.0);
     }
 }

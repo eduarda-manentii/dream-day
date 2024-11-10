@@ -4,6 +4,8 @@ import com.br.dreamday.MainViewApplication;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -30,6 +32,48 @@ public class WindowUtils {
 
     public static void abrirTelaConsultaFornecedor() throws IOException {
         abrirTela("consulta-fornecedor");
+    }
+
+    public static void exibirAlerta(Alert.AlertType tipo, String titulo, String conteudo) {
+        Alert alert = new Alert(tipo);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(conteudo);
+        alert.showAndWait().filter(response -> response == ButtonType.OK);
+    }
+
+    public static void exibirAlerta(Alert.AlertType tipo, String titulo, String cabecalho, String conteudo) {
+        Alert alert = new Alert(tipo);
+        alert.setTitle(titulo);
+        alert.setHeaderText(cabecalho);
+        alert.setContentText(conteudo);
+        alert.showAndWait().filter(response -> response == ButtonType.OK);
+    }
+
+    public static void deleteConfirmationMessage(Runnable action) {
+        Alert dialog = new Alert(Alert.AlertType.CONFIRMATION);
+        ButtonType btnYes = new ButtonType("Sim");
+        ButtonType btnNo = new ButtonType("Não");
+        dialog.setContentText("Tem certeza que deseja remover?");
+        dialog.getButtonTypes().setAll(btnYes, btnNo);
+        dialog.showAndWait().ifPresent(b -> {
+            if (b == btnYes) {
+                action.run();
+            }
+        });
+    }
+
+    public static void confirmationMessage(String mensagem, Runnable acao) {
+        Alert dialog = new Alert(Alert.AlertType.CONFIRMATION);
+        ButtonType btnYes = new ButtonType("Sim");
+        ButtonType btnNo = new ButtonType("Não");
+        dialog.setContentText(mensagem);
+        dialog.getButtonTypes().setAll(btnYes, btnNo);
+        dialog.showAndWait().ifPresent(b -> {
+            if (b == btnYes) {
+                acao.run();
+            }
+        });
     }
 
     public static void abrirTela(String nomeTela) throws IOException {

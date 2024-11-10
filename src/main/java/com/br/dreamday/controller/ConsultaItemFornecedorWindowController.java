@@ -14,19 +14,9 @@ import javafx.scene.layout.AnchorPane;
 
 import java.math.BigDecimal;
 
+import static com.br.dreamday.utils.WindowUtils.exibirAlerta;
+
 public class ConsultaItemFornecedorWindowController {
-
-    @FXML
-    private AnchorPane rootPane;
-
-    @FXML
-    private MenuItem menuItemCadastroCategoria;
-
-    @FXML
-    private MenuItem menuItemCadastroFornecedor;
-
-    @FXML
-    private MenuItem menuItemCadastroProduto;
 
     @FXML
     private TableView<ItemFornecedor> tableItemFornecedor;
@@ -54,9 +44,6 @@ public class ConsultaItemFornecedorWindowController {
 
     @FXML
     private TextField txtValorInicial;
-
-    @FXML
-    private ImageView imgInformation;
 
     private ObservableList<ItemFornecedor> itemFornecedorList;
     private final ItemFornecedorService itemFornecedorService;
@@ -98,20 +85,9 @@ public class ConsultaItemFornecedorWindowController {
             exibirAlerta(
                     Alert.AlertType.ERROR,
                     "Listagem de Item Fornecedor",
-                    null,
                     "Ocorreu um erro na listagem dos itens: " + ex.getMessage()
             );
         }
-    }
-
-    @FXML
-    void mostrarCadastroCategoria(ActionEvent event) {
-
-    }
-
-    @FXML
-    void mostrarCadastroProduto(ActionEvent event) {
-
     }
 
     @FXML
@@ -130,13 +106,5 @@ public class ConsultaItemFornecedorWindowController {
         descricaoProdutoColumn.setCellValueFactory(new PropertyValueFactory<>("descricaoProduto"));
         valorColumn.setCellValueFactory(new PropertyValueFactory<>("preco"));
         descricaoFornecedorColumn.setCellValueFactory(new PropertyValueFactory<>("descricaoFornecedor"));
-    }
-
-    public void exibirAlerta(Alert.AlertType tipo, String titulo, String cabecalho, String conteudo) {
-        Alert alert = new Alert(tipo);
-        alert.setTitle(titulo);
-        alert.setHeaderText(cabecalho);
-        alert.setContentText(conteudo);
-        alert.showAndWait().filter(response -> response == ButtonType.OK);
     }
 }

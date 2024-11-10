@@ -7,6 +7,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
+import static com.br.dreamday.utils.WindowUtils.exibirAlerta;
+
 public class CadastroProdutoWindowController {
 
     @FXML
@@ -40,43 +42,26 @@ public class CadastroProdutoWindowController {
 
             if (!isEdicaoProduto) {
                 produto = new Produto(null, nome, descricao);
-
-                exibirAlerta(
-                        Alert.AlertType.INFORMATION,
-                        "Confirmação de Salvamento",
-                        null,
-                        "As alterações foram salvas com sucesso. "
-                );
                 limparCampos();
             } else {
                 produto.setNome(nome);
                 produto.setDescricao(descricao);
-
-                exibirAlerta(
-                        Alert.AlertType.INFORMATION,
-                        "Confirmação de Alteração",
-                        null,
-                        "As alterações foram salvas com sucesso. "
-                );
             }
 
             produtoService.salvar(produto);
+
+            exibirAlerta(
+                    Alert.AlertType.INFORMATION,
+                    "Confirmação de Salvamento",
+                    "As alterações foram salvas com sucesso. "
+            );
         } catch (Exception ex) {
             exibirAlerta(
                     Alert.AlertType.ERROR,
                     "Erro de Validação",
-                    null,
                     "Ocorreu um erro ao salvar as informações: " + ex.getMessage()
             );
         }
-    }
-
-    public void exibirAlerta(Alert.AlertType tipo, String titulo, String cabecalho, String conteudo) {
-        Alert alert = new Alert(tipo);
-        alert.setTitle(titulo);
-        alert.setHeaderText(cabecalho);
-        alert.setContentText(conteudo);
-        alert.showAndWait().filter(response -> response == ButtonType.OK);
     }
 
     private void limparCampos() {

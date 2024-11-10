@@ -7,6 +7,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
+import static com.br.dreamday.utils.WindowUtils.exibirAlerta;
+
 public class CadastroFornecedorWindowController {
 
     @FXML
@@ -30,13 +32,13 @@ public class CadastroFornecedorWindowController {
     }
 
     @FXML
-    void cancelar(ActionEvent event) {
+    void cancelar() {
         Stage stage = (Stage) btnCancelar.getScene().getWindow();
         stage.close();
     }
 
     @FXML
-    void salvar(ActionEvent event) {
+    void salvar() {
         try {
             String nome = txtNome.getText();
             String telefone = txtTelefone.getText();
@@ -56,14 +58,12 @@ public class CadastroFornecedorWindowController {
             exibirAlerta(
                     Alert.AlertType.INFORMATION,
                     "Seu registro foi salvo",
-                    null,
                     "As alterações foram salvas com sucesso. "
             );
         } catch (Exception ex) {
             exibirAlerta(
                     Alert.AlertType.ERROR,
                     "Erro de Validação",
-                    null,
                     "Ocorreu um erro ao salvar as informações: " + ex.getMessage()
             );
         }
@@ -73,14 +73,6 @@ public class CadastroFornecedorWindowController {
         txtNome.clear();
         txtTelefone.clear();
         txtEmail.clear();
-    }
-
-    public void exibirAlerta(Alert.AlertType tipo, String titulo, String cabecalho, String conteudo) {
-        Alert alert = new Alert(tipo);
-        alert.setTitle(titulo);
-        alert.setHeaderText(cabecalho);
-        alert.setContentText(conteudo);
-        alert.showAndWait().filter(response -> response == ButtonType.OK);
     }
 
     public void setAttributes(Fornecedor fornecedorSelecionado) {

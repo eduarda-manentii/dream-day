@@ -24,6 +24,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 
+import static com.br.dreamday.utils.WindowUtils.deleteConfirmationMessage;
+
 public class ConsultaClienteWindowController {
 
     @FXML
@@ -145,7 +147,7 @@ public class ConsultaClienteWindowController {
         if (clienteSelecionado == null) {
             warningMessage();
         } else {
-            confirmationMessage("Tem certeza que deseja remover o item selecionado?", () -> {
+            deleteConfirmationMessage(() -> {
                 service.excluirPor(clienteSelecionado.getId());
                 recarregarTabela();
                 tableCliente.refresh();
@@ -167,19 +169,6 @@ public class ConsultaClienteWindowController {
         boolean desativado = false;
         dialog.getDialogPane().lookupButton(loginButtonType).setDisable(desativado);
         dialog.showAndWait();
-    }
-
-    private void confirmationMessage(String mensagem, Runnable acao) {
-        Alert dialog = new Alert(Alert.AlertType.CONFIRMATION);
-        ButtonType btnYes = new ButtonType("Sim");
-        ButtonType btnNo = new ButtonType("Não");
-        dialog.setContentText(mensagem);
-        dialog.getButtonTypes().setAll(btnYes, btnNo);
-        dialog.showAndWait().ifPresent(b -> {
-            if (b == btnYes) {
-                acao.run();
-            }
-        });
     }
 
     private void warningMessage() {
