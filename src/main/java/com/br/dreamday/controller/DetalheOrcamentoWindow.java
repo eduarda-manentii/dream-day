@@ -118,7 +118,9 @@ public class DetalheOrcamentoWindow {
         tableItensOrcamentos.setItems(itemOrcamentoList);
 
         if (orcamento.getStatus().equals(OrcamentoStatus.APROVADO)) {
-            if (!parcelamentoService.isParcelamentoExistentePeloOrcamento(orcamento.getId())) {
+            if (parcelamentoService.isParcelamentoExistentePeloOrcamento(orcamento.getId())) {
+                btnVerParcelas.setVisible(true);
+            } else {
                 btnAdicionarParcelas.setVisible(true);
             }
         }

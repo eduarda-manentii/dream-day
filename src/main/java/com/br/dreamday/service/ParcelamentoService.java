@@ -18,6 +18,7 @@ public class ParcelamentoService {
             dao.alterar(parcelamento);
             return parcelamento.getId();
         }
+
         return dao.inserir(parcelamento);
     }
 

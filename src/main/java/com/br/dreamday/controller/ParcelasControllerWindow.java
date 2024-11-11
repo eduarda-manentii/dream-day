@@ -3,6 +3,8 @@ package com.br.dreamday.controller;
 import com.br.dreamday.domain.Parcela;
 import com.br.dreamday.domain.Parcelamento;
 import com.br.dreamday.service.ParcelaService;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -13,6 +15,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 public class ParcelasControllerWindow {
 
@@ -51,16 +54,19 @@ public class ParcelasControllerWindow {
         qtdeParcelasLbl.setText(parcelamento.getQtdeParcelas().toString());
         valorParceladoLbl.setText(parcelamento.getValor().toString());
 
-        // TODO arrumar consulta, ela deve esperar valores nulos.
-        parcelas = FXCollections.observableArrayList(parcelaService.listarPorParcelamento(parcelamento.getId()));
+        parcelas = FXCollections.observableArrayList(
+                parcelaService.listarPorParcelamento(parcelamento.getId()));
 
-//
-//        valorColumn.setCellValueFactory(new PropertyValueFactory<>("valor"));
-//        parteColumn.setCellValueFactory(new PropertyValueFactory<>("parte"));
-//        statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
-//
-//        tableParcelas.setItems(parcelas);
+        parteColumn.setCellValueFactory(param -> {
+            Parcela parcela = param.getValue();
+            int index = parcelas.indexOf(parcela) + 1;
+            String customParteValue = index + "/" + parcela.getParcelamento().getQtdeParcelas();
+            return new SimpleStringProperty(customParteValue);
+        });
 
+        valorColumn.setCellValueFactory(new PropertyValueFactory<>("valor"));
+        statusColumn.setCellValueFactory(new PropertyValueFactory<>("parcelaStatus"));
+        tableParcelas.setItems(parcelas);
     }
 
     @FXML

@@ -4,11 +4,9 @@ import com.br.dreamday.dao.DaoParcelamento;
 import com.br.dreamday.dao.ManagerDb;
 import com.br.dreamday.domain.*;
 
-import javax.xml.transform.Result;
 import java.math.BigDecimal;
 import java.sql.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public class DaoPostgresParcelamento implements DaoParcelamento {
 
@@ -240,8 +238,6 @@ public class DaoPostgresParcelamento implements DaoParcelamento {
             } catch (Exception e) {
                 dataPagamento = null;
             }
-
-
 
             ParcelamentoStatus status = ParcelamentoStatus.valueOf(rs.getString("parcelas_status"));
             String observacao = rs.getString("observacao");
