@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane prefHeight="357.0" prefWidth="687.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.br.dreamday.controller.ConsultaFornecedorWindowController">
+   <children>
+      <Label fx:id="lblNome" layoutX="28.0" layoutY="58.0" text="Nome" />
+      <TextField fx:id="txtNomeFiltro" layoutX="28.0" layoutY="75.0" prefHeight="25.0" prefWidth="472.0" />
+      <Button fx:id="btnAdicionar" layoutX="542.0" layoutY="24.0" mnemonicParsing="false" onAction="#adicionar" prefHeight="25.0" prefWidth="119.0" text="Adicionar" />
+      <Button fx:id="btnFiltrar" layoutX="542.0" layoutY="75.0" mnemonicParsing="false" onAction="#filtrar" prefHeight="25.0" prefWidth="119.0" text="Filtrar" />
+      <TableView fx:id="tableFornecedor" layoutX="27.0" layoutY="120.0" prefHeight="218.0" prefWidth="632.0">
+         <columns>
+            <TableColumn fx:id="codigoColumn" prefWidth="87.0" text="Código" />
+            <TableColumn fx:id="nomeColumn" prefWidth="187.0" text="Nome" />
+            <TableColumn fx:id="telefoneColumn" prefWidth="139.0" text="Telefone" />
+            <TableColumn fx:id="emailColumn" prefWidth="104.0" text="Email" />
+            <TableColumn fx:id="acoesColumn" prefWidth="114.0" text="Ações" />
+         </columns>
+      </TableView>
+   </children>
+</AnchorPane>
