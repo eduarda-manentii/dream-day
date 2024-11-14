@@ -99,21 +99,6 @@ public class CadastroOrcamentoWindowController {
         }
     }
 
-    void abrirTelaVincularItem() throws IOException {
-        FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(MainViewApplication.class.getResource("vincular-item-window.fxml")));
-        Parent parent = loader.load();
-        VincularItemWindowController controller = loader.getController();
-        controller.setOrcamentoId(orcamentoId);
-        Stage popupStage = new Stage();
-        popupStage.setTitle("Vincular Item");
-        Scene scene = new Scene(parent);
-        popupStage.setScene(scene);
-        popupStage.initModality(Modality.APPLICATION_MODAL);
-        popupStage.centerOnScreen();
-        popupStage.setResizable(false);
-        popupStage.showAndWait();
-    }
-
     @FXML
     void onButtonCancelarClicked(ActionEvent event) {
         if (camposPreenchidos()) {
@@ -125,15 +110,6 @@ public class CadastroOrcamentoWindowController {
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.close();
         }
-    }
-
-    @FXML
-    void onButtonVincularItemClicked(ActionEvent event) throws IOException {
-        if (orcamentoId == 0) {
-            showMessage("Salve o orçamento antes de vincular um item.");
-            return;
-        }
-        abrirTelaVincularItem();
     }
 
     public void setAttributes(Orcamento orcamentoSelecionado) {
