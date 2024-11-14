@@ -7,6 +7,7 @@ import com.br.dreamday.domain.Orcamento;
 import com.br.dreamday.domain.OrcamentoStatus;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 public class OrcamentoService {
@@ -83,12 +84,16 @@ public class OrcamentoService {
         return dao.listarPor(nomeDoCliente, status);
     }
 
-    public List<Orcamento> listarPor(ItemOrcamentoStatus status) {
+    public List<Orcamento> listarPor(OrcamentoStatus status) {
         return dao.listarPor(status);
     }
 
     public List<Orcamento> listarPor(String nomeDoCliente) {
         return dao.listarPor(nomeDoCliente);
+    }
+
+    public List<Orcamento> listarPor(LocalDate data) {
+        return dao.listarPor(data);
     }
 
     public List<Orcamento> listarTodos() {

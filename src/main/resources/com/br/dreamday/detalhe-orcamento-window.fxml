@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="460.0" prefWidth="659.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.br.dreamday.controller.DetalheOrcamentoWindow">
+<AnchorPane prefHeight="460.0" prefWidth="785.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.br.dreamday.controller.DetalheOrcamentoWindowController">
    <children>
       <Label fx:id="lblDetalhesDoOrcamento" layoutX="29.0" layoutY="38.0" text="Detalhes do orçamento">
          <font>
@@ -64,17 +64,20 @@
          </font>
       </Label>
       <Label fx:id="lblItensVinculados" layoutX="31.0" layoutY="257.0" text="Itens vinculados" />
-      <TableView fx:id="tableItensOrcamentos" layoutX="33.0" layoutY="280.0" prefHeight="129.0" prefWidth="588.0">
+      <TableView fx:id="tableItensOrcamentos" layoutX="33.0" layoutY="280.0" prefHeight="129.0" prefWidth="726.0">
         <columns>
-          <TableColumn fx:id="codigoColumn" prefWidth="67.0" text="Código" />
-          <TableColumn fx:id="fornecedorColumn" prefWidth="94.0" text="Fornecedor" />
-            <TableColumn fx:id="produtoColumn" prefWidth="87.0" text="Produto" />
-            <TableColumn fx:id="precoColumn" prefWidth="82.0" text="Preço" />
-            <TableColumn fx:id="quantidadeColumn" prefWidth="87.0" text="Quantidade" />
-            <TableColumn fx:id="acoesColumn" prefWidth="170.0" text="Ações" />
+          <TableColumn fx:id="codigoColumn" prefWidth="52.0" text="Código" />
+          <TableColumn fx:id="fornecedorColumn" prefWidth="126.0" text="Fornecedor" />
+            <TableColumn fx:id="produtoColumn" prefWidth="131.0" text="Produto" />
+            <TableColumn fx:id="precoColumn" prefWidth="86.0" text="Preço" />
+            <TableColumn fx:id="quantidadeColumn" prefWidth="95.0" text="Quantidade" />
+            <TableColumn fx:id="valorTotalColumn" prefWidth="93.0" text="Total" />
+            <TableColumn fx:id="acoesColumn" prefWidth="142.0" text="Ações" />
         </columns>
       </TableView>
       <Button fx:id="btnEditar" layoutX="33.0" layoutY="424.0" mnemonicParsing="false" onAction="#onButtonEditarClicked" prefHeight="25.0" prefWidth="112.0" text="Editar" />
+      <Button fx:id="btnVincularItem" layoutX="572.0" layoutY="424.0" mnemonicParsing="false" onAction="#onButtonVincularItemClicked" prefHeight="25.0" prefWidth="191.0" text="Vincular item" />
+      <Button fx:id="btnExcluir" layoutX="168.0" layoutY="424.0" mnemonicParsing="false" onAction="#onButtonExcluirClicked" prefHeight="25.0" prefWidth="112.0" text="Excluir" />
       <Button fx:id="btnVincularItem" layoutX="433.0" layoutY="424.0" mnemonicParsing="false" onAction="#onButtonVincularItemClicked" prefHeight="25.0" prefWidth="191.0" text="Vincular item" />
       <Button fx:id="btnExcluir" layoutX="160.0" layoutY="424.0" mnemonicParsing="false" onAction="#onButtonExcluirClicked" prefHeight="25.0" prefWidth="112.0" text="Excluir" />
       <Button fx:id="btnAdicionarParcelas" layoutX="286.0" layoutY="424.0" mnemonicParsing="false" onAction="#onButtonAdicionarParcelasClicked" prefHeight="25.0" prefWidth="134.0" text="Adicionar parcelas" visible="false" />

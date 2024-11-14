@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 
 
-<AnchorPane prefHeight="156.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.br.dreamday.controller.CadastroCategoriaWindow">
+<AnchorPane prefHeight="156.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.br.dreamday.controller.CadastroCategoriaWindowController">
    <children>
       <TextField fx:id="txtNome" layoutX="47.0" layoutY="34.0" prefHeight="25.0" prefWidth="532.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="25.0" />
       <Label layoutX="40.0" layoutY="38.0" prefHeight="17.0" prefWidth="36.0" text="Nome" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="554.0" />

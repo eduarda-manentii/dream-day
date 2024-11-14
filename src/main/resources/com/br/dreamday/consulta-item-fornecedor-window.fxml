@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="rootPane" prefHeight="400.0" prefWidth="668.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.br.dreamday.controller.ConsultaItemFornecedorWindowController">
+   <children>
+      <Label layoutX="18.0" layoutY="29.0" text="Descrição:" />
+      <TextField fx:id="txtDescricaoProduto" layoutX="86.0" layoutY="25.0" prefHeight="25.0" prefWidth="435.0" />
+      <Button layoutX="528.0" layoutY="25.0" mnemonicParsing="false" onAction="#filtrar" prefHeight="25.0" prefWidth="121.0" text="Filtrar" />
+      <Label layoutX="17.0" layoutY="99.0" text="Valor:" />
+      <TextField fx:id="txtValorInicial" layoutX="86.0" layoutY="95.0" prefHeight="25.0" prefWidth="64.0" />
+      <Label layoutX="159.0" layoutY="99.0" text="até" />
+      <TextField fx:id="txtValorFinal" layoutX="185.0" layoutY="95.0" prefHeight="25.0" prefWidth="64.0" />
+      <TableView fx:id="tableItemFornecedor" layoutX="17.0" layoutY="142.0" prefHeight="200.0" prefWidth="632.0">
+         <columns>
+            <TableColumn fx:id="codigoColumn" prefWidth="87.0" text="Código" />
+            <TableColumn fx:id="descricaoProdutoColumn" prefWidth="236.0" text="Descrição" />
+            <TableColumn fx:id="valorColumn" prefWidth="114.0" text="Valor" />
+            <TableColumn fx:id="descricaoFornecedorColumn" prefWidth="194.0" text="Fornecedor" />
+         </columns>
+      </TableView>
+      <Label layoutX="13.0" layoutY="63.0" text="Fornecedor:" />
+      <TextField fx:id="txtDescricaoFornecedor" layoutX="86.0" layoutY="59.0" prefHeight="25.0" prefWidth="435.0" />
+      <ImageView fx:id="imgInformation" fitHeight="17.0" fitWidth="17.0" layoutX="260.0" layoutY="99.0" onMouseEntered="#mostrarInformacaoDeFiltragem" pickOnBounds="true" preserveRatio="true">
+            <Image url="@images/img.png" />
+      </ImageView>
+   </children>
+</AnchorPane>

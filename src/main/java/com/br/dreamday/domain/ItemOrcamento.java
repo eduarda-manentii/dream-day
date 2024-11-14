@@ -77,8 +77,26 @@ public class ItemOrcamento {
         return itemFornecedor.getFornecedor();
     }
 
+    public String getNomeFornecedor() {
+        return itemFornecedor.getFornecedor().getNome();
+    }
+
     public Produto getProduto() {
         return itemFornecedor.getProduto();
+    }
+
+    public String getNomeProduto() {
+        return itemFornecedor.getProduto().getNome();
+    }
+
+    public String getPrecoProduto() {
+        return itemFornecedor.getPreco().toString();
+    }
+
+    public String getTotalProduto() {
+        double preco = Double.parseDouble(String.valueOf(itemFornecedor.getPreco()));
+        double total = preco * this.quantidade;
+        return String.valueOf(total);
     }
 
     public void setStatus(ItemOrcamentoStatus status) {

@@ -8,7 +8,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.br.dreamday.controller.ConsultaOrcamentoWindow">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.br.dreamday.controller.ConsultaOrcamentoWindowController">
    <children>
       <Button fx:id="btAdicionar" layoutX="463.0" layoutY="33.0" mnemonicParsing="false" onAction="#onButtonAdicionarClicked" prefHeight="28.0" prefWidth="112.0" text="Adicionar" />
       <Label fx:id="lblNomeDoCliente" layoutX="36.0" layoutY="93.0" text="Nome do Cliente" />
@@ -18,11 +18,12 @@
       <Button fx:id="btFiltrar" layoutX="465.0" layoutY="118.0" mnemonicParsing="false" onAction="#onButtonFiltrarClicked" prefHeight="28.0" prefWidth="112.0" text="Filtrar" />
       <TableView fx:id="tblOrcamento" layoutX="39.0" layoutY="163.0" prefHeight="200.0" prefWidth="541.0">
         <columns>
-          <TableColumn fx:id="codigoColumn" prefWidth="75.0" text="Código" />
-          <TableColumn fx:id="clienteColumn" prefWidth="75.0" text="Cliente" />
-            <TableColumn fx:id="custoEstimadoColumn" prefWidth="123.0" text="Custo estimado" />
-            <TableColumn fx:id="valorTotalColumn" prefWidth="123.0" text="Valor total" />
-            <TableColumn fx:id="acoesColumn" prefWidth="142.0" text="Ações" />
+          <TableColumn fx:id="codigoColumn" prefWidth="55.0" text="Código" />
+          <TableColumn fx:id="clienteColumn" prefWidth="87.0" text="Cliente" />
+            <TableColumn fx:id="custoEstimadoColumn" prefWidth="110.0" text="Custo estimado" />
+            <TableColumn fx:id="valorTotalColumn" prefWidth="114.0" text="Valor total" />
+            <TableColumn fx:id="statusColumn" prefWidth="92.0" text="Status" />
+            <TableColumn fx:id="acoesColumn" prefWidth="82.0" text="Ações" />
         </columns>
       </TableView>
    </children>

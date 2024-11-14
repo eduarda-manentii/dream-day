@@ -17,7 +17,7 @@ public class DaoPostgresqlFornecedor implements DaoFornecedor {
     private final String UPDATE = "UPDATE fornecedores SET "
             + "nome = ?, "
             + "telefone = ?, "
-            + "email = ?, "
+            + "email = ? "
             + "WHERE id = ?";
 
     private final String DELETE = "DELETE FROM fornecedores WHERE id = ?";

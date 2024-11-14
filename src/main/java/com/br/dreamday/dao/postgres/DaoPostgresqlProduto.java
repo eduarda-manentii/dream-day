@@ -26,7 +26,7 @@ public class DaoPostgresqlProduto implements DaoProduto {
             + "pro.nome, "
             + "pro.descricao "
             + "FROM produtos pro "
-            + " WHERE Upper(pro.nome) LIKE Upper(?) ORDER BY pro.nome";
+            + "WHERE Upper(pro.nome) LIKE Upper(?) ORDER BY pro.nome ";
 
     private final String SELECT_TODOS = "SELECT "
             + "pro.id, "
@@ -114,7 +114,30 @@ public class DaoPostgresqlProduto implements DaoProduto {
             return produtos;
         } catch (Exception ex) {
             throw new RuntimeException("Ocorreu um erro ao "
-                    + "listar as categorias. Motivo: " + ex.getMessage());
+                    + "listar os produtos. Motivo: " + ex.getMessage());
+        } finally {
+            ManagerDb.getInstance().fechar(ps);
+            ManagerDb.getInstance().fechar(rs);
+        }
+    }
+
+    public List<Produto> listarPor(String nome, Integer limite) {
+        List<Produto> produtos = new ArrayList<>();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            ps = conexao.prepareStatement(SELECT_BY_NOME + " LIMIT ?");
+            ps.setString(1, nome);
+            ps.setInt(2, limite);
+            rs = ps.executeQuery();
+            while(rs.next()) {
+                produtos.add(extrairDo(rs));
+            }
+
+            return produtos;
+        } catch (Exception ex) {
+            throw new RuntimeException("Ocorreu um erro ao "
+                    + "listar os produtos. Motivo: " + ex.getMessage());
         } finally {
             ManagerDb.getInstance().fechar(ps);
             ManagerDb.getInstance().fechar(rs);

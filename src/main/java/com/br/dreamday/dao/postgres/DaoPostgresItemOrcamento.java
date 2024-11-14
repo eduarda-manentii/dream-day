@@ -32,7 +32,6 @@ public class DaoPostgresItemOrcamento implements DaoItemOrcamento {
     private final String SELECT_BY_ID_ORC = "SELECT " +
             "it.id, " +
             "it.id_fornecedor, " +
-            "f.id_categoria, " +
             "it.id_orcamento, " +
             "it.data_entrega, " +
             "it.quantidade, " +
@@ -70,28 +69,28 @@ public class DaoPostgresItemOrcamento implements DaoItemOrcamento {
             "JOIN categorias c ON f.id_categoria = c.id " +
             "JOIN clientes cli ON cli.id = o.id_cliente " +
             "WHERE it.id_orcamento = ? " +
-            "ORDER BY p.nome";
+            "ORDER BY LOWER(p.nome)";
 
     private final String SELECT_BY_ID = "SELECT " +
             "it.id, " +
             "it.id_fornecedor, " +
-            "it.id_categoria, " +
             "it.id_orcamento, " +
             "it.data_entrega, " +
             "it.quantidade, " +
             "it.status, " +
             "f.preco, " +
+            "f.preco AS item_preco, " +
             "f.id_fornecedor AS fornecedor_id, " +
+            "f.id_categoria, " +
             "f.id_produto AS produto_id, " +
-            "f.nome AS fornecedor_nome, " +
-            "f.telefone AS fornecedor_telefone, " +
-            "f.email AS fornecedor_email, " +
+            "forn.nome AS fornecedor_nome, " +
+            "forn.telefone AS fornecedor_telefone, " +
+            "forn.email AS fornecedor_email, " +
             "p.id AS produto_id, " +
             "p.nome AS produto_nome, " +
             "p.descricao AS produto_descricao, " +
             "c.id AS categoria_id, " +
             "c.nome AS categoria_nome, " +
-            "o.id_categoria, " +
             "o.status AS orcamento_status, " +
             "o.observacoes, " +
             "o.data_criacao, " +
@@ -109,30 +108,29 @@ public class DaoPostgresItemOrcamento implements DaoItemOrcamento {
             "JOIN itens_fornecedores f ON it.id_fornecedor = f.id_fornecedor AND it.id_produto = f.id_produto  " +
             "JOIN orcamentos o ON it.id_orcamento = o.id " +
             "JOIN produtos p ON f.id_produto = p.id " +
-            "JOIN categorias c ON it.id_categoria = c.id " +
-            "JOIN clientes cli ON cli.id = orcamentos.id_cliente " +
+            "JOIN categorias c ON f.id_categoria = c.id " +
+            "JOIN clientes cli ON cli.id = o.id_cliente " +
             "WHERE it.id = ?";
 
     private final String SELECT_TODES = "SELECT " +
             "it.id, " +
             "it.id_fornecedor, " +
-            "it.id_categoria, " +
             "it.id_orcamento, " +
             "it.data_entrega, " +
             "it.quantidade, " +
             "it.status, " +
-            "f.preco, " +
+            "f.preco AS item_preco, " +
             "f.id_fornecedor AS fornecedor_id, " +
+            "f.id_categoria, " +
             "f.id_produto AS produto_id, " +
-            "f.nome AS fornecedor_nome, " +
-            "f.telefone AS fornecedor_telefone, " +
-            "f.email AS fornecedor_email, " +
+            "forn.nome AS fornecedor_nome, " +
+            "forn.telefone AS fornecedor_telefone, " +
+            "forn.email AS fornecedor_email, " +
             "p.id AS produto_id, " +
             "p.nome AS produto_nome, " +
             "p.descricao AS produto_descricao, " +
             "c.id AS categoria_id, " +
             "c.nome AS categoria_nome, " +
-            "o.id_categoria, " +
             "o.status AS orcamento_status, " +
             "o.observacoes, " +
             "o.data_criacao, " +
@@ -148,12 +146,12 @@ public class DaoPostgresItemOrcamento implements DaoItemOrcamento {
             "FROM " +
             "itens_orcamentos it " +
             "JOIN itens_fornecedores f ON it.id_fornecedor = f.id_fornecedor AND it.id_produto = f.id_produto  " +
-            "JOIN fornecedores for ON it.id_fornecedor = f.id_fornecedor AND it.id_produto = f.id_produto  " +
+            "JOIN fornecedores forn ON it.id_fornecedor = f.id_fornecedor AND it.id_produto = f.id_produto  " +
             "JOIN orcamentos o ON it.id_orcamento = o.id " +
             "JOIN produtos p ON f.id_produto = p.id " +
-            "JOIN categorias c ON it.id_categoria = c.id " +
-            "JOIN clientes cli ON cli.id = orcamentos.id_cliente " +
-            "ORDER BY LOWER(it.data_entrega) DESC";
+            "JOIN categorias c ON f.id_categoria = c.id " +
+            "JOIN clientes cli ON cli.id = o.id_cliente " +
+            "ORDER BY it.data_entrega DESC";
 
 
     private Connection conexao;
@@ -322,15 +320,14 @@ public class DaoPostgresItemOrcamento implements DaoItemOrcamento {
             String cpfCliente = rs.getString("cliente_cpf");
             Cliente cliente = new Cliente(idCliente, nomeCliente, conjugue, dataCasamento, telefoneCliente, emailCliente, cpfCliente);
 
-            ItemFornecedorKey id = new ItemFornecedorKey(idFornecedor, idProduto);
             BigDecimal preco_item = rs.getBigDecimal("item_preco");
-            ItemFornecedor itemFornecedor = new ItemFornecedor(id, preco_item, categoria, fornecedor, produto);
+            ItemFornecedor itemFornecedor = new ItemFornecedor(idFornecedor, idProduto, preco_item, categoria, fornecedor, produto);
 
             Long idItemOrcamento = rs.getLong("id");
             String observacoes = rs.getString("observacoes");
             LocalDate dataCriacao = rs.getDate("data_criacao").toLocalDate();
             BigDecimal custoEstimado = rs.getBigDecimal("custo_estimado");
-            OrcamentoStatus orcamentoStatus = OrcamentoStatus.valueOf(rs.getString("status"));
+            OrcamentoStatus orcamentoStatus = OrcamentoStatus.valueOf(rs.getString("orcamento_status"));
             BigDecimal valorTotal = rs.getBigDecimal("valor_total");
             Double quantidade = rs.getDouble("quantidade");
 

@@ -3,6 +3,7 @@ package com.br.dreamday.controller;
 import com.br.dreamday.MainViewApplication;
 import com.br.dreamday.domain.Fornecedor;
 import com.br.dreamday.service.FornecedorService;
+import com.br.dreamday.utils.WindowUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -19,7 +20,9 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
 
-public class ConsultaFornecedorWindow {
+import static com.br.dreamday.utils.WindowUtils.exibirAlerta;
+
+public class ConsultaFornecedorWindowController {
 
     @FXML
     private TableView<Fornecedor> tableFornecedor;
@@ -45,7 +48,7 @@ public class ConsultaFornecedorWindow {
     private ObservableList<Fornecedor> fornecedorList;
     private final FornecedorService fornecedorService;
 
-    public ConsultaFornecedorWindow() {
+    public ConsultaFornecedorWindowController() {
         this.fornecedorService = new FornecedorService();
     }
 
@@ -71,7 +74,6 @@ public class ConsultaFornecedorWindow {
                         exibirAlerta(
                                 Alert.AlertType.ERROR,
                                 "Erro ao abrir a tela de detalhes",
-                                null,
                                 "Ocorreu um erro carregar as informações da tela de detalhes"
                         );
 
@@ -124,21 +126,11 @@ public class ConsultaFornecedorWindow {
         tableFornecedor.refresh();
     }
 
-    @FXML
-    void mostrarCadastroCategoria(ActionEvent event) {
-
-    }
-
-    @FXML
-    void mostrarCadastroProduto(ActionEvent event) {
-
-    }
-
     private void mostrarTelaDetalhe(Fornecedor fornecedorSelecionado) throws IOException {
         FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(MainViewApplication.class.getResource("detalhe-fornecedor-window.fxml")));
         Parent root = loader.load();
-        DetalheFornecedorWindow detalheFornecedorWindow = loader.getController();
-        detalheFornecedorWindow.setAttributes(
+        DetalheFornecedorWindowController detalheFornecedorWindowController = loader.getController();
+        detalheFornecedorWindowController.setAttributes(
                 new Fornecedor(
                         fornecedorSelecionado.getId(),
                         fornecedorSelecionado.getNome(),
@@ -155,14 +147,7 @@ public class ConsultaFornecedorWindow {
         popupStage.centerOnScreen();
         popupStage.setResizable(false);
         popupStage.showAndWait();
-    }
-
-    public void exibirAlerta(Alert.AlertType tipo, String titulo, String cabecalho, String conteudo) {
-        Alert alert = new Alert(tipo);
-        alert.setTitle(titulo);
-        alert.setHeaderText(cabecalho);
-        alert.setContentText(conteudo);
-        alert.showAndWait().filter(response -> response == ButtonType.OK);
+        recarregarTabela();
     }
 
     public void recarregarTabela() {

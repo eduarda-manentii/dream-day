@@ -3,6 +3,10 @@ package com.br.dreamday.controller;
 import com.br.dreamday.MainViewApplication;
 import com.br.dreamday.domain.*;
 import com.br.dreamday.service.*;
+import com.br.dreamday.MainViewApplication;
+import com.br.dreamday.domain.*;
+import com.br.dreamday.service.ItemOrcamentoService;
+import com.br.dreamday.service.OrcamentoService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -19,7 +23,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.Objects;
 
-public class DetalheOrcamentoWindow {
+public class DetalheOrcamentoWindowController {
 
     @FXML
     private Label lblClientePreencher;
@@ -64,6 +68,9 @@ public class DetalheOrcamentoWindow {
     private TableColumn<ItemOrcamento, String> quantidadeColumn;
 
     @FXML
+    private TableColumn<ItemOrcamento, String> valorTotalColumn;
+
+    @FXML
     private TableColumn<ItemOrcamento, String> acoesColumn;
 
     @FXML
@@ -74,8 +81,10 @@ public class DetalheOrcamentoWindow {
     private final OrcamentoService orcamentoService;
     private final ParcelamentoService parcelamentoService;
     private Orcamento orcamento;
+    private Long orcamentoId;
 
-    public DetalheOrcamentoWindow() {
+    public DetalheOrcamentoWindowController() {
+        this.orcamentoId = Long.valueOf(0);
         this.orcamentoService = new OrcamentoService();
         this.service = new ItemOrcamentoService();
         parcelamentoService = new ParcelamentoService();
@@ -83,13 +92,14 @@ public class DetalheOrcamentoWindow {
 
     public void setAttributes(Orcamento orcamentoSelecionado) {
         this.orcamento = orcamentoSelecionado;
+        orcamentoId = orcamentoSelecionado.getId();
         populaCampos(orcamentoSelecionado);
         itemOrcamentoList = FXCollections.observableArrayList(service.listarPor(orcamento.getId()));;
 
         codigoColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-        precoColumn.setCellValueFactory(new PropertyValueFactory<>("preco"));
-        fornecedorColumn.setCellValueFactory(new PropertyValueFactory<>("fornecedor.nome"));
-        produtoColumn.setCellValueFactory(new PropertyValueFactory<>("produto.nome"));
+        precoColumn.setCellValueFactory(new PropertyValueFactory<>("precoProduto"));
+        fornecedorColumn.setCellValueFactory(new PropertyValueFactory<>("nomeFornecedor"));
+        produtoColumn.setCellValueFactory(new PropertyValueFactory<>("nomeProduto"));
         quantidadeColumn.setCellValueFactory(new PropertyValueFactory<>("quantidade"));
         acoesColumn.setCellFactory(column -> new TableCell<>() {
             final Button editarButton = new Button("Detalhes");
@@ -99,6 +109,7 @@ public class DetalheOrcamentoWindow {
             {
                 buttonBox.setSpacing(10);
                 excluirButton.setOnAction(event -> {
+                    //TODO: perguntar se tem certeza, recarregar valor total
                     ItemOrcamento itemOrcamento = getTableView().getItems().get(getIndex());
                     service.excluirPor(itemOrcamento.getId());
                     itemOrcamentoList.remove(itemOrcamento);
@@ -138,11 +149,26 @@ public class DetalheOrcamentoWindow {
 
 
     @FXML
-    public void onButtonEditarClicked(ActionEvent actionEvent) {
+    public void onButtonEditarClicked() throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/br/dreamday/cadastro-orcamento-window.fxml"));
+        Parent root = loader.load();
+        CadastroOrcamentoWindowController orcamentoController = loader.getController();
+        orcamentoController.setAttributes(orcamentoService.buscarPor(orcamentoId));
+        Scene scene = new Scene(root);
+        Stage popup = new Stage();
+        popup.setScene(scene);
+        popup.initModality(Modality.APPLICATION_MODAL);
+        popup.showAndWait();
+        recarregarTabela();
     }
 
     @FXML
-    public void onButtonVincularItemClicked(ActionEvent actionEvent) {
+    public void onButtonVincularItemClicked() throws IOException {
+        if (orcamentoId == 0) {
+            showMessage("Salve o orçamento antes de vincular um item.");
+            return;
+        }
+        abrirTelaVincularItem();
     }
 
     @FXML
@@ -188,4 +214,37 @@ public class DetalheOrcamentoWindow {
         popupStage.setResizable(false);
         popupStage.showAndWait();
     }
+
+    private void recarregarTabela() {
+        itemOrcamentoList.clear();
+        itemOrcamentoList.addAll(service.listarPor(orcamentoId));
+    }
+
+    void abrirTelaVincularItem() throws IOException {
+        FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(MainViewApplication.class.getResource("vincular-item-window.fxml")));
+        Parent parent = loader.load();
+        VincularItemWindowController controller = loader.getController();
+        controller.setOrcamentoId(orcamentoId);
+        Stage popupStage = new Stage();
+        popupStage.setTitle("Vincular Item");
+        Scene scene = new Scene(parent);
+        popupStage.setScene(scene);
+        popupStage.initModality(Modality.APPLICATION_MODAL);
+        popupStage.centerOnScreen();
+        popupStage.setResizable(false);
+        popupStage.showAndWait();
+        recarregarTabela();
+    }
+
+    private void showMessage(String mensagem) {
+        ButtonType loginButtonType = new ButtonType("Ok!", ButtonBar.ButtonData.OK_DONE);
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle("Aviso");
+        dialog.setContentText(mensagem);
+        dialog.getDialogPane().getButtonTypes().add(loginButtonType);
+        boolean desativado = false;
+        dialog.getDialogPane().lookupButton(loginButtonType).setDisable(desativado);
+        dialog.showAndWait();
+    }
+
 }

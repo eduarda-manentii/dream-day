@@ -10,5 +10,6 @@ public interface DaoCategoria {
     void alterar(Categoria  categoria);
     void excluirPor(Long id);
     List<Categoria> listarPor(String nome);
+    List<Categoria> listarPor(String nome, Integer limite);
     List<Categoria> listarTodas();
 }

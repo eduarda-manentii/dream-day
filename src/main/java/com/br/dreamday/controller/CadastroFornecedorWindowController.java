@@ -7,7 +7,9 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
 
-public class CadastroFornecedorWindow {
+import static com.br.dreamday.utils.WindowUtils.exibirAlerta;
+
+public class CadastroFornecedorWindowController {
 
     @FXML
     private Button btnCancelar;
@@ -25,28 +27,18 @@ public class CadastroFornecedorWindow {
     private boolean isEdicaoFornecedor;
     private Fornecedor fornecedor;
 
-    public CadastroFornecedorWindow() {
+    public CadastroFornecedorWindowController() {
         this.fornecedorService = new FornecedorService();
     }
 
     @FXML
-    void cancelar(ActionEvent event) {
+    void cancelar() {
         Stage stage = (Stage) btnCancelar.getScene().getWindow();
         stage.close();
     }
 
     @FXML
-    void mostrarCadastroCategoria(ActionEvent event) {
-
-    }
-
-    @FXML
-    void mostrarCadastroProduto(ActionEvent event) {
-
-    }
-
-    @FXML
-    void salvar(ActionEvent event) {
+    void salvar() {
         try {
             String nome = txtNome.getText();
             String telefone = txtTelefone.getText();
@@ -54,6 +46,7 @@ public class CadastroFornecedorWindow {
 
             if (!isEdicaoFornecedor) {
                 fornecedor = new Fornecedor(null, nome, telefone, email);
+                limparCampos();
             } else {
                 fornecedor.setNome(nome);
                 fornecedor.setTelefone(telefone);
@@ -65,15 +58,12 @@ public class CadastroFornecedorWindow {
             exibirAlerta(
                     Alert.AlertType.INFORMATION,
                     "Seu registro foi salvo",
-                    null,
                     "As alterações foram salvas com sucesso. "
             );
-            limparCampos();
         } catch (Exception ex) {
             exibirAlerta(
                     Alert.AlertType.ERROR,
                     "Erro de Validação",
-                    null,
                     "Ocorreu um erro ao salvar as informações: " + ex.getMessage()
             );
         }
@@ -83,14 +73,6 @@ public class CadastroFornecedorWindow {
         txtNome.clear();
         txtTelefone.clear();
         txtEmail.clear();
-    }
-
-    public void exibirAlerta(Alert.AlertType tipo, String titulo, String cabecalho, String conteudo) {
-        Alert alert = new Alert(tipo);
-        alert.setTitle(titulo);
-        alert.setHeaderText(cabecalho);
-        alert.setContentText(conteudo);
-        alert.showAndWait().filter(response -> response == ButtonType.OK);
     }
 
     public void setAttributes(Fornecedor fornecedorSelecionado) {
@@ -103,5 +85,9 @@ public class CadastroFornecedorWindow {
         txtNome.setText(fornecedorSelecionado.getNome());
         txtTelefone.setText(fornecedorSelecionado.getTelefone());
         txtEmail.setText(fornecedorSelecionado.getEmail());
+    }
+
+    public Fornecedor getFornecedor() {
+        return fornecedor;
     }
 }

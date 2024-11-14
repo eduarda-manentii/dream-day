@@ -8,7 +8,7 @@ import java.sql.ResultSet;
 public class ManagerDb {
 
     private static ManagerDb manager;
-    private Connection conexao;
+    private final Connection conexao;
 
     private ManagerDb() {
         try {

@@ -7,7 +7,6 @@ import com.br.dreamday.service.FornecedorService;
 import com.br.dreamday.service.ItemFornecedorService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -21,7 +20,10 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.Objects;
 
-public class DetalheFornecedorWindow {
+import static com.br.dreamday.utils.WindowUtils.deleteConfirmationMessage;
+import static com.br.dreamday.utils.WindowUtils.exibirAlerta;
+
+public class DetalheFornecedorWindowController {
 
     @FXML
     private TableView<ItemFornecedor> tableItens;
@@ -58,18 +60,18 @@ public class DetalheFornecedorWindow {
     private final FornecedorService fornecedorService;
     private Fornecedor fornecedor;
 
-    public DetalheFornecedorWindow() {
+    public DetalheFornecedorWindowController() {
         this.fornecedorService = new FornecedorService();
         this.itemFornecedorService = new ItemFornecedorService();
     }
 
     @FXML
-    void editar(ActionEvent event) throws IOException {
+    void editar() throws IOException {
 
         FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(MainViewApplication.class.getResource("cadastro-fornecedor-window.fxml")));
         Parent root = loader.load();
-        CadastroFornecedorWindow cadastroFornecedorWindow = loader.getController();
-        cadastroFornecedorWindow.setAttributes(
+        CadastroFornecedorWindowController cadastroFornecedorWindowController = loader.getController();
+        cadastroFornecedorWindowController.setAttributes(
                 new Fornecedor(fornecedor.getId(), fornecedor.getNome(), fornecedor.getTelefone(), fornecedor.getEmail())
         );
 
@@ -81,34 +83,34 @@ public class DetalheFornecedorWindow {
         popupStage.centerOnScreen();
         popupStage.setResizable(false);
         popupStage.showAndWait();
+
+        populaCampos(cadastroFornecedorWindowController.getFornecedor());
     }
 
     @FXML
-    void excluir(ActionEvent event) {
+    void excluir() {
 
-        confirmationMessage(() -> {
-            fornecedorService.excluirPor(fornecedor.getId());
-            Stage stage = (Stage) tableItens.getScene().getWindow();
-            stage.close();
+        deleteConfirmationMessage(() -> {
+            try {
+                fornecedorService.excluirPor(fornecedor.getId());
+                Stage stage = (Stage) tableItens.getScene().getWindow();
+                stage.close();
+            } catch (Exception ex) {
+                exibirAlerta(
+                        Alert.AlertType.ERROR,
+                        "Erro ao deletar fornecedor",
+                        "Ocorreu um erro na exclusão do : " + ex.getMessage()
+                );
+            }
         });
     }
 
     @FXML
-    void mostrarCadastroCategoria(ActionEvent event) {
-
-    }
-
-    @FXML
-    void mostrarCadastroProduto(ActionEvent event) {
-
-    }
-
-    @FXML
-    void vincularItem(ActionEvent event) throws IOException {
+    void vincularItem() throws IOException {
         FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(MainViewApplication.class.getResource("cadastro-item-fornecedor-window.fxml")));
         Parent root = loader.load();
-        CadastroItemFornecedorWindow cadastroItemFornecedorWindow = loader.getController();
-        cadastroItemFornecedorWindow.setAttributes(
+        CadastroItemFornecedorWindowController cadastroItemFornecedorWindowController = loader.getController();
+        cadastroItemFornecedorWindowController.setAttributesInsercao(
                 new Fornecedor(fornecedor.getId(), fornecedor.getNome(), fornecedor.getTelefone(), fornecedor.getEmail())
         );
 
@@ -120,37 +122,24 @@ public class DetalheFornecedorWindow {
         popupStage.centerOnScreen();
         popupStage.setResizable(false);
         popupStage.showAndWait();
+        recarregarTabela();
+        tableItens.refresh();
     }
 
     private void mostrarTelaCadastroItemFornecedor(ItemFornecedor itemFornecedorSelecionado) throws IOException {
         FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(MainViewApplication.class.getResource("cadastro-item-fornecedor-window.fxml")));
-        /*Parent root = loader.load();
-        DetalheFornecedorWindow detalheFornecedorWindow = loader.getController();
-        detalheFornecedorWindow.setAttributes(
-                new Fornecedor(
-                        fornecedorSelecionado.getId(),
-                        fornecedorSelecionado.getNome(),
-                        fornecedorSelecionado.getTelefone(),
-                        fornecedorSelecionado.getEmail()
-                )
-        );
+        Parent root = loader.load();
+        CadastroItemFornecedorWindowController cadastroItemFornecedorWindowController = loader.getController();
+        cadastroItemFornecedorWindowController.setAttributesAlteracao(itemFornecedorSelecionado);
 
         Stage popupStage = new Stage();
-        popupStage.setTitle("Detalhe Fornecedor");
+        popupStage.setTitle("Alterar Item Fornecedor");
         Scene scene = new Scene(root);
         popupStage.setScene(scene);
         popupStage.initModality(Modality.APPLICATION_MODAL);
         popupStage.centerOnScreen();
         popupStage.setResizable(false);
-        popupStage.showAndWait();*/
-    }
-
-    public void exibirAlerta(Alert.AlertType tipo, String titulo, String cabecalho, String conteudo) {
-        Alert alert = new Alert(tipo);
-        alert.setTitle(titulo);
-        alert.setHeaderText(cabecalho);
-        alert.setContentText(conteudo);
-        alert.showAndWait().filter(response -> response == ButtonType.OK);
+        popupStage.showAndWait();
     }
 
     public void setAttributes(Fornecedor fornecedorSelecionado) {
@@ -158,22 +147,30 @@ public class DetalheFornecedorWindow {
         populaCampos(fornecedorSelecionado);
 
         itemFornecedorList = FXCollections.observableArrayList(itemFornecedorService.listarPor(fornecedor.getId()));
+        configuraColunasTabela();
+        configuraColunaAcoes();
+        tableItens.setItems(itemFornecedorList);
+    }
 
-        codigoColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-        descricaoColumn.setCellValueFactory(new PropertyValueFactory<>("produto.nome"));
+    private void configuraColunasTabela() {
+        codigoColumn.setCellValueFactory(new PropertyValueFactory<>("codigo"));
+        descricaoColumn.setCellValueFactory(new PropertyValueFactory<>("descricaoProduto"));
         precoColumn.setCellValueFactory(new PropertyValueFactory<>("preco"));
-        categoriaColumn.setCellValueFactory(new PropertyValueFactory<>("categoria.nome"));
+        categoriaColumn.setCellValueFactory(new PropertyValueFactory<>("nomeCategoria"));
+    }
 
+    private void configuraColunaAcoes() {
         acoesColumn.setCellFactory(column -> new TableCell<>() {
-            final Button editarButton = new Button("Detalhes");
+            final Button editarButton = new Button("Editar");
             final Button excluirButton = new Button("Excluir");
             final HBox buttonBox = new HBox(editarButton, excluirButton);
 
             {
-                buttonBox.setSpacing(10);
+                buttonBox.setSpacing(25);
 
                 editarButton.setOnAction(event -> {
                     ItemFornecedor itemFornecedor = getTableView().getItems().get(getIndex());
+                    itemFornecedor.setFornecedor(fornecedor);
 
                     try {
                         mostrarTelaCadastroItemFornecedor(itemFornecedor);
@@ -181,18 +178,25 @@ public class DetalheFornecedorWindow {
                         exibirAlerta(
                                 Alert.AlertType.ERROR,
                                 "Erro ao abrir a tela de item fornecedor",
-                                null,
                                 "Ocorreu um erro carregar as informações da tela de edição: " + e.getMessage()
                         );
                     }
                 });
 
-                excluirButton.setOnAction(event -> {
-                    ItemFornecedor itemFornecedor = getTableView().getItems().get(getIndex());
-                    itemFornecedorService.excluirPor(itemFornecedor.getId());
-                    itemFornecedorList.remove(itemFornecedor);
-                    tableItens.refresh();
-                });
+                excluirButton.setOnAction(event -> deleteConfirmationMessage(() -> {
+                    try {
+                        ItemFornecedor itemFornecedor = getTableView().getItems().get(getIndex());
+                        itemFornecedorService.excluirPor(itemFornecedor.getId());
+                        itemFornecedorList.remove(itemFornecedor);
+                        tableItens.refresh();
+                    } catch(Exception ex) {
+                        exibirAlerta(
+                                Alert.AlertType.ERROR,
+                                "Exclusão de Item Fornecedor",
+                                "Ocorreu um erro ao deletar o item: " + ex.getMessage()
+                        );
+                    }
+                }));
             }
 
             @Override
@@ -205,8 +209,6 @@ public class DetalheFornecedorWindow {
                 }
             }
         });
-
-        tableItens.setItems(itemFornecedorList);
     }
 
     private void populaCampos(Fornecedor fornecedorSelecionado) {
@@ -216,16 +218,8 @@ public class DetalheFornecedorWindow {
         lblEmailFornecedor.setText(fornecedorSelecionado.getEmail());
     }
 
-    private void confirmationMessage(Runnable action) {
-        Alert dialog = new Alert(Alert.AlertType.CONFIRMATION);
-        ButtonType btnYes = new ButtonType("Sim");
-        ButtonType btnNo = new ButtonType("Não");
-        dialog.setContentText("Tem certeza que deseja remover?");
-        dialog.getButtonTypes().setAll(btnYes, btnNo);
-        dialog.showAndWait().ifPresent(b -> {
-            if (b == btnYes) {
-                action.run();
-            }
-        });
+    public void recarregarTabela() {
+        itemFornecedorList.clear();
+        itemFornecedorList.addAll(itemFornecedorService.listarPor(fornecedor.getId()));
     }
 }

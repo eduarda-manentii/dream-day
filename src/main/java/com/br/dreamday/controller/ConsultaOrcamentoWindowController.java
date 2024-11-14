@@ -2,7 +2,6 @@ package com.br.dreamday.controller;
 
 import com.br.dreamday.MainViewApplication;
 import com.br.dreamday.domain.*;
-import com.br.dreamday.service.FornecedorService;
 import com.br.dreamday.service.OrcamentoService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,13 +17,13 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.time.DateTimeException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-public class ConsultaOrcamentoWindow {
+import static com.br.dreamday.utils.WindowUtils.exibirAlerta;
+
+public class ConsultaOrcamentoWindowController {
 
     @FXML
     private TableView<Orcamento> tblOrcamento;
@@ -45,6 +44,9 @@ public class ConsultaOrcamentoWindow {
     private TableColumn<Orcamento, String> acoesColumn;
 
     @FXML
+    private TableColumn<Orcamento, String> statusColumn;
+
+    @FXML
     private TextField txtNomeDoCliente;
 
     @FXML
@@ -53,7 +55,7 @@ public class ConsultaOrcamentoWindow {
     private ObservableList<Orcamento> orcamentoList;
     private final OrcamentoService service;
 
-    public ConsultaOrcamentoWindow() {
+    public ConsultaOrcamentoWindowController() {
         this.service = new OrcamentoService();
     }
 
@@ -65,6 +67,7 @@ public class ConsultaOrcamentoWindow {
         clienteColumn.setCellValueFactory(new PropertyValueFactory<>("cliente"));
         custoEstimadoColumn.setCellValueFactory(new PropertyValueFactory<>("custoEstimado"));
         valorTotalColumn.setCellValueFactory(new PropertyValueFactory<>("valorTotal"));
+        statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
 
         acoesColumn.setCellFactory(column -> new TableCell<>() {
             final Button button = new Button("Detalhes");
@@ -79,7 +82,6 @@ public class ConsultaOrcamentoWindow {
                         exibirAlerta(
                                 Alert.AlertType.ERROR,
                                 "Erro ao abrir a tela de detalhes",
-                                null,
                                 e.getMessage()
                         );
 
@@ -99,13 +101,22 @@ public class ConsultaOrcamentoWindow {
         });
 
         tblOrcamento.setItems(orcamentoList);
+        initializeDropDown();
     }
 
+    private void initializeDropDown() {
+        List<OrcamentoStatus> status = Arrays.asList(OrcamentoStatus.values());
+        ObservableList<OrcamentoStatus> obListStatus = FXCollections.observableArrayList(status);
+        obListStatus.addFirst(null);
+        cbStatus.setItems(obListStatus);
+    }
+
+    @FXML
     private void onButtonDetalhesClicked(Orcamento orcamentoSelecionado) throws IOException {
         FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(MainViewApplication.class.getResource("/com/br/dreamday/detalhe-orcamento-window.fxml")));
         Parent root = loader.load();
-        DetalheOrcamentoWindow detalheOrcamentoWindow = loader.getController();
-        detalheOrcamentoWindow.setAttributes(
+        DetalheOrcamentoWindowController detalheOrcamentoWindowController = loader.getController();
+        detalheOrcamentoWindowController.setAttributes(
                 new Orcamento(
                         orcamentoSelecionado.getId(),
                         orcamentoSelecionado.getCliente(),
@@ -145,6 +156,8 @@ public class ConsultaOrcamentoWindow {
             List<Orcamento> orcamentos;
             if (!txtNomeDoCliente.getText().isBlank() && !(cbStatus.getValue() == null)) {
                orcamentos = service.listarPor(txtNomeDoCliente.getText(), cbStatus.getValue());
+            } else if(!(cbStatus.getValue() == null)) {
+                orcamentos = service.listarPor(cbStatus.getValue());
             } else if (!txtNomeDoCliente.getText().isBlank()) {
                 orcamentos = service.listarPor(txtNomeDoCliente.getText());
             } else {
@@ -157,14 +170,6 @@ public class ConsultaOrcamentoWindow {
         }  catch (Exception e) {
             showMessage(e.getMessage());
         }
-    }
-
-    public void exibirAlerta(Alert.AlertType tipo, String titulo, String cabecalho, String conteudo) {
-        Alert alert = new Alert(tipo);
-        alert.setTitle(titulo);
-        alert.setHeaderText(cabecalho);
-        alert.setContentText(conteudo);
-        alert.showAndWait().filter(response -> response == ButtonType.OK);
     }
 
     private void showMessage(String mensagem) {
