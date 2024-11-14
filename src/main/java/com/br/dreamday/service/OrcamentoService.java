@@ -18,8 +18,8 @@ public class OrcamentoService {
         this.dao = FactoryDao.getInstance().getDaoOrcamento();
     }
 
-    public Long salvar(Orcamento orcamento) {
-        validar(orcamento);
+    public void salvar(Orcamento orcamento) {
+        this.validar(orcamento);
         boolean isJaInserido = orcamento.getId() != null && orcamento.getId() > 0;
         if (isJaInserido) {
             this.dao.alterar(orcamento);
@@ -27,24 +27,23 @@ public class OrcamentoService {
             Long novoId = this.dao.inserir(orcamento);
             orcamento.setId(novoId);
         }
-        return orcamento.getId();
     }
 
     private void validar(Orcamento orcamento) {
         if (orcamento == null) {
-            throw new NullPointerException("O orçamento não pode ser nulo");
+            throw new IllegalArgumentException("O orçamento não pode ser nulo");
         }
 
         if (orcamento.getCliente() == null) {
-            throw new NullPointerException("O cliente do orçamento não pode ser nulo");
+            throw new IllegalArgumentException("O cliente do orçamento não pode ser nulo");
         }
 
         if (orcamento.getStatus() == null) {
-            throw new NullPointerException("O status do orçamento não pode ser nulo");
+            throw new IllegalArgumentException("O status do orçamento não pode ser nulo");
         }
 
         if (orcamento.getDataCriacao() == null) {
-            throw new NullPointerException("A data de criação não pode ser nula");
+            throw new IllegalArgumentException("A data de criação não pode ser nula");
         }
 
         if (orcamento.getCustoEstimado() == null || orcamento.getCustoEstimado().compareTo(BigDecimal.ZERO) < 0) {
