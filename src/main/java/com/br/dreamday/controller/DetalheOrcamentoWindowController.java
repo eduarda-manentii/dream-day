@@ -2,6 +2,9 @@ package com.br.dreamday.controller;
 
 import com.br.dreamday.MainViewApplication;
 import com.br.dreamday.domain.*;
+import com.br.dreamday.service.*;
+import com.br.dreamday.MainViewApplication;
+import com.br.dreamday.domain.*;
 import com.br.dreamday.service.ItemOrcamentoService;
 import com.br.dreamday.service.OrcamentoService;
 import javafx.collections.FXCollections;
@@ -38,6 +41,9 @@ public class DetalheOrcamentoWindowController {
     private Label lblObservacoesPreencher;
 
     @FXML
+    private Button btnAdicionarParcelas;
+
+    @FXML
     private Label lblStatusPreencher;
 
     @FXML
@@ -67,9 +73,13 @@ public class DetalheOrcamentoWindowController {
     @FXML
     private TableColumn<ItemOrcamento, String> acoesColumn;
 
+    @FXML
+    private Button btnVerParcelas;
+
     private ObservableList<ItemOrcamento> itemOrcamentoList;
     private final ItemOrcamentoService service;
     private final OrcamentoService orcamentoService;
+    private final ParcelamentoService parcelamentoService;
     private Orcamento orcamento;
     private Long orcamentoId;
 
@@ -77,6 +87,7 @@ public class DetalheOrcamentoWindowController {
         this.orcamentoId = Long.valueOf(0);
         this.orcamentoService = new OrcamentoService();
         this.service = new ItemOrcamentoService();
+        parcelamentoService = new ParcelamentoService();
     }
 
     public void setAttributes(Orcamento orcamentoSelecionado) {
@@ -90,7 +101,6 @@ public class DetalheOrcamentoWindowController {
         fornecedorColumn.setCellValueFactory(new PropertyValueFactory<>("nomeFornecedor"));
         produtoColumn.setCellValueFactory(new PropertyValueFactory<>("nomeProduto"));
         quantidadeColumn.setCellValueFactory(new PropertyValueFactory<>("quantidade"));
-        valorTotalColumn.setCellValueFactory(new PropertyValueFactory<>("totalProduto"));
         acoesColumn.setCellFactory(column -> new TableCell<>() {
             final Button editarButton = new Button("Detalhes");
             final Button excluirButton = new Button("Excluir");
@@ -117,6 +127,14 @@ public class DetalheOrcamentoWindowController {
             }
         });
         tableItensOrcamentos.setItems(itemOrcamentoList);
+
+        if (orcamento.getStatus().equals(OrcamentoStatus.APROVADO)) {
+            if (parcelamentoService.isParcelamentoExistentePeloOrcamento(orcamento.getId())) {
+                btnVerParcelas.setVisible(true);
+            } else {
+                btnAdicionarParcelas.setVisible(true);
+            }
+        }
     }
 
     private void populaCampos(Orcamento orcamentoSelecionado) {
@@ -128,6 +146,7 @@ public class DetalheOrcamentoWindowController {
         lblStatusPreencher.setText(orcamentoSelecionado.getStatus().toString());
         lblObservacoesPreencher.setText(orcamentoSelecionado.getObservaces());
     }
+
 
     @FXML
     public void onButtonEditarClicked() throws IOException {
@@ -154,6 +173,46 @@ public class DetalheOrcamentoWindowController {
 
     @FXML
     public void onButtonExcluirClicked(ActionEvent actionEvent) {
+    }
+
+    @FXML
+    void onButtonAdicionarParcelasClicked() throws IOException {
+        FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(MainViewApplication.class.getResource("/com/br/dreamday/cadastro-parcelamento-window.fxml")));
+        Parent root = loader.load();
+        CadastroParcelamentoController cadastroParcelamentoController = loader.getController();
+        cadastroParcelamentoController.definirAtributos(
+                orcamento
+        );
+        Stage popupStage = new Stage();
+        popupStage.setTitle("Detalhe Fornecedor");
+        Scene scene = new Scene(root);
+        popupStage.setScene(scene);
+        popupStage.initModality(Modality.APPLICATION_MODAL);
+        popupStage.centerOnScreen();
+        popupStage.setResizable(false);
+        popupStage.showAndWait();
+    }
+
+    @FXML
+    void onButtonVerParcelas() throws IOException {
+        FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/com/br/dreamday/parcelas-window.fxml")));
+        Parent root = loader.load();
+        ParcelasControllerWindow parcelasController = loader.getController();
+        parcelamentoService.isParcelamentoExistentePeloOrcamento(orcamento.getId());
+        Parcelamento parcelamento = parcelamentoService.buscarPorOrcamento(orcamento.getId());
+
+        parcelasController.definirAtributos(
+            parcelamento
+        );
+
+        Stage popupStage = new Stage();
+        popupStage.setTitle("Parcelas");
+        Scene scene = new Scene(root);
+        popupStage.setScene(scene);
+        popupStage.initModality(Modality.APPLICATION_MODAL);
+        popupStage.centerOnScreen();
+        popupStage.setResizable(false);
+        popupStage.showAndWait();
     }
 
     private void recarregarTabela() {

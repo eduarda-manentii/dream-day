@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.br.dreamday.controller.RelatorioController">
+   <children>
+      <Label layoutX="157.0" layoutY="27.0" text="Geração de relatório">
+         <font>
+            <Font size="34.0" />
+         </font>
+      </Label>
+      <Button fx:id="btnCliente" layoutX="168.0" layoutY="97.0" mnemonicParsing="false" onAction="#aoClicarCliente" prefHeight="67.0" prefWidth="286.0" text="Cliente" />
+      <Button fx:id="btnStatus" layoutX="168.0" layoutY="179.0" mnemonicParsing="false" onAction="#aoClicarStatus" prefHeight="67.0" prefWidth="286.0" text="Status" />
+      <Button fx:id="btnValor" layoutX="168.0" layoutY="267.0" mnemonicParsing="false" onAction="#aoClicarValor" prefHeight="67.0" prefWidth="286.0" text="Valor" />
+   </children>
+</AnchorPane>

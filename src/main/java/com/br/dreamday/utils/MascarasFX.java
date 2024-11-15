@@ -12,8 +12,10 @@ public class MascarasFX {
 
     public static void mascaraNumeroInteiro(TextField textField){
         textField.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-            if (!newValue.matches("\\d*")) {
-                textField.setText(newValue.replaceAll("[^\\d]", ""));
+            try {
+                if (!newValue.matches("\\d*")) textField.setText(newValue.replaceAll("[^\\d]", ""));
+            } catch (Exception e) {
+                throw new IllegalArgumentException("O campo inteiro deve ser preenchido.");
             }
         });
     }

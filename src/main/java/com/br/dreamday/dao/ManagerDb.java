@@ -14,8 +14,8 @@ public class ManagerDb {
         try {
             Class.forName("org.postgresql.Driver").getDeclaredConstructor().newInstance();
             this.conexao = DriverManager.getConnection(
-                    "jdbc:postgresql://localhost:5433/dream-day",
-                    "postgres", "postgres");
+                    "jdbc:postgresql://localhost:5432/dream-day",
+                    "postgres", "root");
         }catch (Exception e) {
             throw new RuntimeException("Ocorreu um erro de conexão "
                     + "com o banco de dados. Motivo: " + e.getMessage());

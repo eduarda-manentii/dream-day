@@ -76,7 +76,9 @@
         </columns>
       </TableView>
       <Button fx:id="btnEditar" layoutX="33.0" layoutY="424.0" mnemonicParsing="false" onAction="#onButtonEditarClicked" prefHeight="25.0" prefWidth="112.0" text="Editar" />
-      <Button fx:id="btnVincularItem" layoutX="572.0" layoutY="424.0" mnemonicParsing="false" onAction="#onButtonVincularItemClicked" prefHeight="25.0" prefWidth="191.0" text="Vincular item" />
-      <Button fx:id="btnExcluir" layoutX="168.0" layoutY="424.0" mnemonicParsing="false" onAction="#onButtonExcluirClicked" prefHeight="25.0" prefWidth="112.0" text="Excluir" />
+      <Button fx:id="btnVincularItem" layoutX="433.0" layoutY="424.0" mnemonicParsing="false" onAction="#onButtonVincularItemClicked" prefHeight="25.0" prefWidth="191.0" text="Vincular item" />
+      <Button fx:id="btnExcluir" layoutX="160.0" layoutY="424.0" mnemonicParsing="false" onAction="#onButtonExcluirClicked" prefHeight="25.0" prefWidth="112.0" text="Excluir" />
+      <Button fx:id="btnAdicionarParcelas" layoutX="286.0" layoutY="424.0" mnemonicParsing="false" onAction="#onButtonAdicionarParcelasClicked" prefHeight="25.0" prefWidth="134.0" text="Adicionar parcelas" visible="false" />
+      <Button fx:id="btnVerParcelas" layoutX="525.0" layoutY="245.0" mnemonicParsing="false" onAction="#onButtonVerParcelas" prefHeight="25.0" prefWidth="87.0" text="Ver parcelas" visible="false" />
    </children>
 </AnchorPane>

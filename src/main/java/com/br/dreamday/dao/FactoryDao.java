@@ -4,7 +4,6 @@ import com.br.dreamday.dao.postgres.*;
 
 public class FactoryDao {
 
-
     private static FactoryDao instance;
 
     private FactoryDao() {}
@@ -37,10 +36,19 @@ public class FactoryDao {
         return new DaoPostgresItemOrcamento();
     }
 
+    public DaoParcela getDaoParcela() {
+        return new DaoPostgresParcela();
+    }
+
     public static FactoryDao getInstance() {
         if (instance == null) {
             instance = new FactoryDao();
         }
         return instance;
     }
+
+    public DaoParcelamento getDaoParcelamento() {
+        return new DaoPostgresParcelamento();
+    }
+
 }
