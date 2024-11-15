@@ -3,6 +3,7 @@ package com.br.dreamday.service;
 import com.br.dreamday.dao.DaoCliente;
 import com.br.dreamday.dao.FactoryDao;
 import com.br.dreamday.domain.Cliente;
+import com.br.dreamday.domain.Orcamento;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -73,6 +74,10 @@ public class ClienteService {
             throw new IllegalArgumentException("Não existe cliente vinculado ao id informado");
         }
         return clienteEncontrado;
+    }
+
+    public List<Cliente> listarPor(LocalDate data) {
+        return dao.listarPor(data);
     }
 
     public List<Cliente> listarTodos() {

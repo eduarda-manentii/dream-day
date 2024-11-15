@@ -92,10 +92,6 @@ public class OrcamentoService {
         return dao.listarPor(nomeDoCliente);
     }
 
-    public List<Orcamento> listarPor(LocalDate data) {
-        return dao.listarPor(data);
-    }
-
     public List<Orcamento> listarTodos() {
         return this.dao.listarTodos();
     }

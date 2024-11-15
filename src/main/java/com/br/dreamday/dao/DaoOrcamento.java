@@ -26,8 +26,6 @@ public interface DaoOrcamento {
 
     public List<Orcamento> listarPor(String nomeDoCliente);
 
-    public List<Orcamento> listarPor(LocalDate data);
-
     public List<Orcamento> listarTodos();
 
 }

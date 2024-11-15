@@ -3,6 +3,7 @@ package com.br.dreamday.dao.postgres;
 import com.br.dreamday.dao.DaoCliente;
 import com.br.dreamday.dao.ManagerDb;
 import com.br.dreamday.domain.Cliente;
+import com.br.dreamday.domain.Orcamento;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -30,9 +31,14 @@ public class DaoPostgresCliente implements DaoCliente {
             + "ORDER BY c.nome ";
 
     private final String SELECT_BY_NOME_AND_DATE = "SELECT c.id, c.nome, c.conjugue, c.data_casamento, c.telefone, c.email, c.cpf "
-            + " FROM clientes c "
+            + "FROM clientes c "
             + "WHERE Upper(c.nome) LIKE Upper(?) AND c.data_casamento = ? "
             + "ORDER BY c.nome ";
+
+    private final String SELECT_BY_MES = "SELECT c.id, c.nome, c.conjugue, c.data_casamento, c.telefone, c.email, c.cpf " +
+            "FROM clientes c " +
+            "WHERE EXTRACT(MONTH FROM c.data_casamento) = ? " +
+            "ORDER BY c.nome ";
 
     private final String SELECT_TODES = "SELECT c.id, c.nome, c.conjugue, c.data_casamento, c.telefone, c.email, c.cpf "
             + "FROM clientes c "
@@ -179,6 +185,28 @@ public class DaoPostgresCliente implements DaoCliente {
             ManagerDb.getInstance().fechar(rs);
         }
         return clientes;
+    }
+
+    @Override
+    public List<Cliente> listarPor(LocalDate data) {
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        List<Cliente> clientes = new ArrayList<>();
+        try {
+            ps = conexao.prepareStatement(SELECT_BY_MES);
+            ps.setInt(1, data.getMonth().getValue());
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                clientes.add(extrairDo(rs));
+            }
+            return clientes;
+        } catch (Exception e) {
+            throw new RuntimeException("Ocorreu um erro ao listar os casamentos. "
+                    + "Motivo: " + e.getMessage());
+        } finally {
+            ManagerDb.getInstance().fechar(ps);
+            ManagerDb.getInstance().fechar(rs);
+        }
     }
 
     @Override

@@ -35,7 +35,7 @@ public class WindowUtils {
     }
 
     public static void abrirTelaCalendarioOrcamento() throws IOException {
-        abrirTela("orcamento-calendario");
+        abrirTela("casamento-calendario");
     }
 
     public static void exibirAlerta(Alert.AlertType tipo, String titulo, String conteudo) {
@@ -80,16 +80,24 @@ public class WindowUtils {
         });
     }
 
-    public static void abrirTela(String nomeTela) throws IOException {
-        Parent parent = FXMLLoader.load(Objects.requireNonNull(MainViewApplication.class.getResource(inserirPrefixo(nomeTela))));
-        Stage popupStage = new Stage();
-        popupStage.setTitle(gerarTituloPagina(nomeTela));
-        Scene scene = new Scene(parent);
-        popupStage.setScene(scene);
-        popupStage.initModality(Modality.APPLICATION_MODAL);
-        popupStage.centerOnScreen();
-        popupStage.setResizable(false);
-        popupStage.showAndWait();
+    public static void abrirTela(String nomeTela) {
+        try {
+            Parent parent = FXMLLoader.load(Objects.requireNonNull(MainViewApplication.class.getResource(inserirPrefixo(nomeTela))));
+            Stage popupStage = new Stage();
+            popupStage.setTitle(gerarTituloPagina(nomeTela));
+            Scene scene = new Scene(parent);
+            popupStage.setScene(scene);
+            popupStage.initModality(Modality.APPLICATION_MODAL);
+            popupStage.centerOnScreen();
+            popupStage.setResizable(false);
+            popupStage.showAndWait();
+        } catch(IOException e) {
+            exibirAlerta(
+                    Alert.AlertType.ERROR,
+                    "Erro ao abrir a tela",
+                    "Ocorreu um erro na abertura da tela, favor verificar se o nome da tela foi inserido corretamente!"
+            );
+        }
     }
 
     private static String inserirPrefixo(String nomeTela) {
