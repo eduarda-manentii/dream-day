@@ -67,12 +67,11 @@ public class CadastroItemFornecedorWindowController implements Initializable {
     void salvar() {
         try {
 
+            Produto produto = autoTxtProduto.getProdutoSelecionado();
             Categoria categoria = autoTxtCategoria.getCategoriaSelecionada();
             BigDecimal preco = BigDecimal.valueOf(Double.parseDouble(txtPreco.getText()));
 
             if (!isEdicaoItem) {
-
-                Produto produto = autoTxtProduto.getProdutoSelecionado();
                 itemFornecedor = new ItemFornecedor(
                         fornecedor.getId(),
                         produto.getId(),

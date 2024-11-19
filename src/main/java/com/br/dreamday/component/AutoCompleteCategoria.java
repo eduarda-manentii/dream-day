@@ -53,6 +53,7 @@ public class AutoCompleteCategoria extends TextField {
 
     public void limparAutoComplete() {
         this.categoriaSelecionada = null;
+        setText("");
     }
 
     private void popularPopup(List<Categoria> resultadosEncontrados) {

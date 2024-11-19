@@ -8,7 +8,7 @@ import javafx.scene.input.KeyEvent;
 
 import java.util.function.UnaryOperator;
 
-public class MascarasFX {
+public class MascarasUtils {
 
     public static void mascaraNumeroInteiro(TextField textField){
         textField.textProperty().addListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {

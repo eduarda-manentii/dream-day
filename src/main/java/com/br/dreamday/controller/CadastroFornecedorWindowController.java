@@ -2,10 +2,13 @@ package com.br.dreamday.controller;
 
 import com.br.dreamday.domain.Fornecedor;
 import com.br.dreamday.service.FornecedorService;
+import com.br.dreamday.utils.MascarasUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+
+import java.text.ParseException;
 
 import static com.br.dreamday.utils.WindowUtils.exibirAlerta;
 
@@ -32,6 +35,13 @@ public class CadastroFornecedorWindowController {
     }
 
     @FXML
+    void initialize() throws ParseException {
+        txtTelefone.setPromptText("(XX) XXXXX-XXXX");
+        MascarasUtils.mascaraEmail(txtEmail);
+        MascarasUtils.mascaraTelefone(txtTelefone);
+    }
+
+    @FXML
     void cancelar() {
         Stage stage = (Stage) btnCancelar.getScene().getWindow();
         stage.close();
@@ -46,14 +56,14 @@ public class CadastroFornecedorWindowController {
 
             if (!isEdicaoFornecedor) {
                 fornecedor = new Fornecedor(null, nome, telefone, email);
+                fornecedorService.salvar(fornecedor);
                 limparCampos();
             } else {
                 fornecedor.setNome(nome);
                 fornecedor.setTelefone(telefone);
                 fornecedor.setEmail(email);
+                fornecedorService.salvar(fornecedor);
             }
-
-            fornecedorService.salvar(fornecedor);
 
             exibirAlerta(
                     Alert.AlertType.INFORMATION,

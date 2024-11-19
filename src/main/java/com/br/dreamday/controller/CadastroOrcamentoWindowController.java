@@ -1,29 +1,22 @@
 package com.br.dreamday.controller;
 
-import com.br.dreamday.MainViewApplication;
 import com.br.dreamday.domain.*;
 import com.br.dreamday.service.ClienteService;
 import com.br.dreamday.service.OrcamentoService;
-import com.br.dreamday.utils.MascarasFX;
+import com.br.dreamday.utils.MascarasUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 import static com.br.dreamday.utils.WindowUtils.exibirAlerta;
 
@@ -54,7 +47,7 @@ public class CadastroOrcamentoWindowController {
 
     @FXML
     void initialize() throws ParseException {
-        MascarasFX.mascaraNumeroInteiro(txtCustoEstimado);
+        MascarasUtils.mascaraNumeroInteiro(txtCustoEstimado);
         initializeDropDown();
     }
 

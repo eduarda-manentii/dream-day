@@ -51,6 +51,7 @@ public class AutoCompleteProduto extends TextField {
 
     public void limparAutoComplete() {
         this.produtoSelecionado = null;
+        setText("");
     }
 
     private void popularPopup(List<Produto> resultadosEncontrados) {

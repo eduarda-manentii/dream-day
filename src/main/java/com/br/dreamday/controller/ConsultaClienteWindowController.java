@@ -3,7 +3,7 @@ package com.br.dreamday.controller;
 import com.br.dreamday.MainViewApplication;
 import com.br.dreamday.domain.Cliente;
 import com.br.dreamday.service.ClienteService;
-import com.br.dreamday.utils.MascarasFX;
+import com.br.dreamday.utils.MascarasUtils;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -76,7 +76,7 @@ public class ConsultaClienteWindowController {
         });
 
         txtDataDoCasamento.setPromptText("dd/MM/yyyy");
-        MascarasFX.mascaraData(txtDataDoCasamento);
+        MascarasUtils.mascaraData(txtDataDoCasamento);
     }
 
     @FXML

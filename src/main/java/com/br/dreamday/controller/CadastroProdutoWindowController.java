@@ -29,26 +29,27 @@ public class CadastroProdutoWindowController {
     }
 
     @FXML
-    void cancelar(ActionEvent event) {
+    void cancelar() {
         Stage stage = (Stage) btnCancelar.getScene().getWindow();
         stage.close();
     }
 
     @FXML
-    void salvar(ActionEvent event) {
+    void salvar() {
+
         try {
             String nome = txtNome.getText();
             String descricao = txaDescricao.getText();
 
             if (!isEdicaoProduto) {
                 produto = new Produto(null, nome, descricao);
+                produtoService.salvar(produto);
                 limparCampos();
             } else {
                 produto.setNome(nome);
                 produto.setDescricao(descricao);
+                produtoService.salvar(produto);
             }
-
-            produtoService.salvar(produto);
 
             exibirAlerta(
                     Alert.AlertType.INFORMATION,

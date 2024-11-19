@@ -4,7 +4,7 @@ import com.br.dreamday.domain.*;
 import com.br.dreamday.service.ItemFornecedorService;
 import com.br.dreamday.service.ItemOrcamentoService;
 import com.br.dreamday.service.OrcamentoService;
-import com.br.dreamday.utils.MascarasFX;
+import com.br.dreamday.utils.MascarasUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -79,8 +79,8 @@ public class VincularItemWindowController {
 
     @FXML
     void initialize() throws ParseException {
-        MascarasFX.mascaraData(txtDadaDeEntrega);
-        MascarasFX.mascaraNumeroInteiro(txtQuantidade);
+        MascarasUtils.mascaraData(txtDadaDeEntrega);
+        MascarasUtils.mascaraNumeroInteiro(txtQuantidade);
         txtDadaDeEntrega.setPromptText("dd/MM/yyyy");
         initializeDropDown();
     }

@@ -2,7 +2,7 @@ package com.br.dreamday.controller;
 
 import com.br.dreamday.domain.Cliente;
 import com.br.dreamday.service.ClienteService;
-import com.br.dreamday.utils.MascarasFX;
+import com.br.dreamday.utils.MascarasUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
@@ -49,10 +49,10 @@ public class CadastroClienteWindowController {
         txtDataCasamento.setPromptText("dd/MM/yyyy");
         txtCpf.setPromptText("XXX.XXX.XXX-XX");
         txtTelefone.setPromptText("(XX) XXXXX-XXXX");
-        MascarasFX.mascaraData(txtDataCasamento);
-        MascarasFX.mascaraCPF(txtCpf);
-        MascarasFX.mascaraEmail(txtEmail);
-        MascarasFX.mascaraTelefone(txtTelefone);
+        MascarasUtils.mascaraData(txtDataCasamento);
+        MascarasUtils.mascaraCPF(txtCpf);
+        MascarasUtils.mascaraEmail(txtEmail);
+        MascarasUtils.mascaraTelefone(txtTelefone);
     }
 
     @FXML

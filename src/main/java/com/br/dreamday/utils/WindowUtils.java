@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.Objects;
+import java.util.logging.Logger;
 
 public class WindowUtils {
 
@@ -91,7 +92,7 @@ public class WindowUtils {
             popupStage.centerOnScreen();
             popupStage.setResizable(false);
             popupStage.showAndWait();
-        } catch(IOException e) {
+        } catch(Exception e) {
             exibirAlerta(
                     Alert.AlertType.ERROR,
                     "Erro ao abrir a tela",

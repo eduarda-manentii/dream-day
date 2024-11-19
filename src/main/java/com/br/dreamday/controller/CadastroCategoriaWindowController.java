@@ -16,9 +16,6 @@ public class CadastroCategoriaWindowController {
     private Button btnCancelar;
 
     @FXML
-    private Button btnSalvar;
-
-    @FXML
     private TextField txtNome;
 
     private CategoriaService categoriaService;
@@ -42,13 +39,13 @@ public class CadastroCategoriaWindowController {
             String nome = txtNome.getText();
 
             if (!isEdicaoCategoria) {
-                categoria = new Categoria(null, nome);
+                categoria = new Categoria(nome);
+                categoriaService.salvar(categoria);
                 limparCampos();
             } else {
                 categoria.setNome(nome);
+                categoriaService.salvar(categoria);
             }
-
-            categoriaService.salvar(categoria);
 
             exibirAlerta(
                     Alert.AlertType.INFORMATION,

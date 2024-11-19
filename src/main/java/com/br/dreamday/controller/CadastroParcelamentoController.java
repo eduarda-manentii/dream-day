@@ -3,7 +3,7 @@ package com.br.dreamday.controller;
 import com.br.dreamday.domain.*;
 import com.br.dreamday.service.ParcelaService;
 import com.br.dreamday.service.ParcelamentoService;
-import com.br.dreamday.utils.MascarasFX;
+import com.br.dreamday.utils.MascarasUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
@@ -49,7 +49,7 @@ public class CadastroParcelamentoController {
     public void initialize() {
         parcelamentoService = new ParcelamentoService();
         parcelaService = new ParcelaService();
-        MascarasFX.mascaraData(txtDataVencimento);
+        MascarasUtils.mascaraData(txtDataVencimento);
         formataQtdeParcelas();
     }
 
