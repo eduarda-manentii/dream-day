@@ -4,6 +4,7 @@ import com.br.dreamday.domain.*;
 import com.br.dreamday.service.ItemFornecedorService;
 import com.br.dreamday.service.ItemOrcamentoService;
 import com.br.dreamday.service.OrcamentoService;
+import com.br.dreamday.service.ParcelamentoService;
 import com.br.dreamday.utils.MascarasUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,12 +17,14 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.ParseException;
+import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 
 import static com.br.dreamday.utils.WindowUtils.confirmationMessage;
+import static com.br.dreamday.utils.WindowUtils.exibirAlerta;
 
 public class VincularItemWindowController {
 
@@ -44,6 +47,12 @@ public class VincularItemWindowController {
     private ItemOrcamentoService service;
     private DetalheOrcamentoWindowController parent;
     private ItemOrcamento itemOrcamentoSelecionado;
+
+    public VincularItemWindowController() {
+        this.itemFornecedorService = new ItemFornecedorService();
+        this.orcamentoService = new OrcamentoService();
+        this.service = new ItemOrcamentoService();
+    }
 
     @FXML
     void initialize() throws ParseException {
@@ -83,21 +92,12 @@ public class VincularItemWindowController {
 
     @FXML
     void confirmar(ActionEvent event) throws IOException {
-        if (!validarCampos()) {
-            return;
-        }
-
         try {
             ItemFornecedor itemFornecedor = cbItem.getValue();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             LocalDate dataEntrega = LocalDate.parse(txtDadaDeEntrega.getText(), formatter);
             ItemOrcamentoStatus status = cbStatus.getValue();
             int quantidade = Integer.parseInt(txtQuantidade.getText());
-
-            if (quantidade <= 0) {
-                showMessage("A quantidade deve ser maior que zero.");
-                return;
-            }
 
             if (itemOrcamentoSelecionado != null) {
                 double quantidadeAntiga = itemOrcamentoSelecionado.getQuantidade();
@@ -116,9 +116,7 @@ public class VincularItemWindowController {
                 BigDecimal totalAtualizado = valorTotal.subtract(subtotalAntigo).add(subtotalNovo);
                 orcamentoService.atualizarValorTotal(orcamentoId, totalAtualizado);
                 parent.atualizarCampoValorTotal(totalAtualizado.toString());
-
                 itemOrcamentoSelecionado = null;
-                showMessage("Item de orçamento alterado com sucesso!");
             } else {
                 ItemOrcamento itemOrcamento = new ItemOrcamento(orcamento, itemFornecedor, dataEntrega, quantidade, status);
                 service.salvar(itemOrcamento);
@@ -130,11 +128,26 @@ public class VincularItemWindowController {
                 orcamentoService.atualizarValorTotal(orcamentoId, totalAtualizado);
 
                 parent.atualizarCampoValorTotal(totalAtualizado.toString());
-                showMessage("Item vinculado com sucesso!");
                 limparCampos();
             }
+            exibirAlerta(
+                    Alert.AlertType.INFORMATION,
+                    "Confirmação de Salvamento",
+                    "As alterações foram salvas com sucesso."
+            );
+
+        } catch (DateTimeException ex) {
+            exibirAlerta(
+                    Alert.AlertType.ERROR,
+                    "Erro de Validação",
+                    "Ocorreu um erro ao salvar as informações:  Digite um valor para a data válido."
+            );
         } catch (Exception e) {
-            showMessage("Erro ao vincular item: " + e.getMessage());
+            exibirAlerta(
+                    Alert.AlertType.ERROR,
+                    "Erro de Validação",
+                    "Ocorreu um erro ao salvar as informações: " + e.getMessage()
+            );
         }
     }
 
@@ -160,44 +173,6 @@ public class VincularItemWindowController {
         txtDadaDeEntrega.setText(itemOrcamentoSelecionado.getDataDeEntrega().format(formatter));
     }
 
-    private boolean validarCampos() {
-        if (cbItem.getValue() == null) {
-            showMessage("Selecione um item do fornecedor.");
-            return false;
-        }
-        if (cbStatus.getValue() == null) {
-            showMessage("Selecione o status do item.");
-            return false;
-        }
-        if (txtDadaDeEntrega.getText().isBlank()) {
-            showMessage("Informe a data de entrega.");
-            return false;
-        }
-        if (txtQuantidade.getText().isBlank()) {
-            showMessage("Informe a quantidade.");
-            return false;
-        }
-        try {
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            LocalDate.parse(txtDadaDeEntrega.getText(), formatter);
-        } catch (Exception e) {
-            showMessage("A data de entrega deve estar no formato dd/MM/yyyy.");
-            return false;
-        }
-        try {
-            double quantidade = Double.parseDouble(txtQuantidade.getText());
-            if (quantidade <= 0) {
-                showMessage("A quantidade deve ser maior que zero.");
-                return false;
-            }
-        } catch (NumberFormatException e) {
-            showMessage("A quantidade deve ser um número válido.");
-            return false;
-        }
-
-        return true;
-    }
-
     private boolean camposPreenchidos() {
         String dataDeEntrega = txtDadaDeEntrega.getText();
         String quantidade = txtQuantidade.getText();
@@ -212,14 +187,4 @@ public class VincularItemWindowController {
         cbStatus.setValue(null);
     }
 
-    private void showMessage(String mensagem) {
-        ButtonType loginButtonType = new ButtonType("Ok!", ButtonBar.ButtonData.OK_DONE);
-        Dialog<String> dialog = new Dialog<>();
-        dialog.setTitle("Aviso");
-        dialog.setContentText(mensagem);
-        dialog.getDialogPane().getButtonTypes().add(loginButtonType);
-        boolean desativado = false;
-        dialog.getDialogPane().lookupButton(loginButtonType).setDisable(desativado);
-        dialog.showAndWait();
-    }
 }

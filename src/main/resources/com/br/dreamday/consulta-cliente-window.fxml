@@ -7,7 +7,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.br.dreamday.controller.ConsultaClienteWindowController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.br.dreamday.controller.ConsultaClienteWindowController">
    <children>
       <Button fx:id="btnAdicionar" layoutX="467.0" layoutY="33.0" mnemonicParsing="false" onAction="#adicionar" prefHeight="28.0" prefWidth="100.0" text="Adicionar" />
       <TextField fx:id="txtNomeDoCliente" layoutX="27.0" layoutY="108.0" prefHeight="28.0" prefWidth="215.0" />
@@ -19,11 +19,10 @@
       <Button fx:id="btnExcluir" layoutX="354.0" layoutY="344.0" mnemonicParsing="false" onAction="#excluir" prefHeight="28.0" prefWidth="100.0" text="Excluir" />
       <TableView fx:id="tableCliente" layoutX="30.0" layoutY="152.0" prefHeight="180.0" prefWidth="538.0">
         <columns>
-          <TableColumn fx:id="codigoColumn" prefWidth="75.0" text="Cdigo" />
+          <TableColumn fx:id="codigoColumn" prefWidth="75.0" text="Codigo" />
           <TableColumn fx:id="nomeColumn" prefWidth="75.0" text="Nome" />
             <TableColumn fx:id="conjugueColumn" prefWidth="75.0" text="Conjugue" />
-            <TableColumn fx:id="dataCasamentoColumn" prefWidth="160.0" text="Data do Casamento"
-            />
+            <TableColumn fx:id="dataCasamentoColumn" prefWidth="160.0" text="Data do Casamento" />
             <TableColumn fx:id="telefoneColumn" prefWidth="160.0" text="Telefone" />
         </columns>
       </TableView>
