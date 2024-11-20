@@ -153,6 +153,7 @@ public class ConsultaOrcamentoWindowController {
         popupStage.centerOnScreen();
         popupStage.setResizable(false);
         popupStage.showAndWait();
+        recarregarTabela();
     }
 
     @FXML

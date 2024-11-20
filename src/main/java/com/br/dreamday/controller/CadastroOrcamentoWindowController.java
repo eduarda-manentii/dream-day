@@ -73,14 +73,22 @@ public class CadastroOrcamentoWindowController {
     void salvar() {
         try {
             Cliente cliente = cbCliente.getValue();
-            //TODO: validar BigDecimal vazio
-            BigDecimal custoEstimado = new BigDecimal(txtCustoEstimado.getText());
+            BigDecimal custoEstimado = BigDecimal.ZERO;
+            String custoEstimadoText = txtCustoEstimado.getText();
             OrcamentoStatus status = cbStatus.getValue();
             String observacoes = txtAreaObservacoes.getText();
             LocalDate dataDeCriacao = LocalDate.now();
+
+            if (custoEstimadoText.trim().isEmpty()) {
+                throw new IllegalArgumentException("Ocorreu um erro ao salvar as informações: O custo estimado é obrigatório.");
+            } else {
+                custoEstimado = new BigDecimal(custoEstimadoText);
+            }
+
             if (orcamentoSelecionado == null) {
                 Orcamento orcamento = new Orcamento(cliente, status, dataDeCriacao, custoEstimado, BigDecimal.ZERO, observacoes);
                 service.salvar(orcamento);
+                limparCampor();
             } else {
                 orcamentoSelecionado.setCliente(cliente);
                 orcamentoSelecionado.setCustoEstimado(custoEstimado);
@@ -123,6 +131,13 @@ public class CadastroOrcamentoWindowController {
         cbStatus.setValue(orcamentoSelecionado.getStatus());
         txtCustoEstimado.setText(orcamentoSelecionado.getCustoEstimado().toString());
         txtAreaObservacoes.setText(orcamentoSelecionado.getObservaces());
+    }
+
+    private void limparCampor() {
+        txtAreaObservacoes.setText("");
+        txtCustoEstimado.setText("");
+        cbCliente.setItems(null);
+        cbStatus.setItems(null);
     }
 
     private boolean camposPreenchidos() {
