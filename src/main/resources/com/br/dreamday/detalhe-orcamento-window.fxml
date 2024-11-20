@@ -87,8 +87,8 @@
             <TableColumn fx:id="acoesColumn" prefWidth="142.0" text="Ações" />
         </columns>
       </TableView>
-      <Button fx:id="btnEditar" layoutX="33.0" layoutY="424.0" mnemonicParsing="false" onAction="#onButtonEditarClicked" prefHeight="25.0" prefWidth="112.0" text="Editar" />
-      <Button fx:id="btnVincularItem" layoutX="572.0" layoutY="424.0" mnemonicParsing="false" onAction="#onButtonVincularItemClicked" prefHeight="25.0" prefWidth="191.0" text="Vincular item" />
-      <Button fx:id="btnExcluir" layoutX="168.0" layoutY="424.0" mnemonicParsing="false" onAction="#onButtonExcluirClicked" prefHeight="25.0" prefWidth="112.0" text="Excluir" />
+      <Button fx:id="btnEditar" layoutX="33.0" layoutY="424.0" mnemonicParsing="false" onAction="#editar" prefHeight="25.0" prefWidth="112.0" text="Editar" />
+      <Button fx:id="btnVincularItem" layoutX="572.0" layoutY="424.0" mnemonicParsing="false" onAction="#vincularItem" prefHeight="25.0" prefWidth="191.0" text="Vincular item" />
+      <Button fx:id="btnExcluir" layoutX="168.0" layoutY="424.0" mnemonicParsing="false" onAction="#excluir" prefHeight="25.0" prefWidth="112.0" text="Excluir" />
    </children>
 </AnchorPane>

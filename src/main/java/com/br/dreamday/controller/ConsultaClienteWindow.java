@@ -79,7 +79,7 @@ public class ConsultaClienteWindow {
     }
 
     @FXML
-    public void onButtonAdicionarCLicked(ActionEvent actionEvent) throws IOException {
+    public void adicionar(ActionEvent actionEvent) throws IOException {
         Parent parent = FXMLLoader.load(Objects.requireNonNull(MainViewApplication.class.getResource("cadastro-cliente-window.fxml")));
         Stage popupStage = new Stage();
         popupStage.setTitle("Cadastro Cliente");
@@ -93,7 +93,7 @@ public class ConsultaClienteWindow {
     }
 
     @FXML
-    public void onButtonFiltrarClicked(ActionEvent actionEvent) {
+    public void filtrar(ActionEvent actionEvent) {
         try {
             List<Cliente> clientes;
             if (!txtDataDoCasamento.getText().isBlank() && !txtNomeDoCliente.getText().isBlank()) {
@@ -121,7 +121,7 @@ public class ConsultaClienteWindow {
     }
 
     @FXML
-    public void onButtonEditarClicked(ActionEvent actionEvent) throws IOException {
+    public void editar(ActionEvent actionEvent) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/br/dreamday/cadastro-cliente-window.fxml"));
         Parent root = loader.load();
         CadastroClienteWindow clienteController = loader.getController();
@@ -140,7 +140,7 @@ public class ConsultaClienteWindow {
     }
 
     @FXML
-    public void onButtonExcluirClicked(ActionEvent actionEvent) {
+    public void excluir(ActionEvent actionEvent) {
         try {
             Cliente clienteSelecionado = tableCliente.getSelectionModel().getSelectedItem();
             if (clienteSelecionado == null) {
