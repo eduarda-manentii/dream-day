@@ -39,6 +39,19 @@ public class WindowUtils {
         abrirTela("casamento-calendario");
     }
 
+
+    public static void mostraMensagem(String titulo, String mensagem) throws IOException {
+        exibirAlerta(
+                Alert.AlertType.INFORMATION,
+                titulo,
+                mensagem
+        );
+    }
+
+    public static void mostraMensagem(String mensagem) throws IOException {
+        mostraMensagem("Aviso!", mensagem);
+    }
+
     public static void exibirAlerta(Alert.AlertType tipo, String titulo, String conteudo) {
         Alert alert = new Alert(tipo);
         alert.setTitle(titulo);

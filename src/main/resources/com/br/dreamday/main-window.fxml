@@ -22,7 +22,10 @@
                   <MenuItem fx:id="mnGerenciamentoDeOrcamento" mnemonicParsing="false" onAction="#mostrarConsultaOrcamento" text="Gerencimaneto de Orçamentos" />
                   <MenuItem fx:id="mnCalendarioDeOrcamento" mnemonicParsing="false" onAction="#mostrarCalendarioOrcamento" text="Calendário de Orçamentos" />
                </items></Menu>
-          <Menu mnemonicParsing="false" text="Relatorios" />
+          <Menu mnemonicParsing="false" text="Relatorios">
+               <items>
+                  <MenuItem fx:id="mnGerenciamentoDeOrcamento1" mnemonicParsing="false" onAction="#mostrarRelatorio" text="Por cliente" />
+               </items></Menu>
         </menus>
       </MenuBar>
    </children>

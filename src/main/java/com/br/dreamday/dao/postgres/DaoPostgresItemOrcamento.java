@@ -112,7 +112,7 @@ public class DaoPostgresItemOrcamento implements DaoItemOrcamento {
             "JOIN clientes cli ON cli.id = o.id_cliente " +
             "WHERE it.id = ?";
 
-    private final String SELECT_TODES = "SELECT " +
+    private final String SELECT_BASE =  "SELECT " +
             "it.id, " +
             "it.id_fornecedor, " +
             "it.id_orcamento, " +
@@ -150,9 +150,12 @@ public class DaoPostgresItemOrcamento implements DaoItemOrcamento {
             "JOIN orcamentos o ON it.id_orcamento = o.id " +
             "JOIN produtos p ON f.id_produto = p.id " +
             "JOIN categorias c ON f.id_categoria = c.id " +
-            "JOIN clientes cli ON cli.id = o.id_cliente " +
+            "JOIN clientes cli ON cli.id = o.id_cliente ";
+
+    private final String SELECT_TODES = SELECT_BASE +
             "ORDER BY it.data_entrega DESC";
 
+    private final String SELECT_POR_CLIENTE = SELECT_BASE + " WHERE cli.id = ?";
 
     private Connection conexao;
 
@@ -250,6 +253,29 @@ public class DaoPostgresItemOrcamento implements DaoItemOrcamento {
             ManagerDb.getInstance().fechar(ps);
             ManagerDb.getInstance().fechar(rs);
         }
+    }
+
+    @Override
+    public List<ItemOrcamento> listarPorCliente(Long idCliente) {
+        List<ItemOrcamento> itens = new ArrayList<>();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            ps = conexao.prepareStatement(SELECT_POR_CLIENTE);
+            ps.setLong(1, idCliente);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                itens.add(extrairDo(rs));
+            }
+            return itens;
+        } catch (Exception ex) {
+            throw new RuntimeException(
+                    "Ocorreu um erro ao listar o " + "nome do item. Motivo: " + ex.getMessage());
+        } finally {
+            ManagerDb.getInstance().fechar(ps);
+            ManagerDb.getInstance().fechar(rs);
+        }
+
     }
 
     @Override

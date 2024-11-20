@@ -2,6 +2,7 @@ package com.br.dreamday.service;
 
 import com.br.dreamday.dao.DaoItemOrcamento;
 import com.br.dreamday.dao.FactoryDao;
+import com.br.dreamday.domain.Cliente;
 import com.br.dreamday.domain.ItemFornecedor;
 import com.br.dreamday.domain.ItemOrcamento;
 import com.br.dreamday.domain.key.ItemFornecedorKey;
@@ -40,6 +41,10 @@ public class ItemOrcamentoService {
 
     public List<ItemOrcamento> listarTodos() {
         return dao.listarTodos();
+    }
+
+    public List<ItemOrcamento> listarPorCliente(Long clienteId) {
+        return dao.listarPorCliente(clienteId);
     }
 
 }

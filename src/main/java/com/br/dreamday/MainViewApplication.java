@@ -6,6 +6,7 @@ import com.br.dreamday.domain.Parcelamento;
 import com.br.dreamday.domain.ParcelamentoStatus;
 import com.br.dreamday.service.OrcamentoService;
 import com.br.dreamday.service.ParcelamentoService;
+import com.br.dreamday.utils.Formatter;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

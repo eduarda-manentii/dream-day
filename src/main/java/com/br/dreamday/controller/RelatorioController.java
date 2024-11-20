@@ -1,33 +1,23 @@
 package com.br.dreamday.controller;
 
-import javafx.event.ActionEvent;
+import com.br.dreamday.utils.WindowUtils;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
+
+import java.io.IOException;
 
 public class RelatorioController {
 
     @FXML
-    private Button btnCliente;
-
-    @FXML
-    private Button btnStatus;
-
-    @FXML
-    private Button btnValor;
-
-    @FXML
-    void aoClicarCliente(ActionEvent event) {
-
+    void aoClicarCliente() throws IOException {
+        WindowUtils.abrirTela("cliente-relatorio");
     }
 
     @FXML
-    void aoClicarStatus(ActionEvent event) {
-
+    void aoClicarStatus() {
     }
 
     @FXML
-    void aoClicarValor(ActionEvent event) {
-
+    void aoClicarValor() {
     }
 
 }
