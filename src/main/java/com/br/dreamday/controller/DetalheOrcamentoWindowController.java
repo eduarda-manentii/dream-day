@@ -12,6 +12,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -21,6 +22,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.Objects;
 
 public class DetalheOrcamentoWindowController {
@@ -101,19 +103,44 @@ public class DetalheOrcamentoWindowController {
         fornecedorColumn.setCellValueFactory(new PropertyValueFactory<>("nomeFornecedor"));
         produtoColumn.setCellValueFactory(new PropertyValueFactory<>("nomeProduto"));
         quantidadeColumn.setCellValueFactory(new PropertyValueFactory<>("quantidade"));
-        acoesColumn.setCellFactory(column -> new TableCell<>() {
-            final Button editarButton = new Button("Detalhes");
+        valorTotalColumn.setCellValueFactory(new PropertyValueFactory<>("totalProduto"));
+        acoesColumn.setCellFactory(column -> criarAcaoDosBotoes());
+    }
+
+    private TableCell<ItemOrcamento, String> criarAcaoDosBotoes() {
+        return new TableCell<>() {
+            final Button editarButton = new Button("Editar");
             final Button excluirButton = new Button("Excluir");
             final HBox buttonBox = new HBox(editarButton, excluirButton);
 
             {
                 buttonBox.setSpacing(10);
-                excluirButton.setOnAction(event -> {
-                    //TODO: perguntar se tem certeza, recarregar valor total
-                    ItemOrcamento itemOrcamento = getTableView().getItems().get(getIndex());
+                excluirButton.setOnAction(event -> Mensagens.exibirMensagemDeConfirmacao("Tem certeza que deseja remover o item selecionado?", () -> {
+                    int index = getIndex();
+                    ItemOrcamento itemOrcamento = getTableView().getItems().get(index);
                     service.excluirPor(itemOrcamento.getId());
                     itemOrcamentoList.remove(itemOrcamento);
                     tableItensOrcamentos.refresh();
+                    recarregarValorTotal(itemOrcamento);
+                }));
+                editarButton.setOnAction(event -> {
+                    try {
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/br/dreamday/vincular-item-window.fxml"));
+                        Parent root = loader.load();
+                        VincularItemWindow vincularItemWindow = loader.getController();
+                        vincularItemWindow.setParentController(DetalheOrcamentoWindow.this);
+                        vincularItemWindow.setOrcamentoId(orcamentoId);
+                        int index = getIndex();
+                        ItemOrcamento itemOrcamento = getTableView().getItems().get(index);
+                        vincularItemWindow.setAttributes(itemOrcamento);
+                        Stage popup = new Stage();
+                        popup.setScene(new Scene(root));
+                        popup.initModality(Modality.APPLICATION_MODAL);
+                        popup.showAndWait();
+                        recarregarTabela();
+                    } catch (IOException e) {
+                        Mensagens.exibirMensagemDeErro("Erro ao abrir a janela de edição.");
+                    }
                 });
             }
             @Override
@@ -149,7 +176,7 @@ public class DetalheOrcamentoWindowController {
 
 
     @FXML
-    public void onButtonEditarClicked() throws IOException {
+    public void editar(ActionEvent actionEvent) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/br/dreamday/cadastro-orcamento-window.fxml"));
         Parent root = loader.load();
         CadastroOrcamentoWindowController orcamentoController = loader.getController();
@@ -163,7 +190,7 @@ public class DetalheOrcamentoWindowController {
     }
 
     @FXML
-    public void onButtonVincularItemClicked() throws IOException {
+    public void vincularItem(ActionEvent actionEvent) throws IOException {
         if (orcamentoId == 0) {
             showMessage("Salve o orçamento antes de vincular um item.");
             return;
@@ -172,7 +199,12 @@ public class DetalheOrcamentoWindowController {
     }
 
     @FXML
-    public void onButtonExcluirClicked(ActionEvent actionEvent) {
+    public void excluir(ActionEvent event) {
+        Mensagens.exibirMensagemDeConfirmacao("Tem certeza que deseja excluir este orçamento e todos os seus itens?", () -> {
+            orcamentoService.excluirOrcamentoEItensVinculados(orcamentoId);
+            Mensagens.exibirMensagemInformativa("Orçamento e todos os itens foram excluídos com sucesso.");
+            closeWindow(event);
+        });
     }
 
     @FXML
@@ -191,6 +223,10 @@ public class DetalheOrcamentoWindowController {
         popupStage.centerOnScreen();
         popupStage.setResizable(false);
         popupStage.showAndWait();
+    }
+
+    public void atualizarCampoValorTotal(String novoValor) {
+        lblValorTotalPreencher.setText(novoValor);
     }
 
     @FXML
@@ -220,6 +256,11 @@ public class DetalheOrcamentoWindowController {
         itemOrcamentoList.addAll(service.listarPor(orcamentoId));
     }
 
+    private void closeWindow(ActionEvent event) {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.close();
+    }
+
     void abrirTelaVincularItem() throws IOException {
         FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(MainViewApplication.class.getResource("vincular-item-window.fxml")));
         Parent parent = loader.load();
@@ -234,6 +275,25 @@ public class DetalheOrcamentoWindowController {
         popupStage.setResizable(false);
         popupStage.showAndWait();
         recarregarTabela();
+    }
+
+    private void recarregarValorTotal(ItemOrcamento itemOrcamento) {
+        BigDecimal subtotal = calculateSubtotal(itemOrcamento);
+        Orcamento orcamentoAtualizado = orcamentoService.buscarPor(orcamentoId);
+        BigDecimal totalAtualizado = orcamentoAtualizado.getValorTotal().subtract(subtotal);
+        orcamentoService.atualizarValorTotal(orcamentoId, totalAtualizado);
+        lblValorTotalPreencher.setText(totalAtualizado.toString());
+        recarregarTabela();
+    }
+
+    private BigDecimal calculateSubtotal(ItemOrcamento itemOrcamento) {
+        BigDecimal precoProduto = new BigDecimal(itemOrcamento.getPrecoProduto());
+        BigDecimal quantidade = BigDecimal.valueOf(itemOrcamento.getQuantidade());
+        return quantidade.multiply(precoProduto);
+    }
+
+    private void recarregarTabela() {
+        itemOrcamentoList.setAll(service.listarPor(orcamentoId));
     }
 
     private void showMessage(String mensagem) {

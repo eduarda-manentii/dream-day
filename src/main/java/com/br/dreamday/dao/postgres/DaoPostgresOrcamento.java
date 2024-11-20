@@ -41,7 +41,7 @@ public class DaoPostgresOrcamento implements DaoOrcamento {
             + " WHERE o.id_cliente = c.id " +
             "   AND o.id = ? ";
 
-    private final String UPDATE_VALOR_TOTAL = "UPDATE orcamentos SET valor_total = valor_total + ? WHERE id = ?";
+    private final String UPDATE_VALOR_TOTAL = "UPDATE orcamentos SET valor_total = ? WHERE id = ?";
 
     private final String SELECT_BY_CLI_NOME = "SELECT " +
             "o.id, " +
@@ -122,6 +122,8 @@ public class DaoPostgresOrcamento implements DaoOrcamento {
             "       clientes c " +
             "WHERE o.id_cliente = c.id "
             + "ORDER BY o.id";
+
+    private final String SELECT_COUNT_CLIENTES = "SELECT COUNT(*) FROM orcamentos WHERE id_cliente = ?";
 
     private Connection conexao;
 
@@ -230,10 +232,18 @@ public class DaoPostgresOrcamento implements DaoOrcamento {
     public void atualizarValorTotal(Long idOrcamento, BigDecimal subtotal) {
         PreparedStatement ps = null;
         try {
+            ManagerDb.getInstance().configurarAutoCommitDa(conexao, false);
             ps = conexao.prepareStatement(UPDATE_VALOR_TOTAL);
             ps.setBigDecimal(1, subtotal);
             ps.setLong(2, idOrcamento);
             ps.executeUpdate();
+            boolean isAlteracaoOK = ps.executeUpdate() == 1;
+            if (isAlteracaoOK) {
+                this.conexao.commit();
+            } else {
+                this.conexao.rollback();
+            }
+            ManagerDb.getInstance().configurarAutoCommitDa(conexao, true);
         } catch (Exception ex) {
             throw new RuntimeException("Erro ao atualizar o valor total do orçamento. Motivo: " + ex.getMessage());
         } finally {
@@ -327,6 +337,19 @@ public class DaoPostgresOrcamento implements DaoOrcamento {
             ManagerDb.getInstance().fechar(rs);
         }
         return orcamentos;
+    }
+
+    public int contarOrcamentosPorClienteId(int clienteId) {
+        try (PreparedStatement ps = conexao.prepareStatement(SELECT_COUNT_CLIENTES)) {
+            ps.setInt(1, clienteId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao contar orçamentos do cliente: " + e.getMessage());
+        }
+        return 0;
     }
 
     private Orcamento extrairDo(ResultSet rs) {

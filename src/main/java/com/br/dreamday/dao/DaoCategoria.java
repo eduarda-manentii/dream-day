@@ -12,4 +12,5 @@ public interface DaoCategoria {
     List<Categoria> listarPor(String nome);
     List<Categoria> listarPor(String nome, Integer limite);
     List<Categoria> listarTodas();
+
 }

@@ -45,9 +45,11 @@ public class DaoPostgresCliente implements DaoCliente {
             + "ORDER BY LOWER(c.nome)";
 
     private Connection conexao;
+    private DaoPostgresOrcamento daoOrcamento;
 
     public DaoPostgresCliente() {
         this.conexao = ManagerDb.getInstance().getConexao();
+        this.daoOrcamento = new DaoPostgresOrcamento();
     }
 
     @Override
@@ -100,6 +102,10 @@ public class DaoPostgresCliente implements DaoCliente {
 
     @Override
     public void excluirPor(int id) {
+        int quantidadeOrcamentos = daoOrcamento.contarOrcamentosPorClienteId(id);
+        if (quantidadeOrcamentos > 0) {
+            throw new RuntimeException("Não é possível excluir o cliente, pois ele possui orçamentos vinculados.");
+        }
         PreparedStatement ps = null;
         try {
             ManagerDb.getInstance().configurarAutoCommitDa(conexao, false);
@@ -108,7 +114,7 @@ public class DaoPostgresCliente implements DaoCliente {
             boolean isExclusaoOK = ps.executeUpdate() == 1;
             if (isExclusaoOK) {
                 this.conexao.commit();
-            }else {
+            } else {
                 this.conexao.rollback();
             }
             ManagerDb.getInstance().configurarAutoCommitDa(conexao, true);

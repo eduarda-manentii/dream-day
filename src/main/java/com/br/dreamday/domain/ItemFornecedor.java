@@ -23,6 +23,20 @@ public class ItemFornecedor {
         this.produto = produto;
     }
 
+    public ItemFornecedor(Long idFornecedor, Long idProduto, BigDecimal preco, Categoria categoria) {
+        this.id = new ItemFornecedorKey(idFornecedor, idProduto);
+        this.preco = preco;
+        this.categoria = categoria;
+    }
+
+    public ItemFornecedor(ItemFornecedorKey id, BigDecimal preco, Categoria categoria, Fornecedor fornecedor, Produto produto) {
+        this.id = id;
+        this.preco = preco;
+        this.categoria = categoria;
+        this.fornecedor = fornecedor;
+        this.produto = produto;
+    }
+
     public ItemFornecedorKey getId() {
         return id;
     }

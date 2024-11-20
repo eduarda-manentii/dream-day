@@ -1,8 +1,11 @@
 package com.br.dreamday.dao.postgres;
 
-import com.br.dreamday.domain.*;
+import com.br.dreamday.domain.Fornecedor;
+import com.br.dreamday.domain.ItemFornecedor;
+import com.br.dreamday.domain.Produto;
 import com.br.dreamday.dao.DaoItemFornecedor;
 import com.br.dreamday.dao.ManagerDb;
+import com.br.dreamday.domain.Categoria;
 import com.br.dreamday.domain.key.ItemFornecedorKey;
 
 import java.math.BigDecimal;
@@ -36,8 +39,11 @@ public class DaoPostgresqlItemFornecedor implements DaoItemFornecedor {
             + "c.nome nome_categoria, "
             + "ifs.id_fornecedor, "
             + "ifs.id_produto, "
-            + "ifs.preco "
+            + "ifs.preco, "
+            + "f.id id_fornecedor, "
+            + "f.nome nome_fornecedor "
             + "FROM itens_fornecedores ifs "
+            + "join fornecedores f on f.id = ifs.id_fornecedor "
             + "join categorias c on c.id = ifs.id_categoria "
             + "join produtos p on p.id = ifs.id_produto "
             + "WHERE ifs.id_fornecedor = ? "
@@ -55,24 +61,10 @@ public class DaoPostgresqlItemFornecedor implements DaoItemFornecedor {
             + "if.id_produto, "
             + "if.preco "
             + "FROM itens_fornecedores if "
-            + "JOIN categorias c ON c.id = if.id_categoria "
-            + "JOIN fornecedores f ON f.id = if.id_fornecedor "
-            + "JOIN produtos p ON p.id = if.id_produto "
-            + "WHERE UPPER(p.nome) LIKE UPPER(?)";
-
-    private final String SELECT_TODOS = "SELECT "
-            + "ifs.id_fornecedor, "
-            + "f.nome AS nome_fornecedor, "
-            + "p.id AS id_produto, "
-            + "p.nome AS nome_produto, "
-            + "c.id AS id_categoria, "
-            + "c.nome AS nome_categoria, "
-            + "ifs.preco "
-            + "FROM itens_fornecedores ifs "
-            + "JOIN fornecedores f ON f.id = ifs.id_fornecedor "
-            + "JOIN produtos p ON p.id = ifs.id_produto "
-            + "JOIN categorias c ON c.id = ifs.id_categoria "
-            + "ORDER BY LOWER(f.nome)";
+            + "join categorias c on c.id = if.id_categoria "
+            + "join fornecedores f on f.id = if.id_fornecedor "
+            + "join produtos p on p.id = if.id_produto "
+            + "WHERE Upper(p.nome) LIKE Upper(?) ";
 
     private final String SELECT_ID_EXISTENTE = "SELECT COUNT (itens_fornecedores.id_categoria) as qtde "
             + "FROM itens_fornecedores " + "WHERE itens_fornecedores.id_fornecedor = ? AND itens_fornecedores.id_produto = ?";
@@ -92,6 +84,20 @@ public class DaoPostgresqlItemFornecedor implements DaoItemFornecedor {
             + "WHERE i.id_produto = ? "
             + "AND i.id_fornecedor = ? "
             + ") AS existe";
+
+    private final String SELECT_TODOS = "SELECT "
+            + "ifs.id_fornecedor, "
+            + "f.nome AS nome_fornecedor, "
+            + "p.id AS id_produto, "
+            + "p.nome AS nome_produto, "
+            + "c.id AS id_categoria, "
+            + "c.nome AS nome_categoria, "
+            + "ifs.preco "
+            + "FROM itens_fornecedores ifs "
+            + "JOIN fornecedores f ON f.id = ifs.id_fornecedor "
+            + "JOIN produtos p ON p.id = ifs.id_produto "
+            + "JOIN categorias c ON c.id = ifs.id_categoria "
+            + "ORDER BY LOWER(f.nome)";
 
     private final Connection conexao;
 
@@ -172,6 +178,7 @@ public class DaoPostgresqlItemFornecedor implements DaoItemFornecedor {
         ResultSet rs = null;
         try {
             StringBuilder consulta = new StringBuilder(SELECT_BY_NOME_PRECO_FORN);
+         
 
             consulta.append("AND Upper(f.nome) LIKE Upper(?) ");
             consulta.append("AND if.preco >= ? ");
@@ -183,7 +190,6 @@ public class DaoPostgresqlItemFornecedor implements DaoItemFornecedor {
             ps.setString(2, nomeFornecedor);
             ps.setBigDecimal(3, valorInicial);
             ps.setBigDecimal(4, valorFinal);
-
             rs = ps.executeQuery();
             while (rs.next()) {
                 itens.add(extrairDo(rs));
@@ -221,28 +227,7 @@ public class DaoPostgresqlItemFornecedor implements DaoItemFornecedor {
         }
     }
 
-    @Override
-    public List<ItemFornecedor> listarTodos() {
-        List<ItemFornecedor> itensFornecedores = new ArrayList<>();
-        PreparedStatement ps = null;
-        ResultSet rs = null;
-        try {
-            ps = conexao.prepareStatement(SELECT_TODOS);
-            rs = ps.executeQuery();
-            while(rs.next()) {
-                itensFornecedores.add(extrairDo(rs));
-            }
-        } catch (Exception ex) {
-            throw new RuntimeException("Ocorreu um erro na listagem"
-                    + " dos itens de fornecedores. Motivo: " + ex.getMessage());
-        } finally {
-            ManagerDb.getInstance().fechar(ps);
-            ManagerDb.getInstance().fechar(rs);
-        }
-        return itensFornecedores;
-    }
-
-    @Override
+   @Override
     public boolean validarEdicao(Long idFornecedor, Long idProduto) {
         PreparedStatement ps = null;
         ResultSet rs = null;
@@ -263,6 +248,27 @@ public class DaoPostgresqlItemFornecedor implements DaoItemFornecedor {
             ManagerDb.getInstance().fechar(ps);
             ManagerDb.getInstance().fechar(rs);
         }
+    }
+
+    @Override
+    public List<ItemFornecedor> listarTodos() {
+        List<ItemFornecedor> itensFornecedores = new ArrayList<>();
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        try {
+            ps = conexao.prepareStatement(SELECT_TODES);
+            rs = ps.executeQuery();
+            while(rs.next()) {
+                itensFornecedores.add(extrairDo(rs));
+            }
+        } catch (Exception ex) {
+            throw new RuntimeException("Ocorreu um erro na listagem"
+                    + " dos itens de fornecedores. Motivo: " + ex.getMessage());
+        } finally {
+            ManagerDb.getInstance().fechar(ps);
+            ManagerDb.getInstance().fechar(rs);
+        }
+        return itensFornecedores;
     }
 
     @Override

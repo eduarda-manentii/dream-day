@@ -1,5 +1,6 @@
 package com.br.dreamday.controller;
 
+import com.br.dreamday.MainViewApplication;
 import com.br.dreamday.domain.*;
 import com.br.dreamday.service.ClienteService;
 import com.br.dreamday.service.OrcamentoService;
@@ -8,15 +9,22 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import static com.br.dreamday.utils.WindowUtils.exibirAlerta;
 
@@ -65,46 +73,52 @@ public class CadastroOrcamentoWindowController {
 
     @FXML
     void onButtonSalvarClicked() {
+        if (!validarCampos()) {
+            return;
+        }
+
         try {
+            Cliente cliente = cbCliente.getValue();
+            BigDecimal custoEstimado = new BigDecimal(txtCustoEstimado.getText());
+            OrcamentoStatus status = cbStatus.getValue();
+            String observacoes = txtAreaObservacoes.getText();
+            LocalDate dataDeCriacao = LocalDate.now();
             if(!camposPreenchidos()) {
-                showMessage("Preencha os campos são obrigatórios.");
+                showMessage("Preencha os campos obrigatórios!");
             } else {
-                if(txtCustoEstimado.getText().isBlank()) {
-                    exibirAlerta(
-                            Alert.AlertType.ERROR,
-                            "Erro de Validação",
-                            "Ocorreu um erro ao salvar as informações: O campo de custo estimado é obrigatório."
-                    );
-                    return;
-                }
-                Cliente cliente = cbCliente.getValue();
-                BigDecimal custoEstimado = new BigDecimal(txtCustoEstimado.getText());
-                OrcamentoStatus status = cbStatus.getValue();
-                String observacoes = txtAreaObservacoes.getText();
-                LocalDate dataDeCriacao = LocalDate.now();
                 if (orcamentoSelecionado == null) {
                     Orcamento orcamento = new Orcamento(cliente, status, dataDeCriacao, custoEstimado, BigDecimal.ZERO, observacoes);
-                    service.salvar(orcamento);
+                    orcamentoId = service.salvar(orcamento);
                     showMessage("Orçamento salvo com sucesso!");
-                    limparCampos();
                 } else {
                     orcamentoSelecionado.setCliente(cliente);
                     orcamentoSelecionado.setCustoEstimado(custoEstimado);
                     orcamentoSelecionado.setDataCriacao(dataDeCriacao);
                     orcamentoSelecionado.setStatus(status);
                     orcamentoSelecionado.setObservaces(observacoes);
-                    service.salvar(orcamentoSelecionado);
+                    orcamentoId = service.salvar(orcamentoSelecionado);
                     orcamentoSelecionado = null;
                     showMessage("Orçamento alterado com sucesso!");
                 }
             }
-        } catch (Exception ex) {
-            exibirAlerta(
-                    Alert.AlertType.ERROR,
-                    "Erro de Validação",
-                    "Ocorreu um erro ao salvar as informações: " + ex.getMessage()
-            );
+        } catch (Exception e) {
+            showMessage(e.getMessage());
         }
+    }
+
+    void abrirTelaVincularItem() throws IOException {
+        FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(MainViewApplication.class.getResource("vincular-item-window.fxml")));
+        Parent parent = loader.load();
+        VincularItemWindow controller = loader.getController();
+        controller.setOrcamentoId(orcamentoId);
+        Stage popupStage = new Stage();
+        popupStage.setTitle("Vincular Item");
+        Scene scene = new Scene(parent);
+        popupStage.setScene(scene);
+        popupStage.initModality(Modality.APPLICATION_MODAL);
+        popupStage.centerOnScreen();
+        popupStage.setResizable(false);
+        popupStage.showAndWait();
     }
 
     @FXML
@@ -120,6 +134,15 @@ public class CadastroOrcamentoWindowController {
         }
     }
 
+    @FXML
+    void onButtonVincularItemClicked(ActionEvent event) throws IOException {
+        if (orcamentoId == 0) {
+            showMessage("Salve o orçamento antes de vincular um item.");
+            return;
+        }
+        abrirTelaVincularItem();
+    }
+
     public void setAttributes(Orcamento orcamentoSelecionado) {
         this.orcamentoSelecionado = orcamentoSelecionado;
         cbCliente.setValue(orcamentoSelecionado.getCliente());
@@ -131,13 +154,6 @@ public class CadastroOrcamentoWindowController {
     private boolean camposPreenchidos() {
         String custoEstimado = txtCustoEstimado.getText();
         return cbCliente.getValue() != null || !custoEstimado.isBlank() ||  cbStatus.getValue() != null;
-    }
-
-    private void limparCampos() {
-        cbCliente.setValue(null);
-        txtCustoEstimado.setText("");
-        cbStatus.setValue(null);
-        txtAreaObservacoes.setText("");
     }
 
     private void showMessage(String mensagem) {

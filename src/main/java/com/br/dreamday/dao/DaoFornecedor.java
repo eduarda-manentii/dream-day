@@ -11,4 +11,5 @@ public interface DaoFornecedor {
     void excluirPor(Long id);
     List<Fornecedor> listarPor(String nome);
     List<Fornecedor> listarTodos();
+
 }

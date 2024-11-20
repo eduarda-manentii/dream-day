@@ -8,19 +8,12 @@ import java.util.List;
 
 public interface DaoCliente {
 
-    public void inserir(Cliente cliente);
-
-    public void alterar(Cliente cliente);
-
-    public void excluirPor(int id);
-
-    public Cliente buscarPor(int id);
-
-    public List<Cliente> listarPor(String nome);
-
-    public List<Cliente> listarPor(String nome, LocalDate dataDeCasamento);
-
-    public List<Cliente> listarPor(LocalDate data);
-
-    public List<Cliente> listarTodos();
+    void inserir(Cliente cliente);
+    void alterar(Cliente cliente);
+    void excluirPor(int id);
+    Cliente buscarPor(int id);
+    List<Cliente> listarPor(String nome);
+    List<Cliente> listarPor(String nome, LocalDate dataDeCasamento);
+    List<Cliente> listarTodos();
+    List<Cliente> listarPor(LocalDate data);
 }

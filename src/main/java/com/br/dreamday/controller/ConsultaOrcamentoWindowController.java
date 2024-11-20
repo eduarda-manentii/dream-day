@@ -2,6 +2,7 @@ package com.br.dreamday.controller;
 
 import com.br.dreamday.MainViewApplication;
 import com.br.dreamday.domain.*;
+import com.br.dreamday.service.FornecedorService;
 import com.br.dreamday.service.OrcamentoService;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,6 +18,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.time.DateTimeException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -135,6 +139,7 @@ public class ConsultaOrcamentoWindowController {
         popupStage.centerOnScreen();
         popupStage.setResizable(false);
         popupStage.showAndWait();
+        recarregarTabela();
     }
 
     @FXML
@@ -172,6 +177,14 @@ public class ConsultaOrcamentoWindowController {
         }
     }
 
+    public void exibirAlerta(Alert.AlertType tipo, String titulo, String cabecalho, String conteudo) {
+        Alert alert = new Alert(tipo);
+        alert.setTitle(titulo);
+        alert.setHeaderText(cabecalho);
+        alert.setContentText(conteudo);
+        alert.showAndWait().filter(response -> response == ButtonType.OK);
+    }
+
     private void showMessage(String mensagem) {
         ButtonType loginButtonType = new ButtonType("Ok!", ButtonBar.ButtonData.OK_DONE);
         Dialog<String> dialog = new Dialog<>();
@@ -181,6 +194,11 @@ public class ConsultaOrcamentoWindowController {
         boolean desativado = false;
         dialog.getDialogPane().lookupButton(loginButtonType).setDisable(desativado);
         dialog.showAndWait();
+    }
+
+    private void recarregarTabela() {
+        orcamentoList.clear();
+        orcamentoList.addAll(service.listarTodos());
     }
 
 }

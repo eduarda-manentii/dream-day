@@ -173,7 +173,7 @@ public class DaoPostgresItemOrcamento implements DaoItemOrcamento {
             ps.setLong(2, itemOrcamento.getItemFornecedor().getId().getIdProduto());
             ps.setLong(3, itemOrcamento.getOrcamento().getId());
             ps.setDate(4, Date.valueOf(itemOrcamento.getDataDeEntrega()));
-            ps.setDouble(5, itemOrcamento.getQuantidade());
+            ps.setInt(5, itemOrcamento.getQuantidade());
             ps.setString(6, String.valueOf(itemOrcamento.getStatus()));
             ps.execute();
         } catch (Exception ex) {
@@ -193,7 +193,7 @@ public class DaoPostgresItemOrcamento implements DaoItemOrcamento {
             ps.setLong(2, itemOrcamento.getItemFornecedor().getId().getIdProduto());
             ps.setLong(3, itemOrcamento.getOrcamento().getId());
             ps.setDate(4, Date.valueOf(itemOrcamento.getDataDeEntrega()));
-            ps.setDouble(5, itemOrcamento.getQuantidade());
+            ps.setInt(5, itemOrcamento.getQuantidade());
             ps.setString(6, String.valueOf(itemOrcamento.getStatus()));
             ps.setLong(7, itemOrcamento.getId());
             boolean isAlteracaoOK = ps.executeUpdate() == 1;
@@ -355,7 +355,7 @@ public class DaoPostgresItemOrcamento implements DaoItemOrcamento {
             BigDecimal custoEstimado = rs.getBigDecimal("custo_estimado");
             OrcamentoStatus orcamentoStatus = OrcamentoStatus.valueOf(rs.getString("orcamento_status"));
             BigDecimal valorTotal = rs.getBigDecimal("valor_total");
-            Double quantidade = rs.getDouble("quantidade");
+            int quantidade = rs.getInt("quantidade");
 
             Long idOrcamento = rs.getLong("id_orcamento");
             LocalDate dataEntrega = rs.getDate("data_entrega").toLocalDate();
