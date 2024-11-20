@@ -130,6 +130,11 @@ public class CadastroClienteWindowController {
         txtCpf.setText("");
         txtEmail.setText("");
         txtTelefone.setText("");
+        txtTelefone.setOnKeyTyped(null);
+        txtTelefone.setTextFormatter(null);
+        txtTelefone.setOnKeyReleased(null);
+        txtTelefone.clear();
+        MascarasUtils.mascaraTelefone(txtTelefone);
         txtDataCasamento.setText("");
     }
 
