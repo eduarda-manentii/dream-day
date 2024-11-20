@@ -95,7 +95,11 @@ public class OrcamentoService {
     }
 
     public List<Orcamento> listarPor(String nomeDoCliente) {
-        return dao.listarPor(nomeDoCliente);
+        boolean isFiltroInvalido = nomeDoCliente.isBlank() || nomeDoCliente.length() < 3;
+        if (isFiltroInvalido) {
+            throw new IllegalArgumentException("O filtro para listagem é obrigatório e deve ter mais que 2 caracteres.");
+        }
+        return dao.listarPor(nomeDoCliente + "%");
     }
 
     public List<Orcamento> listarTodos() {

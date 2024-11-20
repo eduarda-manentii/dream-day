@@ -79,13 +79,13 @@ public class ConsultaOrcamentoWindowController {
                 button.setOnAction(event -> {
                     Orcamento orcamento = getTableView().getItems().get(getIndex());
                     try {
-                        onButtonDetalhesClicked(orcamento);
+                        detalhes(orcamento);
                     }
                     catch (IOException e) {
                         exibirAlerta(
                                 Alert.AlertType.ERROR,
-                                null,
-                                "Erro ao abrir a tela de detalhes",
+                                "Detalhes",
+                                "Ocorreu um erro ao abrir a tela de detalhes de orçamento: ",
                                 e.getMessage()
                         );
 
@@ -116,7 +116,7 @@ public class ConsultaOrcamentoWindowController {
     }
 
     @FXML
-    private void onButtonDetalhesClicked(Orcamento orcamentoSelecionado) throws IOException {
+    private void detalhes(Orcamento orcamentoSelecionado) throws IOException {
         FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(MainViewApplication.class.getResource("/com/br/dreamday/detalhe-orcamento-window.fxml")));
         Parent root = loader.load();
         DetalheOrcamentoWindowController detalheOrcamentoWindowController = loader.getController();
@@ -143,7 +143,7 @@ public class ConsultaOrcamentoWindowController {
     }
 
     @FXML
-    void onButtonAdicionarClicked() throws IOException {
+    void adicionar() throws IOException {
         Parent parent = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/com/br/dreamday/cadastro-orcamento-window.fxml")));
         Stage popupStage = new Stage();
         popupStage.setTitle("Cadastro de Orçamentos");
@@ -156,7 +156,7 @@ public class ConsultaOrcamentoWindowController {
     }
 
     @FXML
-    void onButtonFiltrarClicked() {
+    void filtrar() {
         try {
             List<Orcamento> orcamentos;
             if (!txtNomeDoCliente.getText().isBlank() && !(cbStatus.getValue() == null)) {
@@ -173,27 +173,13 @@ public class ConsultaOrcamentoWindowController {
             tblOrcamento.setItems(orcamentoList);
             tblOrcamento.refresh();
         }  catch (Exception e) {
-            showMessage(e.getMessage());
+            exibirAlerta(
+                    Alert.AlertType.ERROR,
+                    "Filtrar Orçamento",
+                    null,
+                    "Ocorreu um erro ao filtro o orçamento: " + e.getMessage()
+            );
         }
-    }
-
-    public void exibirAlerta(Alert.AlertType tipo, String titulo, String cabecalho, String conteudo) {
-        Alert alert = new Alert(tipo);
-        alert.setTitle(titulo);
-        alert.setHeaderText(cabecalho);
-        alert.setContentText(conteudo);
-        alert.showAndWait().filter(response -> response == ButtonType.OK);
-    }
-
-    private void showMessage(String mensagem) {
-        ButtonType loginButtonType = new ButtonType("Ok!", ButtonBar.ButtonData.OK_DONE);
-        Dialog<String> dialog = new Dialog<>();
-        dialog.setTitle("Aviso");
-        dialog.setContentText(mensagem);
-        dialog.getDialogPane().getButtonTypes().add(loginButtonType);
-        boolean desativado = false;
-        dialog.getDialogPane().lookupButton(loginButtonType).setDisable(desativado);
-        dialog.showAndWait();
     }
 
     private void recarregarTabela() {

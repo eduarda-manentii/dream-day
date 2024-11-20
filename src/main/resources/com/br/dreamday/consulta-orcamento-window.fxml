@@ -10,12 +10,12 @@
 
 <AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.br.dreamday.controller.ConsultaOrcamentoWindowController">
    <children>
-      <Button fx:id="btAdicionar" layoutX="463.0" layoutY="33.0" mnemonicParsing="false" onAction="#onButtonAdicionarClicked" prefHeight="28.0" prefWidth="112.0" text="Adicionar" />
+      <Button fx:id="btAdicionar" layoutX="463.0" layoutY="33.0" mnemonicParsing="false" onAction="#adicionar" prefHeight="28.0" prefWidth="112.0" text="Adicionar" />
       <Label fx:id="lblNomeDoCliente" layoutX="36.0" layoutY="93.0" text="Nome do Cliente" />
       <TextField fx:id="txtNomeDoCliente" layoutX="37.0" layoutY="118.0" prefHeight="28.0" prefWidth="244.0" />
       <ComboBox fx:id="cbStatus" layoutX="292.0" layoutY="118.0" prefHeight="28.0" prefWidth="164.0" />
       <Label fx:id="lblStatus" layoutX="292.0" layoutY="93.0" text="Status" />
-      <Button fx:id="btFiltrar" layoutX="465.0" layoutY="118.0" mnemonicParsing="false" onAction="#onButtonFiltrarClicked" prefHeight="28.0" prefWidth="112.0" text="Filtrar" />
+      <Button fx:id="btFiltrar" layoutX="465.0" layoutY="118.0" mnemonicParsing="false" onAction="#filtrar" prefHeight="28.0" prefWidth="112.0" text="Filtrar" />
       <TableView fx:id="tblOrcamento" layoutX="39.0" layoutY="163.0" prefHeight="200.0" prefWidth="541.0">
         <columns>
           <TableColumn fx:id="codigoColumn" prefWidth="55.0" text="Código" />

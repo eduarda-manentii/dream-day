@@ -168,17 +168,6 @@ public class DetalheOrcamentoWindowController {
         }
     }
 
-    private void populaCampos(Orcamento orcamentoSelecionado) {
-        lblDetalhesDoOrcamentoPreencher.setText(orcamentoSelecionado.getId().toString());
-        lblClientePreencher.setText(orcamentoSelecionado.getCliente().getNome());
-        lblCustoEstimadoPreencher.setText(orcamentoSelecionado.getCustoEstimado().toString());
-        lblDataDeCriacaoPreencher.setText(orcamentoSelecionado.getDataCriacao().toString());
-        lblValorTotalPreencher.setText(orcamentoSelecionado.getValorTotal().toString());
-        lblStatusPreencher.setText(orcamentoSelecionado.getStatus().toString());
-        lblObservacoesPreencher.setText(orcamentoSelecionado.getObservaces());
-    }
-
-
     @FXML
     public void editar(ActionEvent actionEvent) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/br/dreamday/cadastro-orcamento-window.fxml"));
@@ -213,7 +202,7 @@ public class DetalheOrcamentoWindowController {
             exibirAlerta(
                     Alert.AlertType.INFORMATION,
                     "Confirmação de Exclusão",
-                    "Orçamento e todos os itens foram excluídos com sucesso. "
+                    "Orçamento e todos os itens foram excluídos com sucesso."
             );
             closeWindow(event);
         });
@@ -263,17 +252,6 @@ public class DetalheOrcamentoWindowController {
         popupStage.showAndWait();
     }
 
-    private void recarregarTabela() {
-        itemOrcamentoList.clear();
-        itemOrcamentoList.addAll(service.listarPor(orcamentoId));
-        itemOrcamentoList.setAll(service.listarPor(orcamentoId));
-    }
-
-    private void closeWindow(ActionEvent event) {
-        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-        stage.close();
-    }
-
     void abrirTelaVincularItem() throws IOException {
         FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(MainViewApplication.class.getResource("vincular-item-window.fxml")));
         Parent parent = loader.load();
@@ -303,6 +281,27 @@ public class DetalheOrcamentoWindowController {
         BigDecimal precoProduto = new BigDecimal(itemOrcamento.getPrecoProduto());
         BigDecimal quantidade = BigDecimal.valueOf(itemOrcamento.getQuantidade());
         return quantidade.multiply(precoProduto);
+    }
+
+    private void populaCampos(Orcamento orcamentoSelecionado) {
+        lblDetalhesDoOrcamentoPreencher.setText(orcamentoSelecionado.getId().toString());
+        lblClientePreencher.setText(orcamentoSelecionado.getCliente().getNome());
+        lblCustoEstimadoPreencher.setText(orcamentoSelecionado.getCustoEstimado().toString());
+        lblDataDeCriacaoPreencher.setText(orcamentoSelecionado.getDataCriacao().toString());
+        lblValorTotalPreencher.setText(orcamentoSelecionado.getValorTotal().toString());
+        lblStatusPreencher.setText(orcamentoSelecionado.getStatus().toString());
+        lblObservacoesPreencher.setText(orcamentoSelecionado.getObservaces());
+    }
+
+    private void recarregarTabela() {
+        itemOrcamentoList.clear();
+        itemOrcamentoList.addAll(service.listarPor(orcamentoId));
+        itemOrcamentoList.setAll(service.listarPor(orcamentoId));
+    }
+
+    private void closeWindow(ActionEvent event) {
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        stage.close();
     }
 
 }
