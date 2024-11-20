@@ -97,7 +97,14 @@ public class VincularItemWindowController {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             LocalDate dataEntrega = LocalDate.parse(txtDadaDeEntrega.getText(), formatter);
             ItemOrcamentoStatus status = cbStatus.getValue();
-            int quantidade = Integer.parseInt(txtQuantidade.getText());
+            int quantidade = 0;
+            String quantidadeText = txtQuantidade.getText();
+
+            if (quantidadeText.trim().isEmpty()) {
+                throw new IllegalArgumentException("Ocorreu um erro ao salvar as informações: A quantidade é obrigatória.");
+            } else {
+                quantidade = Integer.parseInt(quantidadeText);
+            }
 
             if (itemOrcamentoSelecionado != null) {
                 double quantidadeAntiga = itemOrcamentoSelecionado.getQuantidade();

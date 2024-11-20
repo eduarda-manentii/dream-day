@@ -132,7 +132,7 @@ public class ConsultaOrcamentoWindowController {
                 )
         );
         Stage popupStage = new Stage();
-        popupStage.setTitle("Detalhe Fornecedor");
+        popupStage.setTitle("Detalhe Orçamento");
         Scene scene = new Scene(root);
         popupStage.setScene(scene);
         popupStage.initModality(Modality.APPLICATION_MODAL);

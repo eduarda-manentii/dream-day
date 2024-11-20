@@ -54,7 +54,7 @@ public class CadastroOrcamentoWindowController {
 
     @FXML
     void initialize() throws ParseException {
-        MascarasUtils.mascaraNumeroInteiro(txtCustoEstimado);
+        MascarasUtils.mascaraNumero(txtCustoEstimado);
         initializeDropDown();
     }
 
@@ -81,9 +81,10 @@ public class CadastroOrcamentoWindowController {
 
             if (custoEstimadoText.trim().isEmpty()) {
                 throw new IllegalArgumentException("Ocorreu um erro ao salvar as informações: O custo estimado é obrigatório.");
-            } else {
-                custoEstimado = new BigDecimal(custoEstimadoText);
             }
+
+            custoEstimadoText = custoEstimadoText.replace(",", ".");
+            custoEstimado = new BigDecimal(custoEstimadoText);
 
             if (orcamentoSelecionado == null) {
                 Orcamento orcamento = new Orcamento(cliente, status, dataDeCriacao, custoEstimado, BigDecimal.ZERO, observacoes);
@@ -129,8 +130,12 @@ public class CadastroOrcamentoWindowController {
         this.orcamentoSelecionado = orcamentoSelecionado;
         cbCliente.setValue(orcamentoSelecionado.getCliente());
         cbStatus.setValue(orcamentoSelecionado.getStatus());
-        txtCustoEstimado.setText(orcamentoSelecionado.getCustoEstimado().toString());
         txtAreaObservacoes.setText(orcamentoSelecionado.getObservaces());
+        txtCustoEstimado.setText(formatarDecimal(orcamentoSelecionado.getCustoEstimado()));
+    }
+
+    private String formatarDecimal(BigDecimal valor) {
+        return String.format("%.2f", valor);
     }
 
     private void limparCampor() {

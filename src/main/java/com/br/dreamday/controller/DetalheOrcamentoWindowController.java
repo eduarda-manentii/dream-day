@@ -180,6 +180,8 @@ public class DetalheOrcamentoWindowController {
         popup.setScene(scene);
         popup.initModality(Modality.APPLICATION_MODAL);
         popup.showAndWait();
+        Orcamento orcamentoAtualizado = orcamentoService.buscarPor(orcamentoId);
+        populaCampos(orcamentoAtualizado);
         recarregarTabela();
     }
 
@@ -288,12 +290,17 @@ public class DetalheOrcamentoWindowController {
     private void populaCampos(Orcamento orcamentoSelecionado) {
         lblDetalhesDoOrcamentoPreencher.setText(orcamentoSelecionado.getId().toString());
         lblClientePreencher.setText(orcamentoSelecionado.getCliente().getNome());
-        lblCustoEstimadoPreencher.setText(orcamentoSelecionado.getCustoEstimado().toString());
+        lblCustoEstimadoPreencher.setText(formatarDecimal(orcamentoSelecionado.getCustoEstimado()));
         lblDataDeCriacaoPreencher.setText(orcamentoSelecionado.getDataCriacao().toString());
-        lblValorTotalPreencher.setText(orcamentoSelecionado.getValorTotal().toString());
+        lblValorTotalPreencher.setText(formatarDecimal(orcamentoSelecionado.getValorTotal()));
         lblStatusPreencher.setText(orcamentoSelecionado.getStatus().toString());
         lblObservacoesPreencher.setText(orcamentoSelecionado.getObservaces());
     }
+
+    private String formatarDecimal(BigDecimal valor) {
+        return String.format("%.2f", valor);
+    }
+
 
     private void recarregarTabela() {
         itemOrcamentoList.clear();
