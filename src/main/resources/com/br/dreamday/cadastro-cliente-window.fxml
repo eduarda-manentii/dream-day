@@ -20,13 +20,12 @@
       <TextField fx:id="txtTelefone" layoutX="153.0" layoutY="251.0" prefHeight="25.0" prefWidth="412.0" />
       <Label fx:id="lblEmail" layoutX="41.0" layoutY="299.0" text="E-mail" />
       <TextField fx:id="txtEmail" layoutX="153.0" layoutY="295.0" prefHeight="25.0" prefWidth="412.0" />
-      <Button fx:id="btnSalvar" layoutX="430.0" layoutY="343.0" mnemonicParsing="false" onAction="#onButtonSalvarClicked" prefHeight="25.0" prefWidth="133.0" text="Salvar" />
-      <Button fx:id="btnCancelar" layoutX="296.0" layoutY="343.0" mnemonicParsing="false" onAction="#onButtonCancelarClicked" prefHeight="25.0" prefWidth="121.0" text="Cancelar" />
+      <Button fx:id="btnSalvar" layoutX="430.0" layoutY="343.0" mnemonicParsing="false" onAction="#salvar" prefHeight="25.0" prefWidth="133.0" text="Salvar" />
+      <Button fx:id="btnCancelar" layoutX="296.0" layoutY="343.0" mnemonicParsing="false" onAction="#cancelar" prefHeight="25.0" prefWidth="121.0" text="Cancelar" />
       <Label fx:id="lblCadastroDeCliente" layoutX="47.0" layoutY="47.0" text="Cadastro de Cliente">
          <font>
             <Font size="20.0" />
          </font>
       </Label>
-      <Button fx:id="btnVoltar" layoutX="154.0" layoutY="343.0" mnemonicParsing="false" onAction="#onButtonVoltarClicked" prefHeight="25.0" prefWidth="133.0" text="Voltar" />
    </children>
 </AnchorPane>

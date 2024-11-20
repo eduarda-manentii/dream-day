@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static com.br.dreamday.utils.WindowUtils.deleteConfirmationMessage;
+import static com.br.dreamday.utils.WindowUtils.exibirAlerta;
 
 public class ConsultaClienteWindowController {
 
@@ -80,7 +81,7 @@ public class ConsultaClienteWindowController {
     }
 
     @FXML
-    public void onButtonAdicionarCLicked(ActionEvent actionEvent) throws IOException {
+    public void adicionar(ActionEvent actionEvent) throws IOException {
         Parent parent = FXMLLoader.load(Objects.requireNonNull(MainViewApplication.class.getResource("cadastro-cliente-window.fxml")));
         Stage popupStage = new Stage();
         popupStage.setTitle("Cadastro Cliente");
@@ -94,7 +95,7 @@ public class ConsultaClienteWindowController {
     }
 
     @FXML
-    public void onButtonFiltrarClicked(ActionEvent actionEvent) {
+    public void filtrar(ActionEvent actionEvent) {
         try {
             List<Cliente> clientes;
             if (!txtDataDoCasamento.getText().isBlank() && !txtNomeDoCliente.getText().isBlank()) {
@@ -115,20 +116,36 @@ public class ConsultaClienteWindowController {
             tableCliente.setItems(clienteList);
             tableCliente.refresh();
         }  catch (DateTimeException ex) {
-            showMessage("Digite um valor para a hora válido.");
+            exibirAlerta(
+                    Alert.AlertType.ERROR,
+                    "Filtrar Cliente",
+                    null,
+                    "Ocorreu um erro ao filtro o cliente: Digite um valor para a data válido "
+            );
         } catch (Exception e) {
-            showMessage(e.getMessage());
+            exibirAlerta(
+                    Alert.AlertType.ERROR,
+                    "Filtrar Cliente",
+                    null,
+                    "Ocorreu um erro ao filtro o cliente: " + e.getMessage()
+            );
         }
     }
 
     @FXML
-    public void onButtonEditarClicked(ActionEvent actionEvent) throws IOException {
+    public void editar(ActionEvent actionEvent) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/br/dreamday/cadastro-cliente-window.fxml"));
         Parent root = loader.load();
         CadastroClienteWindowController clienteController = loader.getController();
         Cliente clienteSelecionado = tableCliente.getSelectionModel().getSelectedItem();
         if (clienteSelecionado == null) {
-            warningMessage();
+
+            exibirAlerta(
+                    Alert.AlertType.ERROR,
+                    "Seleção de Cliente",
+                    null,
+                    "É necessário selecionar um cliente para edição!"
+            );
         } else {
             clienteController.setAttributes(clienteSelecionado);
             Scene scene = new Scene(root, 640, 400);
@@ -142,10 +159,15 @@ public class ConsultaClienteWindowController {
     }
 
     @FXML
-    public void onButtonExcluirClicked(ActionEvent actionEvent) {
+    public void excluir(ActionEvent actionEvent) {
         Cliente clienteSelecionado = tableCliente.getSelectionModel().getSelectedItem();
         if (clienteSelecionado == null) {
-            warningMessage();
+            exibirAlerta(
+                    Alert.AlertType.ERROR,
+                    "Seleção de Cliente",
+                    null,
+                    "É necessário selecionar um cliente para exclusão!"
+            );
         } else {
             deleteConfirmationMessage(() -> {
                 service.excluirPor(clienteSelecionado.getId());
@@ -160,25 +182,4 @@ public class ConsultaClienteWindowController {
         clienteList.addAll(service.listarTodos());
     }
 
-    private void showMessage(String mensagem) {
-        ButtonType loginButtonType = new ButtonType("Ok!", ButtonBar.ButtonData.OK_DONE);
-        Dialog<String> dialog = new Dialog<>();
-        dialog.setTitle("Aviso");
-        dialog.setContentText(mensagem);
-        dialog.getDialogPane().getButtonTypes().add(loginButtonType);
-        boolean desativado = false;
-        dialog.getDialogPane().lookupButton(loginButtonType).setDisable(desativado);
-        dialog.showAndWait();
-    }
-
-    private void warningMessage() {
-        ButtonType loginButtonType = new ButtonType("Ok!", ButtonBar.ButtonData.OK_DONE);
-        Dialog<String> dialog = new Dialog<>();
-        dialog.setTitle("Aviso!");
-        dialog.setContentText("Selecione um cliente.");
-        dialog.getDialogPane().getButtonTypes().add(loginButtonType);
-        boolean disabled = false;
-        dialog.getDialogPane().lookupButton(loginButtonType).setDisable(disabled);
-        dialog.showAndWait();
-    }
 }

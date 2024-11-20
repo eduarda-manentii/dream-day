@@ -3,11 +3,9 @@ package com.br.dreamday.controller;
 import com.br.dreamday.MainViewApplication;
 import com.br.dreamday.domain.*;
 import com.br.dreamday.service.*;
-import com.br.dreamday.MainViewApplication;
-import com.br.dreamday.domain.*;
 import com.br.dreamday.service.ItemOrcamentoService;
 import com.br.dreamday.service.OrcamentoService;
-import com.br.dreamday.utils.Mensagens;
+import com.br.dreamday.utils.WindowUtils;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -25,6 +23,8 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Objects;
+
+import static com.br.dreamday.utils.WindowUtils.exibirAlerta;
 
 public class DetalheOrcamentoWindowController {
 
@@ -112,7 +112,7 @@ public class DetalheOrcamentoWindowController {
             {
                 buttonBox.setSpacing(10);
                 excluirButton.setOnAction(event -> {
-                    Mensagens.exibirMensagemDeConfirmacao("Tem certeza que deseja remover o item selecionado?", () -> {
+                    WindowUtils.confirmationMessage("Tem certeza que deseja remover o item selecionado?", () -> {
                         int index = getIndex();
                         ItemOrcamento itemOrcamento = getTableView().getItems().get(index);
                         service.excluirPor(itemOrcamento.getId());
@@ -122,7 +122,6 @@ public class DetalheOrcamentoWindowController {
                     });
                 });
 
-                // Ação do botão Editar
                 editarButton.setOnAction(event -> {
                     try {
                         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/br/dreamday/vincular-item-window.fxml"));
@@ -139,7 +138,11 @@ public class DetalheOrcamentoWindowController {
                         popup.showAndWait();
                         recarregarTabela();
                     } catch (IOException e) {
-                        Mensagens.exibirMensagemDeErro("Erro ao abrir a janela de edição.");
+                        exibirAlerta(
+                                Alert.AlertType.ERROR,
+                                "Erro de Validação",
+                                "Erro ao abrir a janela de edição: " + e.getMessage()
+                        );
                     }
                 });
             }
@@ -193,7 +196,11 @@ public class DetalheOrcamentoWindowController {
     @FXML
     public void vincularItem(ActionEvent actionEvent) throws IOException {
         if (orcamentoId == 0) {
-            showMessage("Salve o orçamento antes de vincular um item.");
+            exibirAlerta(
+                    Alert.AlertType.INFORMATION,
+                    "Atenção",
+                    "Salve o orçamento antes de vincular um item."
+            );
             return;
         }
         abrirTelaVincularItem();
@@ -201,15 +208,19 @@ public class DetalheOrcamentoWindowController {
 
     @FXML
     public void excluir(ActionEvent event) {
-        Mensagens.exibirMensagemDeConfirmacao("Tem certeza que deseja excluir este orçamento e todos os seus itens?", () -> {
+        WindowUtils.confirmationMessage("Tem certeza que deseja excluir este orçamento e todos os seus itens?", () -> {
             orcamentoService.excluirOrcamentoEItensVinculados(orcamentoId);
-            Mensagens.exibirMensagemInformativa("Orçamento e todos os itens foram excluídos com sucesso.");
+            exibirAlerta(
+                    Alert.AlertType.INFORMATION,
+                    "Confirmação de Exclusão",
+                    "Orçamento e todos os itens foram excluídos com sucesso. "
+            );
             closeWindow(event);
         });
     }
 
     @FXML
-    void onButtonAdicionarParcelasClicked() throws IOException {
+    void adicionarParcelas() throws IOException {
         FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(MainViewApplication.class.getResource("/com/br/dreamday/cadastro-parcelamento-window.fxml")));
         Parent root = loader.load();
         CadastroParcelamentoController cadastroParcelamentoController = loader.getController();
@@ -231,7 +242,7 @@ public class DetalheOrcamentoWindowController {
     }
 
     @FXML
-    void onButtonVerParcelas() throws IOException {
+    void verParcelas() throws IOException {
         FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(getClass().getResource("/com/br/dreamday/parcelas-window.fxml")));
         Parent root = loader.load();
         ParcelasControllerWindow parcelasController = loader.getController();
@@ -292,17 +303,6 @@ public class DetalheOrcamentoWindowController {
         BigDecimal precoProduto = new BigDecimal(itemOrcamento.getPrecoProduto());
         BigDecimal quantidade = BigDecimal.valueOf(itemOrcamento.getQuantidade());
         return quantidade.multiply(precoProduto);
-    }
-
-    private void showMessage(String mensagem) {
-        ButtonType loginButtonType = new ButtonType("Ok!", ButtonBar.ButtonData.OK_DONE);
-        Dialog<String> dialog = new Dialog<>();
-        dialog.setTitle("Aviso");
-        dialog.setContentText(mensagem);
-        dialog.getDialogPane().getButtonTypes().add(loginButtonType);
-        boolean desativado = false;
-        dialog.getDialogPane().lookupButton(loginButtonType).setDisable(desativado);
-        dialog.showAndWait();
     }
 
 }

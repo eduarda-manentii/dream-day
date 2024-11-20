@@ -45,8 +45,9 @@ public class ClienteService {
     }
 
     public List<Cliente> listarPor(String nome) {
-        if (nome == null || nome.isBlank()) {
-            throw new IllegalArgumentException("Informe o nome para listagem");
+        boolean isFiltroInvalido = nome.isBlank() || nome.length() < 3;
+        if (isFiltroInvalido) {
+            throw new IllegalArgumentException("O filtro para listagem é obrigatório e deve ter mais que 2 caracteres.");
         }
         return dao.listarPor(nome + "%");
     }

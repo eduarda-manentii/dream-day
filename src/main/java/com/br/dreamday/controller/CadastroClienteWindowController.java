@@ -3,6 +3,7 @@ package com.br.dreamday.controller;
 import com.br.dreamday.domain.Cliente;
 import com.br.dreamday.service.ClienteService;
 import com.br.dreamday.utils.MascarasUtils;
+import com.br.dreamday.utils.WindowUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
@@ -14,6 +15,8 @@ import java.text.ParseException;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+
+import static com.br.dreamday.utils.WindowUtils.exibirAlerta;
 
 
 public class CadastroClienteWindowController {
@@ -36,7 +39,7 @@ public class CadastroClienteWindowController {
     @FXML
     private TextField txtTelefone;
 
-    private ClienteService service;
+    private final ClienteService service;
 
     private Cliente clienteSelecionado;
 
@@ -56,63 +59,56 @@ public class CadastroClienteWindowController {
     }
 
     @FXML
-    void onButtonSalvarClicked(ActionEvent event) {
+    void salvar(ActionEvent event) {
         try {
             String nomeCompleto = txtNomeCompleto.getText();
             String nomeConjugue = txtNomeConjugue.getText();
             String cpf = txtCpf.getText();
             String email = txtEmail.getText();
             String telefone = txtTelefone.getText();
-            String dataDoCasamento = txtDataCasamento.getText();
-            if (!(nomeCompleto.isBlank() && nomeConjugue.isBlank() && cpf.isBlank() && email.isBlank() && telefone.isBlank() && dataDoCasamento.isBlank())) {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-                LocalDate dataDoCasamentoDT = LocalDate.parse(txtDataCasamento.getText(), formatter);
-                if (clienteSelecionado != null) {
-                    clienteSelecionado.setNome(nomeCompleto);
-                    clienteSelecionado.setConjugue(nomeConjugue);
-                    clienteSelecionado.setCpf(cpf);
-                    clienteSelecionado.setEmail(email);
-                    clienteSelecionado.setTelefone(telefone);
-                    clienteSelecionado.setDataCasamento(dataDoCasamentoDT);
-                    service.salvar(clienteSelecionado);
-                    clienteSelecionado = null;
-                    showMessage("Cliente alterado com sucesso!");
-                } else {
-                    Cliente cliente = new Cliente(nomeCompleto, nomeConjugue, dataDoCasamentoDT, telefone, email, cpf);
-                    service.salvar(cliente);
-                    showMessage("Cliente cadastrado com sucesso!");
-                }
-                limparCampos();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDate dataDoCasamentoDT = LocalDate.parse(txtDataCasamento.getText(), formatter);
+            if (clienteSelecionado != null) {
+                clienteSelecionado.setNome(nomeCompleto);
+                clienteSelecionado.setConjugue(nomeConjugue);
+                clienteSelecionado.setCpf(cpf);
+                clienteSelecionado.setEmail(email);
+                clienteSelecionado.setTelefone(telefone);
+                clienteSelecionado.setDataCasamento(dataDoCasamentoDT);
+                service.salvar(clienteSelecionado);
+                clienteSelecionado = null;
             } else {
-                showMessage("Todos os campos são obrigatórios!");
+                Cliente cliente = new Cliente(nomeCompleto, nomeConjugue, dataDoCasamentoDT, telefone, email, cpf);
+                service.salvar(cliente);
             }
+            exibirAlerta(
+                    Alert.AlertType.INFORMATION,
+                    "Confirmação de Salvamento",
+                    "As alterações foram salvas com sucesso. "
+            );
+            limparCampos();
         }  catch (DateTimeException ex) {
-            showMessage("Digite um valor para a hora válido.");
+            exibirAlerta(
+                    Alert.AlertType.ERROR,
+                    "Erro de Validação",
+                    "Ocorreu um erro ao salvar as informações:  Digite um valor para a data válido."
+            );
         } catch (Exception e) {
-            showMessage(e.getMessage());
+            exibirAlerta(
+                    Alert.AlertType.ERROR,
+                    "Erro de Validação",
+                    "Ocorreu um erro ao salvar as informações: " + e.getMessage()
+            );
         }
     }
 
     @FXML
-    void onButtonCancelarClicked(ActionEvent event) {
+    void cancelar(ActionEvent event) {
         if (camposPreenchidos()) {
-            confirmationMessage("Tem certeza que deseja cancelar a inserção?", () -> {
+            WindowUtils.confirmationMessage("Tem certeza que deseja cancelar a inserção?", () -> {
                 Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
                 stage.close();
             });
-        }
-    }
-
-    @FXML
-    void onButtonVoltarClicked(ActionEvent event) {
-        if (camposPreenchidos()) {
-            confirmationMessage("Tem certeza que deseja cancelar a inserção?", () -> {
-                Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-                stage.close();
-            });
-        } else {
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.close();
         }
     }
 
@@ -137,30 +133,6 @@ public class CadastroClienteWindowController {
         txtDataCasamento.setText("");
     }
 
-    private void showMessage(String mensagem) {
-        ButtonType loginButtonType = new ButtonType("Ok!", ButtonBar.ButtonData.OK_DONE);
-        Dialog<String> dialog = new Dialog<>();
-        dialog.setTitle("Aviso");
-        dialog.setContentText(mensagem);
-        dialog.getDialogPane().getButtonTypes().add(loginButtonType);
-        boolean desativado = false;
-        dialog.getDialogPane().lookupButton(loginButtonType).setDisable(desativado);
-        dialog.showAndWait();
-    }
-
-    private void confirmationMessage(String mensagem, Runnable acao) {
-        Alert dialog = new Alert(Alert.AlertType.CONFIRMATION);
-        ButtonType btnYes = new ButtonType("Sim");
-        ButtonType btnNo = new ButtonType("Não");
-        dialog.setContentText(mensagem);
-        dialog.getButtonTypes().setAll(btnYes, btnNo);
-        dialog.showAndWait().ifPresent(b -> {
-            if (b == btnYes) {
-                acao.run();
-            }
-        });
-    }
-
     public void setAttributes(Cliente clienteSelecionado) {
         this.clienteSelecionado = clienteSelecionado;
         txtNomeCompleto.setText(clienteSelecionado.getNome());
@@ -171,4 +143,5 @@ public class CadastroClienteWindowController {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         txtDataCasamento.setText(clienteSelecionado.getDataCasamento().format(formatter));
     }
+
 }
