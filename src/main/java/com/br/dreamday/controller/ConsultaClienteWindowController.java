@@ -71,7 +71,13 @@ public class ConsultaClienteWindowController {
             String formattedDate = dataCasamento.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
             return new SimpleStringProperty(formattedDate);
         });
-        telefoneColumn.setCellValueFactory(new PropertyValueFactory<>("telefone"));
+        telefoneColumn.setCellValueFactory(cellData -> {
+            String telefone = cellData.getValue().getTelefone();
+            if (telefone != null && telefone.length() == 11) {
+                telefone = String.format("(%s) %s-%s", telefone.substring(0, 2), telefone.substring(2, 6), telefone.substring(6));
+            }
+            return new SimpleStringProperty(telefone);
+        });
         tableCliente.setItems(clienteList);
         tableCliente.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
         });
@@ -160,20 +166,29 @@ public class ConsultaClienteWindowController {
 
     @FXML
     public void excluir(ActionEvent actionEvent) {
-        Cliente clienteSelecionado = tableCliente.getSelectionModel().getSelectedItem();
-        if (clienteSelecionado == null) {
+        try {
+            Cliente clienteSelecionado = tableCliente.getSelectionModel().getSelectedItem();
+            if (clienteSelecionado == null) {
+                exibirAlerta(
+                        Alert.AlertType.ERROR,
+                        "Seleção de Cliente",
+                        null,
+                        "É necessário selecionar um cliente para exclusão!"
+                );
+            } else {
+                deleteConfirmationMessage(() -> {
+                    service.excluirPor(clienteSelecionado.getId());
+                    recarregarTabela();
+                    tableCliente.refresh();
+                });
+            }
+        } catch (Exception e) {
             exibirAlerta(
                     Alert.AlertType.ERROR,
-                    "Seleção de Cliente",
+                    "Excluir Cliente",
                     null,
-                    "É necessário selecionar um cliente para exclusão!"
+                    "Ocorreu um erro ao excluir o cliente: " + e.getMessage()
             );
-        } else {
-            deleteConfirmationMessage(() -> {
-                service.excluirPor(clienteSelecionado.getId());
-                recarregarTabela();
-                tableCliente.refresh();
-            });
         }
     }
 
