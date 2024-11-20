@@ -104,6 +104,7 @@ public class DetalheOrcamentoWindowController {
         fornecedorColumn.setCellValueFactory(new PropertyValueFactory<>("nomeFornecedor"));
         produtoColumn.setCellValueFactory(new PropertyValueFactory<>("nomeProduto"));
         quantidadeColumn.setCellValueFactory(new PropertyValueFactory<>("quantidade"));
+        valorTotalColumn.setCellValueFactory(new PropertyValueFactory<>("totalProduto"));
         acoesColumn.setCellFactory(column -> new TableCell<>() {
             final Button editarButton = new Button("Editar");
             final Button excluirButton = new Button("Excluir");
@@ -253,9 +254,10 @@ public class DetalheOrcamentoWindowController {
     }
 
     void abrirTelaVincularItem() throws IOException {
-        FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(MainViewApplication.class.getResource("vincular-item-window.fxml")));
+        FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(MainViewApplication.class.getResource("/com/br/dreamday/vincular-item-window.fxml")));
         Parent parent = loader.load();
         VincularItemWindowController controller = loader.getController();
+        controller.setParentController(this);
         controller.setOrcamentoId(orcamentoId);
         Stage popupStage = new Stage();
         popupStage.setTitle("Vincular Item");
