@@ -1,6 +1,7 @@
 package com.br.dreamday.service;
 
 import com.br.dreamday.dao.DaoCliente;
+import com.br.dreamday.dao.DaoOrcamento;
 import com.br.dreamday.dao.FactoryDao;
 import com.br.dreamday.domain.Cliente;
 import com.br.dreamday.domain.Orcamento;
@@ -11,9 +12,11 @@ import java.util.List;
 public class ClienteService {
 
     private DaoCliente dao;
+    private DaoOrcamento daoOrcamento;
 
     public ClienteService() {
         this.dao = FactoryDao.getInstance().getDaoCliente();
+        this.daoOrcamento = FactoryDao.getInstance().getDaoOrcamento();
     }
 
     public void salvar(Cliente cliente) {
@@ -33,14 +36,22 @@ public class ClienteService {
         if (cliente.getNome() == null || cliente.getNome().isBlank() || cliente.getNome().length() > 250  || cliente.getNome().length() < 5) {
             throw new IllegalArgumentException("O nome é obrigatório e deve conter entre 5 a 250 caracteres");
         }
+        if (cliente.getConjugue() == null || cliente.getConjugue().isBlank() || cliente.getConjugue().length() > 250  || cliente.getConjugue().length() < 5) {
+            throw new IllegalArgumentException("O nome do conjugue é obrigatório e deve conter entre 5 a 250 caracteres");
+        }
         if (cliente.getTelefone() == null || cliente.getTelefone().isBlank()) {
             throw new IllegalArgumentException("O telefone é obrigatório");
         }
-        if (cliente.getEmail() == null || cliente.getEmail().isBlank()) {
+        if (cliente.getEmail() == null || cliente.getEmail().isBlank() || !cliente.getEmail().contains("@")) {
             throw new IllegalArgumentException("O email é obrigatório");
         }
         if (cliente.getCpf() == null || cliente.getCpf().isBlank()) {
             throw new IllegalArgumentException("O CPF é obrigatório");
+        }
+
+        LocalDate dataAtual = LocalDate.now();
+        if(cliente.getDataCasamento() == null || cliente.getDataCasamento().isBefore(dataAtual)) {
+            throw new IllegalArgumentException("A data de casamento não pode ser anterior ao dia atual.");
         }
     }
 
@@ -56,7 +67,10 @@ public class ClienteService {
         if (idDoCliente == null || idDoCliente <= 0) {
             throw new IllegalArgumentException("O id para exclusão deve ser maior que zero");
         }
-        this.dao.excluirPor(idDoCliente.intValue());
+        if (daoOrcamento.contarOrcamentosPorClienteId(idDoCliente) > 0) {
+            throw new IllegalArgumentException("Não é possível excluir um cliente vinculado a orçamentos.");
+        }
+        this.dao.excluirPor(idDoCliente);
     }
 
     public List<Cliente> listarPor(String nome, LocalDate dataDeCasamento) {

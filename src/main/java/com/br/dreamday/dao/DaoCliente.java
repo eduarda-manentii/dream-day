@@ -10,7 +10,7 @@ public interface DaoCliente {
 
     void inserir(Cliente cliente);
     void alterar(Cliente cliente);
-    void excluirPor(int id);
+    void excluirPor(Long id);
     Cliente buscarPor(int id);
     List<Cliente> listarPor(String nome);
     List<Cliente> listarPor(String nome, LocalDate dataDeCasamento);

@@ -19,5 +19,6 @@ public interface DaoOrcamento {
     List<Orcamento> listarPor(OrcamentoStatus status);
     List<Orcamento> listarPor(String nomeDoCliente);
     List<Orcamento> listarTodos();
+    int contarOrcamentosPorClienteId(Long clienteId);
 
 }

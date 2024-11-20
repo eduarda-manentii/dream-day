@@ -123,7 +123,8 @@ public class DaoPostgresOrcamento implements DaoOrcamento {
             "WHERE o.id_cliente = c.id "
             + "ORDER BY o.id";
 
-    private final String SELECT_COUNT_CLIENTES = "SELECT COUNT(*) FROM orcamentos WHERE id_cliente = ?";
+    private final String SELECT_COUNT_CLIENTES = "SELECT COUNT (orcamentos.id_cliente) as qtde "
+            + "FROM orcamentos " + "WHERE orcamentos.id_cliente = ?";
 
     private Connection conexao;
 
@@ -339,9 +340,9 @@ public class DaoPostgresOrcamento implements DaoOrcamento {
         return orcamentos;
     }
 
-    public int contarOrcamentosPorClienteId(int clienteId) {
+    public int contarOrcamentosPorClienteId(Long clienteId) {
         try (PreparedStatement ps = conexao.prepareStatement(SELECT_COUNT_CLIENTES)) {
-            ps.setInt(1, clienteId);
+            ps.setLong(1, clienteId);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 return rs.getInt(1);

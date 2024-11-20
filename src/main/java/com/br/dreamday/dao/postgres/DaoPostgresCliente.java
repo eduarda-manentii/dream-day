@@ -101,16 +101,12 @@ public class DaoPostgresCliente implements DaoCliente {
     }
 
     @Override
-    public void excluirPor(int id) {
-        int quantidadeOrcamentos = daoOrcamento.contarOrcamentosPorClienteId(id);
-        if (quantidadeOrcamentos > 0) {
-            throw new RuntimeException("Não é possível excluir o cliente, pois ele possui orçamentos vinculados.");
-        }
+    public void excluirPor(Long id) {
         PreparedStatement ps = null;
         try {
             ManagerDb.getInstance().configurarAutoCommitDa(conexao, false);
             ps = conexao.prepareStatement(DELETE);
-            ps.setInt(1, id);
+            ps.setLong(1, id);
             boolean isExclusaoOK = ps.executeUpdate() == 1;
             if (isExclusaoOK) {
                 this.conexao.commit();
