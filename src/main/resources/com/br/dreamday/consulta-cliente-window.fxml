@@ -22,7 +22,8 @@
           <TableColumn fx:id="codigoColumn" prefWidth="75.0" text="Cdigo" />
           <TableColumn fx:id="nomeColumn" prefWidth="75.0" text="Nome" />
             <TableColumn fx:id="conjugueColumn" prefWidth="75.0" text="Conjugue" />
-            <TableColumn fx:id="dataCasamentoColumn" prefWidth="160.0" text="Data do Casamento" />
+            <TableColumn fx:id="dataCasamentoColumn" prefWidth="160.0" text="Data do Casamento"
+            />
             <TableColumn fx:id="telefoneColumn" prefWidth="160.0" text="Telefone" />
         </columns>
       </TableView>

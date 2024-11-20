@@ -7,6 +7,7 @@ import com.br.dreamday.MainViewApplication;
 import com.br.dreamday.domain.*;
 import com.br.dreamday.service.ItemOrcamentoService;
 import com.br.dreamday.service.OrcamentoService;
+import com.br.dreamday.utils.Mensagens;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -103,32 +104,31 @@ public class DetalheOrcamentoWindowController {
         fornecedorColumn.setCellValueFactory(new PropertyValueFactory<>("nomeFornecedor"));
         produtoColumn.setCellValueFactory(new PropertyValueFactory<>("nomeProduto"));
         quantidadeColumn.setCellValueFactory(new PropertyValueFactory<>("quantidade"));
-        valorTotalColumn.setCellValueFactory(new PropertyValueFactory<>("totalProduto"));
-        acoesColumn.setCellFactory(column -> criarAcaoDosBotoes());
-    }
-
-    private TableCell<ItemOrcamento, String> criarAcaoDosBotoes() {
-        return new TableCell<>() {
+        acoesColumn.setCellFactory(column -> new TableCell<>() {
             final Button editarButton = new Button("Editar");
             final Button excluirButton = new Button("Excluir");
             final HBox buttonBox = new HBox(editarButton, excluirButton);
 
             {
                 buttonBox.setSpacing(10);
-                excluirButton.setOnAction(event -> Mensagens.exibirMensagemDeConfirmacao("Tem certeza que deseja remover o item selecionado?", () -> {
-                    int index = getIndex();
-                    ItemOrcamento itemOrcamento = getTableView().getItems().get(index);
-                    service.excluirPor(itemOrcamento.getId());
-                    itemOrcamentoList.remove(itemOrcamento);
-                    tableItensOrcamentos.refresh();
-                    recarregarValorTotal(itemOrcamento);
-                }));
+                excluirButton.setOnAction(event -> {
+                    Mensagens.exibirMensagemDeConfirmacao("Tem certeza que deseja remover o item selecionado?", () -> {
+                        int index = getIndex();
+                        ItemOrcamento itemOrcamento = getTableView().getItems().get(index);
+                        service.excluirPor(itemOrcamento.getId());
+                        itemOrcamentoList.remove(itemOrcamento);
+                        tableItensOrcamentos.refresh();
+                        recarregarValorTotal(itemOrcamento);
+                    });
+                });
+
+                // Ação do botão Editar
                 editarButton.setOnAction(event -> {
                     try {
                         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/br/dreamday/vincular-item-window.fxml"));
                         Parent root = loader.load();
-                        VincularItemWindow vincularItemWindow = loader.getController();
-                        vincularItemWindow.setParentController(DetalheOrcamentoWindow.this);
+                        VincularItemWindowController vincularItemWindow = loader.getController();
+                        vincularItemWindow.setParentController(DetalheOrcamentoWindowController.this);
                         vincularItemWindow.setOrcamentoId(orcamentoId);
                         int index = getIndex();
                         ItemOrcamento itemOrcamento = getTableView().getItems().get(index);
@@ -143,6 +143,7 @@ public class DetalheOrcamentoWindowController {
                     }
                 });
             }
+
             @Override
             protected void updateItem(String item, boolean empty) {
                 super.updateItem(item, empty);
@@ -254,6 +255,7 @@ public class DetalheOrcamentoWindowController {
     private void recarregarTabela() {
         itemOrcamentoList.clear();
         itemOrcamentoList.addAll(service.listarPor(orcamentoId));
+        itemOrcamentoList.setAll(service.listarPor(orcamentoId));
     }
 
     private void closeWindow(ActionEvent event) {
@@ -290,10 +292,6 @@ public class DetalheOrcamentoWindowController {
         BigDecimal precoProduto = new BigDecimal(itemOrcamento.getPrecoProduto());
         BigDecimal quantidade = BigDecimal.valueOf(itemOrcamento.getQuantidade());
         return quantidade.multiply(precoProduto);
-    }
-
-    private void recarregarTabela() {
-        itemOrcamentoList.setAll(service.listarPor(orcamentoId));
     }
 
     private void showMessage(String mensagem) {

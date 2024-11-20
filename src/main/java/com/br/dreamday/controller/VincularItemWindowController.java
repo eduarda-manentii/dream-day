@@ -42,13 +42,13 @@ public class VincularItemWindowController {
     private OrcamentoService orcamentoService;
     private ItemFornecedorService itemFornecedorService;
     private ItemOrcamentoService service;
-    private DetalheOrcamentoWindow parent;
+    private DetalheOrcamentoWindowController parent;
     private ItemOrcamento itemOrcamentoSelecionado;
 
     @FXML
     void initialize() throws ParseException {
-        MascarasFX.mascaraData(txtDadaDeEntrega);
-        MascarasFX.mascaraNumeroInteiro(txtQuantidade);
+        MascarasUtils.mascaraData(txtDadaDeEntrega);
+        MascarasUtils.mascaraNumeroInteiro(txtQuantidade);
         txtDadaDeEntrega.setPromptText("dd/MM/yyyy");
         initializeDropDown();
     }
@@ -65,13 +65,7 @@ public class VincularItemWindowController {
         cbItem.setItems(obListClientes);
     }
 
-    public VincularItemWindow() {
-        this.service = new ItemOrcamentoService();
-        this.orcamentoService = new OrcamentoService();
-        this.itemFornecedorService = new ItemFornecedorService();
-    }
-
-    public void setParentController(DetalheOrcamentoWindow parent) {
+    public void setParentController(DetalheOrcamentoWindowController parent) {
         this.parent = parent;
     }
 
@@ -101,7 +95,7 @@ public class VincularItemWindowController {
             int quantidade = Integer.parseInt(txtQuantidade.getText());
 
             if (quantidade <= 0) {
-                Mensagens.exibirMensagemInformativa("A quantidade deve ser maior que zero.");
+                showMessage("A quantidade deve ser maior que zero.");
                 return;
             }
 
@@ -124,7 +118,7 @@ public class VincularItemWindowController {
                 parent.atualizarCampoValorTotal(totalAtualizado.toString());
 
                 itemOrcamentoSelecionado = null;
-                Mensagens.exibirMensagemInformativa("Item de orçamento alterado com sucesso!");
+                showMessage("Item de orçamento alterado com sucesso!");
             } else {
                 ItemOrcamento itemOrcamento = new ItemOrcamento(orcamento, itemFornecedor, dataEntrega, quantidade, status);
                 service.salvar(itemOrcamento);
@@ -136,26 +130,12 @@ public class VincularItemWindowController {
                 orcamentoService.atualizarValorTotal(orcamentoId, totalAtualizado);
 
                 parent.atualizarCampoValorTotal(totalAtualizado.toString());
-                Mensagens.exibirMensagemInformativa("Item vinculado com sucesso!");
+                showMessage("Item vinculado com sucesso!");
                 limparCampos();
             }
         } catch (Exception e) {
-            Mensagens.exibirMensagemInformativa("Erro ao vincular item: " + e.getMessage());
+            showMessage("Erro ao vincular item: " + e.getMessage());
         }
-    }
-
-
-    private void initializeDropDown() {
-        List<ItemOrcamentoStatus> status = Arrays.asList(ItemOrcamentoStatus.values());
-        ObservableList<ItemOrcamentoStatus> obListStatus = FXCollections.observableArrayList(status);
-        obListStatus.addFirst(null);
-        cbStatus.setItems(obListStatus);
-
-        //TODO tem que ver essa parte porque não existe mais listarTodos() do itemFornecedor
-        List<ItemFornecedor> itensFornecedores = itemFornecedorService.listarTodos();
-        ObservableList<ItemFornecedor> obListClientes = FXCollections.observableArrayList(itensFornecedores);
-        obListClientes.addFirst(null);
-        cbItem.setItems(obListClientes);
     }
 
     @FXML
@@ -182,36 +162,36 @@ public class VincularItemWindowController {
 
     private boolean validarCampos() {
         if (cbItem.getValue() == null) {
-            Mensagens.exibirMensagemInformativa("Selecione um item do fornecedor.");
+            showMessage("Selecione um item do fornecedor.");
             return false;
         }
         if (cbStatus.getValue() == null) {
-            Mensagens.exibirMensagemInformativa("Selecione o status do item.");
+            showMessage("Selecione o status do item.");
             return false;
         }
         if (txtDadaDeEntrega.getText().isBlank()) {
-            Mensagens.exibirMensagemInformativa("Informe a data de entrega.");
+            showMessage("Informe a data de entrega.");
             return false;
         }
         if (txtQuantidade.getText().isBlank()) {
-            Mensagens.exibirMensagemInformativa("Informe a quantidade.");
+            showMessage("Informe a quantidade.");
             return false;
         }
         try {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             LocalDate.parse(txtDadaDeEntrega.getText(), formatter);
         } catch (Exception e) {
-            Mensagens.exibirMensagemInformativa("A data de entrega deve estar no formato dd/MM/yyyy.");
+            showMessage("A data de entrega deve estar no formato dd/MM/yyyy.");
             return false;
         }
         try {
             double quantidade = Double.parseDouble(txtQuantidade.getText());
             if (quantidade <= 0) {
-                Mensagens.exibirMensagemInformativa("A quantidade deve ser maior que zero.");
+                showMessage("A quantidade deve ser maior que zero.");
                 return false;
             }
         } catch (NumberFormatException e) {
-            Mensagens.exibirMensagemInformativa("A quantidade deve ser um número válido.");
+            showMessage("A quantidade deve ser um número válido.");
             return false;
         }
 

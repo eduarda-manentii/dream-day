@@ -122,7 +122,7 @@ public class ClienteRelatorioController {
 
         qtdeColumn.setCellValueFactory(param -> {
             ItemOrcamento item = param.getValue();
-            return new SimpleStringProperty(item.getQuantidade().toString());
+            return new SimpleStringProperty();
         });
 
         totalUnitarioColumn.setCellValueFactory(param -> {

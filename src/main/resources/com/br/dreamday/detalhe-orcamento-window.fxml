@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="460.0" prefWidth="785.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.br.dreamday.controller.DetalheOrcamentoWindow">
+<AnchorPane prefHeight="460.0" prefWidth="785.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.br.dreamday.controller.DetalheOrcamentoWindowController">
    <children>
       <Label fx:id="lblDetalhesDoOrcamento" layoutX="29.0" layoutY="38.0" text="Detalhes do orçamento">
          <font>

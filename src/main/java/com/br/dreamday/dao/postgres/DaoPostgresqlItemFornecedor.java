@@ -256,7 +256,7 @@ public class DaoPostgresqlItemFornecedor implements DaoItemFornecedor {
         PreparedStatement ps = null;
         ResultSet rs = null;
         try {
-            ps = conexao.prepareStatement(SELECT_TODES);
+            ps = conexao.prepareStatement(SELECT_TODOS);
             rs = ps.executeQuery();
             while(rs.next()) {
                 itensFornecedores.add(extrairDo(rs));

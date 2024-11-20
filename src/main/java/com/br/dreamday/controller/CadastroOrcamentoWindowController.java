@@ -44,11 +44,9 @@ public class CadastroOrcamentoWindowController {
 
     private OrcamentoService service;
     private ClienteService clienteService;
-    //private Long orcamentoId;
     private Orcamento orcamentoSelecionado;
 
     public CadastroOrcamentoWindowController() {
-        //this.orcamentoId = Long.valueOf(0);
         this.service = new OrcamentoService();
         this.clienteService = new ClienteService();
     }
@@ -88,7 +86,7 @@ public class CadastroOrcamentoWindowController {
             } else {
                 if (orcamentoSelecionado == null) {
                     Orcamento orcamento = new Orcamento(cliente, status, dataDeCriacao, custoEstimado, BigDecimal.ZERO, observacoes);
-                    orcamentoId = service.salvar(orcamento);
+                    service.salvar(orcamento);
                     showMessage("Orçamento salvo com sucesso!");
                 } else {
                     orcamentoSelecionado.setCliente(cliente);
@@ -96,7 +94,7 @@ public class CadastroOrcamentoWindowController {
                     orcamentoSelecionado.setDataCriacao(dataDeCriacao);
                     orcamentoSelecionado.setStatus(status);
                     orcamentoSelecionado.setObservaces(observacoes);
-                    orcamentoId = service.salvar(orcamentoSelecionado);
+                    service.salvar(orcamentoSelecionado);
                     orcamentoSelecionado = null;
                     showMessage("Orçamento alterado com sucesso!");
                 }
@@ -109,8 +107,7 @@ public class CadastroOrcamentoWindowController {
     void abrirTelaVincularItem() throws IOException {
         FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(MainViewApplication.class.getResource("vincular-item-window.fxml")));
         Parent parent = loader.load();
-        VincularItemWindow controller = loader.getController();
-        controller.setOrcamentoId(orcamentoId);
+        VincularItemWindowController controller = loader.getController();
         Stage popupStage = new Stage();
         popupStage.setTitle("Vincular Item");
         Scene scene = new Scene(parent);
@@ -134,13 +131,31 @@ public class CadastroOrcamentoWindowController {
         }
     }
 
-    @FXML
-    void onButtonVincularItemClicked(ActionEvent event) throws IOException {
-        if (orcamentoId == 0) {
-            showMessage("Salve o orçamento antes de vincular um item.");
-            return;
+    private boolean validarCampos() {
+        if (cbCliente.getValue() == null) {
+            showMessage("Selecione um cliente.");
+            return false;
         }
-        abrirTelaVincularItem();
+        if (cbStatus.getValue() == null) {
+            showMessage("Selecione o status do orçamento.");
+            return false;
+        }
+        if (txtCustoEstimado.getText().isBlank()) {
+            showMessage("Informe o custo estimado.");
+            return false;
+        }
+        try {
+            BigDecimal custoEstimado = new BigDecimal(txtCustoEstimado.getText());
+            if (custoEstimado.compareTo(BigDecimal.ZERO) <= 0) {
+                showMessage("O custo estimado deve ser um valor positivo.");
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            showMessage("O custo estimado deve ser um número válido.");
+            return false;
+        }
+
+        return true;
     }
 
     public void setAttributes(Orcamento orcamentoSelecionado) {

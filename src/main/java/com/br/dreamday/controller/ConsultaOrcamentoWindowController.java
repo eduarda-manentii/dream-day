@@ -82,9 +82,9 @@ public class ConsultaOrcamentoWindowController {
                         onButtonDetalhesClicked(orcamento);
                     }
                     catch (IOException e) {
-
                         exibirAlerta(
                                 Alert.AlertType.ERROR,
+                                null,
                                 "Erro ao abrir a tela de detalhes",
                                 e.getMessage()
                         );
