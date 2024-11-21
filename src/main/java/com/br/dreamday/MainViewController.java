@@ -37,7 +37,7 @@ public class MainViewController {
     }
 
     @FXML
-    void mostrarRelatorio() throws IOException {
+    void mostrarRelatorioCliente() {
         WindowUtils.abrirTela("cliente-relatorio");
     }
 }

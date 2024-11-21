@@ -5,7 +5,7 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="513.0" prefWidth="731.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.br.dreamday.MainViewController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="513.0" prefWidth="731.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.br.dreamday.MainViewController">
    <children>
       <MenuBar layoutY="-1.0" prefHeight="34.0" prefWidth="731.0">
         <menus>
@@ -23,7 +23,10 @@
                   <MenuItem fx:id="mnGerenciamentoDeOrcamento" mnemonicParsing="false" onAction="#mostrarConsultaOrcamento" text="Gerencimaneto de Orçamentos" />
                   <MenuItem fx:id="mnCalendarioDeOrcamento" mnemonicParsing="false" onAction="#mostrarCalendarioOrcamento" text="Calendário de Orçamentos" />
                </items></Menu>
-          <Menu mnemonicParsing="false" text="Relatorios" />
+          <Menu mnemonicParsing="false" text="Relatorios">
+               <items>
+                  <MenuItem fx:id="mnPorCliente" mnemonicParsing="false" onAction="#mostrarRelatorioCliente" text="Por cliente" />
+               </items></Menu>
         </menus>
       </MenuBar>
    </children>
