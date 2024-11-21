@@ -53,7 +53,7 @@ public class ConsultaCategoriaWindowController {
     }
 
     @FXML
-    void adicionar(ActionEvent event) throws IOException {
+    void adicionar() throws IOException {
         Parent parent = FXMLLoader.load(Objects.requireNonNull(MainViewApplication.class.getResource("cadastro-categoria-window.fxml")));
         Stage popupStage = new Stage();
         popupStage.setTitle("Cadastro Categoria");
@@ -67,7 +67,7 @@ public class ConsultaCategoriaWindowController {
     }
 
     @FXML
-    void filtrar(ActionEvent event) {
+    void filtrar() {
 
         try {
             List<Categoria> categorias;
@@ -83,17 +83,14 @@ public class ConsultaCategoriaWindowController {
             tableCategoria.setItems(categoriaList);
             tableCategoria.refresh();
         } catch (Exception ex) {
-            exibirAlerta(
-                    Alert.AlertType.ERROR,
-                    "Seleção de Categoria",
-                    null,
-                    "Ocorreu um erro na listagem das categorias: " + ex.getMessage()
-            );
+            showMessage(ex.getMessage());
         }
     }
 
     @FXML
-    void editar(ActionEvent event) throws IOException {
+    void editar(
+
+    ) throws IOException {
         Categoria categoriaSelecionada = tableCategoria.getSelectionModel().getSelectedItem();
 
         if (categoriaSelecionada == null) {
@@ -118,23 +115,20 @@ public class ConsultaCategoriaWindowController {
             popupStage.setResizable(false);
             popupStage.showAndWait();
 
-            Categoria categoria = cadastroCategoriaWindowController.getCategoria();
-            int index = categoriaList.indexOf(categoriaSelecionada);
-            categoriaList.set(index, categoria);
-
+            recarregarTabela();
             tableCategoria.refresh();
         }
     }
 
     @FXML
-    void excluir(ActionEvent event) {
+    void excluir() {
         Categoria categoriaSelecionada = tableCategoria.getSelectionModel().getSelectedItem();
 
         if (categoriaSelecionada == null) {
             exibirAlerta(
                     Alert.AlertType.ERROR,
                     "Seleção de Categoria",
-                    "É necessário selecionar uma categoria para excluir!. "
+                    "É necessário selecionar uma categoria para excluir!"
             );
         } else {
 
@@ -152,6 +146,17 @@ public class ConsultaCategoriaWindowController {
                 }
             });
         }
+    }
+
+    private void showMessage(String mensagem) {
+        ButtonType loginButtonType = new ButtonType("Ok!", ButtonBar.ButtonData.OK_DONE);
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle("Aviso");
+        dialog.setContentText(mensagem);
+        dialog.getDialogPane().getButtonTypes().add(loginButtonType);
+        boolean desativado = false;
+        dialog.getDialogPane().lookupButton(loginButtonType).setDisable(desativado);
+        dialog.showAndWait();
     }
 
     public void recarregarTabela() {
