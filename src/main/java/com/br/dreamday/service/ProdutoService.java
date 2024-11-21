@@ -68,7 +68,7 @@ public class ProdutoService {
     }
 
     public List<Produto> listarPor(String nome) {
-        boolean isFiltroInvalido = nome.isBlank() && nome.length() < 3;
+        boolean isFiltroInvalido = nome.isBlank() || nome.length() < 3;
 
         if (isFiltroInvalido) {
             throw new IllegalArgumentException("O filtro para listagem é obrigatório e deve ter mais que 2 caracteres.");

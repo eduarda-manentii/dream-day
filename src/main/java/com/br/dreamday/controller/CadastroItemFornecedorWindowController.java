@@ -20,6 +20,8 @@ import javafx.scene.layout.AnchorPane;
 
 import java.math.BigDecimal;
 import java.net.URL;
+import java.text.NumberFormat;
+import java.util.Locale;
 import java.util.ResourceBundle;
 
 import static com.br.dreamday.utils.WindowUtils.exibirAlerta;
@@ -69,7 +71,9 @@ public class CadastroItemFornecedorWindowController implements Initializable {
 
             Produto produto = autoTxtProduto.getProdutoSelecionado();
             Categoria categoria = autoTxtCategoria.getCategoriaSelecionada();
-            BigDecimal preco = BigDecimal.valueOf(Double.parseDouble(txtPreco.getText()));
+            NumberFormat format = NumberFormat.getInstance(Locale.getDefault());
+            Number number = format.parse(txtPreco.getText());
+            BigDecimal preco = BigDecimal.valueOf(number.doubleValue());
 
             if (!isEdicaoItem) {
                 itemFornecedor = new ItemFornecedor(
@@ -80,13 +84,13 @@ public class CadastroItemFornecedorWindowController implements Initializable {
                         fornecedor,
                         produto
                 );
+                itemFornecedorService.salvar(itemFornecedor);
                 limparCampos();
             } else {
                 itemFornecedor.setPreco(preco);
                 itemFornecedor.setCategoria(categoria);
+                itemFornecedorService.salvar(itemFornecedor);
             }
-
-            itemFornecedorService.salvar(itemFornecedor);
 
             exibirAlerta(
                     Alert.AlertType.INFORMATION,
@@ -118,7 +122,7 @@ public class CadastroItemFornecedorWindowController implements Initializable {
         this.lblNomeFornecedor.setText(itemFornecedor.getFornecedor().getNome());
         this.autoTxtCategoria.setCategoriaSelecionado(itemFornecedor.getCategoria());
         this.autoTxtProduto.setProdutoSelecionado(itemFornecedor.getProduto());
-        this.txtPreco.setText(itemFornecedor.getPreco().toString());
+        this.txtPreco.setText(itemFornecedor.getPreco().toString().replace(".", ","));
         isEdicaoItem = true;
     }
 

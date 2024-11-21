@@ -51,19 +51,19 @@
             <Font name="System Bold" size="15.0" />
          </font>
       </Label>
-      <Label fx:id="lblNomeFornecedor" layoutX="91.0" layoutY="76.0" prefHeight="21.0" prefWidth="614.0">
+      <Label fx:id="lblNomeFornecedor" layoutX="101.0" layoutY="76.0" prefHeight="21.0" prefWidth="604.0">
          <font>
-            <Font name="System Bold" size="15.0" />
+            <Font size="15.0" />
          </font>
       </Label>
-      <Label fx:id="lblEmailFornecedor" layoutX="92.0" layoutY="137.0" prefHeight="21.0" prefWidth="511.0">
+      <Label fx:id="lblEmailFornecedor" layoutX="100.0" layoutY="137.0" prefHeight="21.0" prefWidth="503.0">
          <font>
-            <Font name="System Bold" size="15.0" />
+            <Font size="15.0" />
          </font>
       </Label>
-      <Label fx:id="lblTelefoneFornecedor" layoutX="92.0" layoutY="106.0" prefHeight="21.0" prefWidth="191.0">
+      <Label fx:id="lblTelefoneFornecedor" layoutX="101.0" layoutY="106.0" prefHeight="21.0" prefWidth="182.0">
          <font>
-            <Font name="System Bold" size="15.0" />
+            <Font size="15.0" />
          </font>
       </Label>
    </children>

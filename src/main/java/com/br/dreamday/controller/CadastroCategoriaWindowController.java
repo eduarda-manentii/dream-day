@@ -18,7 +18,7 @@ public class CadastroCategoriaWindowController {
     @FXML
     private TextField txtNome;
 
-    private CategoriaService categoriaService;
+    private final CategoriaService categoriaService;
     private boolean isEdicaoCategoria;
     private Categoria categoria;
 
@@ -69,9 +69,5 @@ public class CadastroCategoriaWindowController {
         this.categoria = categoriaSelecionada;
         txtNome.setText(categoriaSelecionada.getNome());
         isEdicaoCategoria = true;
-    }
-
-    public Categoria getCategoria() {
-        return this.categoria;
     }
 }
