@@ -98,10 +98,7 @@ public class ConsultaProdutoWindowController {
             popupStage.setResizable(false);
             popupStage.showAndWait();
 
-            Produto produto = cadastroProdutoWindowController.getProduto();
-            int index = produtoList.indexOf(produtoSelecionado);
-            produtoList.set(index, produto);
-
+            recarregarTabela();
             tableProduto.refresh();
         }
     }
@@ -128,18 +125,33 @@ public class ConsultaProdutoWindowController {
 
     @FXML
     void filtrar() {
-        List<Produto> produtos;
+        try {
+            List<Produto> produtos;
 
-        if (!txtNomeFiltro.getText().isBlank()) {
-            produtos = produtoService.listarPor(txtNomeFiltro.getText());
-        } else {
-            produtos = produtoService.listarTodos();
+            if (!txtNomeFiltro.getText().isBlank()) {
+                produtos = produtoService.listarPor(txtNomeFiltro.getText());
+            } else {
+                produtos = produtoService.listarTodos();
+            }
+
+            produtoList.clear();
+            produtoList.addAll(produtos);
+            tableProduto.setItems(produtoList);
+            tableProduto.refresh();
+        } catch (Exception ex) {
+            showMessage(ex.getMessage());
         }
+    }
 
-        produtoList.clear();
-        produtoList.addAll(produtos);
-        tableProduto.setItems(produtoList);
-        tableProduto.refresh();
+    private void showMessage(String mensagem) {
+        ButtonType loginButtonType = new ButtonType("Ok!", ButtonBar.ButtonData.OK_DONE);
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle("Aviso");
+        dialog.setContentText(mensagem);
+        dialog.getDialogPane().getButtonTypes().add(loginButtonType);
+        boolean desativado = false;
+        dialog.getDialogPane().lookupButton(loginButtonType).setDisable(desativado);
+        dialog.showAndWait();
     }
 
     public void recarregarTabela() {

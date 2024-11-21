@@ -16,7 +16,7 @@
       <TableView fx:id="tableProduto" layoutX="27.0" layoutY="111.0" prefHeight="222.0" prefWidth="637.0">
          <columns>
             <TableColumn fx:id="codigoColumn" prefWidth="87.0" text="Código" />
-            <TableColumn fx:id="nomeColumn" prefWidth="530.0" text="Nome" />
+            <TableColumn fx:id="nomeColumn" prefWidth="549.0" text="Nome" />
          </columns>
       </TableView>
       <Button fx:id="btnFiltrar1" layoutX="411.0" layoutY="347.0" mnemonicParsing="false" onAction="#excluir" prefHeight="25.0" prefWidth="119.0" text="Excluir" />

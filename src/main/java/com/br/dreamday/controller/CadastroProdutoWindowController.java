@@ -76,8 +76,4 @@ public class CadastroProdutoWindowController {
         txaDescricao.setText(produtoSelecionado.getDescricao());
         isEdicaoProduto = true;
     }
-
-    public Produto getProduto() {
-        return this.produto;
-    }
 }
