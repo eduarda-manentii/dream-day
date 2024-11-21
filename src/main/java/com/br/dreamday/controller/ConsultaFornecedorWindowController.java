@@ -110,20 +110,34 @@ public class ConsultaFornecedorWindowController {
     }
 
     @FXML
-    void filtrar(ActionEvent event) {
+    void filtrar() {
+        try {
+            List<Fornecedor> fornecedores;
 
-        List<Fornecedor> fornecedores;
+            if (!txtNomeFiltro.getText().isBlank()) {
+                fornecedores = fornecedorService.listarPor(txtNomeFiltro.getText());
+            } else {
+                fornecedores = fornecedorService.listarTodas();
+            }
 
-        if (!txtNomeFiltro.getText().isBlank()) {
-            fornecedores = fornecedorService.listarPor(txtNomeFiltro.getText());
-        } else {
-            fornecedores = fornecedorService.listarTodas();
+            fornecedorList.clear();
+            fornecedorList.addAll(fornecedores);
+            tableFornecedor.setItems(fornecedorList);
+            tableFornecedor.refresh();
+        } catch(Exception ex) {
+            showMessage(ex.getMessage());
         }
+    }
 
-        fornecedorList.clear();
-        fornecedorList.addAll(fornecedores);
-        tableFornecedor.setItems(fornecedorList);
-        tableFornecedor.refresh();
+    private void showMessage(String mensagem) {
+        ButtonType loginButtonType = new ButtonType("Ok!", ButtonBar.ButtonData.OK_DONE);
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle("Aviso");
+        dialog.setContentText(mensagem);
+        dialog.getDialogPane().getButtonTypes().add(loginButtonType);
+        boolean desativado = false;
+        dialog.getDialogPane().lookupButton(loginButtonType).setDisable(desativado);
+        dialog.showAndWait();
     }
 
     private void mostrarTelaDetalhe(Fornecedor fornecedorSelecionado) throws IOException {

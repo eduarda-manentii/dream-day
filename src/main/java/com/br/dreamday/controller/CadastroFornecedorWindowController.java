@@ -81,7 +81,11 @@ public class CadastroFornecedorWindowController {
 
     private void limparCampos() {
         txtNome.clear();
+        txtTelefone.setOnKeyTyped(null);
+        txtTelefone.setTextFormatter(null);
+        txtTelefone.setOnKeyReleased(null);
         txtTelefone.clear();
+        MascarasUtils.mascaraTelefone(txtTelefone);
         txtEmail.clear();
     }
 

@@ -4,7 +4,11 @@ import com.br.dreamday.domain.Fornecedor;
 import com.br.dreamday.dao.DaoFornecedor;
 import com.br.dreamday.dao.DaoItemFornecedor;
 import com.br.dreamday.dao.FactoryDao;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FornecedorService {
@@ -53,11 +57,13 @@ public class FornecedorService {
         boolean isEmailInvalido = fornecedor.getEmail().isBlank()
                 || fornecedor.getEmail().length() > 255
                 || fornecedor.getEmail().length() < 3
-                || !fornecedor.getEmail().contains("@");
+                || !fornecedor.getEmail().contains("@")
+                || !fornecedor.getEmail().endsWith(".com")
+                || fornecedor.getEmail().indexOf("@") >= fornecedor.getEmail().lastIndexOf(".com") - 1;
 
         if (isEmailInvalido) {
             throw new IllegalArgumentException("O email do fornecedor deve possuir"
-                    + " entre 3 e 100 e conter @.");
+                    + " entre 3 e 100 e seguir o padrão nome_email@proverdor_de_email.com)");
         }
     }
 
@@ -79,7 +85,7 @@ public class FornecedorService {
     }
 
     public List<Fornecedor> listarPor(String nome) {
-        boolean isFiltroInvalido = nome.isBlank() && nome.length() < 3;
+        boolean isFiltroInvalido = nome.isBlank() || nome.length() < 3;
 
         if (isFiltroInvalido) {
             throw new IllegalArgumentException("O filtro para listagem é obrigatório e deve ter mais que 2 caracteres.");

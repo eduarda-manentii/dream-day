@@ -18,6 +18,9 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.util.Locale;
 import java.util.Objects;
 
 import static com.br.dreamday.utils.WindowUtils.deleteConfirmationMessage;
@@ -35,7 +38,7 @@ public class DetalheFornecedorWindowController {
     private TableColumn<ItemFornecedor, String> descricaoColumn;
 
     @FXML
-    private TableColumn<ItemFornecedor, String> precoColumn;
+    private TableColumn<ItemFornecedor, BigDecimal> precoColumn;
 
     @FXML
     private TableColumn<ItemFornecedor, String> categoriaColumn;
@@ -140,6 +143,8 @@ public class DetalheFornecedorWindowController {
         popupStage.centerOnScreen();
         popupStage.setResizable(false);
         popupStage.showAndWait();
+
+        recarregarTabela();
     }
 
     public void setAttributes(Fornecedor fornecedorSelecionado) {
@@ -157,6 +162,20 @@ public class DetalheFornecedorWindowController {
         descricaoColumn.setCellValueFactory(new PropertyValueFactory<>("descricaoProduto"));
         precoColumn.setCellValueFactory(new PropertyValueFactory<>("preco"));
         categoriaColumn.setCellValueFactory(new PropertyValueFactory<>("nomeCategoria"));
+
+        precoColumn.setCellFactory(column -> new TableCell<>() {
+            private final NumberFormat formatoBrasileiro = NumberFormat.getCurrencyInstance(Locale.of("pt", "BR"));
+
+            @Override
+            protected void updateItem(BigDecimal preco, boolean empty) {
+                super.updateItem(preco, empty);
+                if (empty || preco == null) {
+                    setText(null);
+                } else {
+                    setText(formatoBrasileiro.format(preco));
+                }
+            }
+        });
     }
 
     private void configuraColunaAcoes() {
