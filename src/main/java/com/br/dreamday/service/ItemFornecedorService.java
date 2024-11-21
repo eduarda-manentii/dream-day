@@ -23,6 +23,7 @@ public class ItemFornecedorService {
         if (isPersistido) {
             this.daoItemFornecedor.alterar(itemFornecedor);
         } else {
+            validarDuplicidade(itemFornecedor);
             this.daoItemFornecedor.inserir(itemFornecedor);
         }
     }
@@ -55,7 +56,9 @@ public class ItemFornecedorService {
         if (isCategoriaInvalida || isFornecedorInvalida || isProdutoInvalida) {
             throw new IllegalArgumentException("A categoria, fornecedor e produto são obrigatórios!");
         }
+    }
 
+    public void validarDuplicidade(ItemFornecedor itemFornecedor) {
         boolean existe = daoItemFornecedor.validarItemDuplicado(
                 itemFornecedor.getProduto().getId(),
                 itemFornecedor.getFornecedor().getId()

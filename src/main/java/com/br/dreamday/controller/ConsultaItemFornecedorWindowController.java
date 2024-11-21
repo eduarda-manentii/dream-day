@@ -58,7 +58,7 @@ public class ConsultaItemFornecedorWindowController {
     }
 
     @FXML
-    void filtrar(ActionEvent event) {
+    void filtrar() {
 
         try {
             String descricaoFornecedor = txtDescricaoFornecedor.getText();
@@ -82,11 +82,7 @@ public class ConsultaItemFornecedorWindowController {
             tableItemFornecedor.setItems(itemFornecedorList);
 
         } catch (Exception ex) {
-            exibirAlerta(
-                    Alert.AlertType.ERROR,
-                    "Listagem de Item Fornecedor",
-                    "Ocorreu um erro na listagem dos itens: " + ex.getMessage()
-            );
+            showMessage(ex.getMessage());
         }
     }
 
@@ -99,6 +95,17 @@ public class ConsultaItemFornecedorWindowController {
                 Valor Inicial: 0\s
                 Valor Final: 1000""");
         Tooltip.install(imageView, tooltip);
+    }
+
+    private void showMessage(String mensagem) {
+        ButtonType loginButtonType = new ButtonType("Ok!", ButtonBar.ButtonData.OK_DONE);
+        Dialog<String> dialog = new Dialog<>();
+        dialog.setTitle("Aviso");
+        dialog.setContentText(mensagem);
+        dialog.getDialogPane().getButtonTypes().add(loginButtonType);
+        boolean desativado = false;
+        dialog.getDialogPane().lookupButton(loginButtonType).setDisable(desativado);
+        dialog.showAndWait();
     }
 
     private void configuraColunasTabela() {
