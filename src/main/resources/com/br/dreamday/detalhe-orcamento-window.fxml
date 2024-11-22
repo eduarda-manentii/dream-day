@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="460.0" prefWidth="785.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.br.dreamday.controller.DetalheOrcamentoWindowController">
+<AnchorPane prefHeight="460.0" prefWidth="785.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.br.dreamday.controller.DetalheOrcamentoWindowController">
    <children>
       <Label fx:id="lblDetalhesDoOrcamento" layoutX="29.0" layoutY="38.0" text="Detalhes do orçamento">
          <font>
@@ -90,7 +90,7 @@
       <Button fx:id="btnEditar" layoutX="33.0" layoutY="424.0" mnemonicParsing="false" onAction="#editar" prefHeight="25.0" prefWidth="112.0" text="Editar" />
       <Button fx:id="btnVincularItem" layoutX="572.0" layoutY="424.0" mnemonicParsing="false" onAction="#vincularItem" prefHeight="25.0" prefWidth="191.0" text="Vincular item" />
       <Button fx:id="btnExcluir" layoutX="168.0" layoutY="424.0" mnemonicParsing="false" onAction="#excluir" prefHeight="25.0" prefWidth="112.0" text="Excluir" />
-      <Button fx:id="btnAdicionarParcelas" layoutX="286.0" layoutY="424.0" mnemonicParsing="false" onAction="#adicionarParcelas" prefHeight="25.0" prefWidth="134.0" text="Adicionar parcelas" visible="false" />
-      <Button fx:id="btnVerParcelas" layoutX="525.0" layoutY="245.0" mnemonicParsing="false" onAction="#verParcelas" prefHeight="25.0" prefWidth="87.0" text="Ver parcelas" visible="false" />
+      <Button fx:id="btnAdicionarParcelas" layoutX="309.0" layoutY="424.0" mnemonicParsing="false" onAction="#adicionarParcelas" prefHeight="25.0" prefWidth="134.0" text="Adicionar parcelas" visible="false" />
+      <Button fx:id="btnVerParcelas" layoutX="643.0" layoutY="243.0" mnemonicParsing="false" onAction="#verParcelas" prefHeight="25.0" prefWidth="112.0" text="Ver parcelas" visible="false" />
    </children>
 </AnchorPane>

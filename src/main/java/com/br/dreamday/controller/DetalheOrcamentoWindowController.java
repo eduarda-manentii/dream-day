@@ -17,6 +17,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -212,7 +213,7 @@ public class DetalheOrcamentoWindowController {
     }
 
     @FXML
-    void adicionarParcelas() throws IOException {
+    void adicionarParcelas(ActionEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader(Objects.requireNonNull(MainViewApplication.class.getResource("/com/br/dreamday/cadastro-parcelamento-window.fxml")));
         Parent root = loader.load();
         CadastroParcelamentoController cadastroParcelamentoController = loader.getController();
@@ -227,6 +228,8 @@ public class DetalheOrcamentoWindowController {
         popupStage.centerOnScreen();
         popupStage.setResizable(false);
         popupStage.showAndWait();
+        closeWindow(event);
+
     }
 
     public void atualizarCampoValorTotal(String novoValor) {
