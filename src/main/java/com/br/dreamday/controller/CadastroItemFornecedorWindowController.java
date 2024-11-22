@@ -21,6 +21,7 @@ import javafx.scene.layout.AnchorPane;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.text.NumberFormat;
+import java.text.ParseException;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -68,12 +69,32 @@ public class CadastroItemFornecedorWindowController implements Initializable {
     @FXML
     void salvar() {
         try {
-
             Produto produto = autoTxtProduto.getProdutoSelecionado();
+            if (produto == null) {
+                throw new IllegalArgumentException("Por favor, selecione um produto válido.");
+            }
+
             Categoria categoria = autoTxtCategoria.getCategoriaSelecionada();
-            NumberFormat format = NumberFormat.getInstance(Locale.getDefault());
-            Number number = format.parse(txtPreco.getText());
-            BigDecimal preco = BigDecimal.valueOf(number.doubleValue());
+            if (categoria == null) {
+                throw new IllegalArgumentException("Por favor, selecione uma categoria válida.");
+            }
+
+            String strPreco = txtPreco.getText();
+            if (strPreco == null || strPreco.isBlank()) {
+                throw new IllegalArgumentException("O campo de preço não pode estar vazio.");
+            }
+
+            BigDecimal preco;
+            try {
+                NumberFormat format = NumberFormat.getInstance(Locale.getDefault());
+                Number number = format.parse(strPreco);
+                preco = BigDecimal.valueOf(number.doubleValue());
+                if (preco.compareTo(BigDecimal.ZERO) <= 0) {
+                    throw new IllegalArgumentException("O preço deve ser um valor positivo.");
+                }
+            } catch (ParseException e) {
+                throw new IllegalArgumentException("O preço informado está em um formato inválido. Por favor, use um formato numérico válido.");
+            }
 
             if (!isEdicaoItem) {
                 itemFornecedor = new ItemFornecedor(
@@ -95,13 +116,19 @@ public class CadastroItemFornecedorWindowController implements Initializable {
             exibirAlerta(
                     Alert.AlertType.INFORMATION,
                     "Confirmação de Alteração",
-                    "As alterações foram salvas com sucesso. "
+                    "As alterações foram salvas com sucesso!"
+            );
+        } catch (IllegalArgumentException e) {
+            exibirAlerta(
+                    Alert.AlertType.WARNING,
+                    "Erro de Validação",
+                    "Validação falhou: " + e.getMessage()
             );
         } catch (Exception ex) {
             exibirAlerta(
                     Alert.AlertType.ERROR,
-                    "Erro de Validação",
-                    "Ocorreu um erro ao salvar as informações: " + ex.getMessage()
+                    "Erro ao Salvar",
+                    "Ocorreu um erro ao salvar as informações. Tente novamente mais tarde.\nDetalhes: " + ex.getMessage()
             );
         }
     }
