@@ -55,7 +55,7 @@ public class FornecedorService {
         }
 
         boolean isEmailInvalido = fornecedor.getEmail().isBlank()
-                || fornecedor.getEmail().length() > 255
+                || fornecedor.getEmail().length() > 100
                 || fornecedor.getEmail().length() < 3
                 || !fornecedor.getEmail().contains("@")
                 || !fornecedor.getEmail().endsWith(".com")
