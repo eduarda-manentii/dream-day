@@ -116,9 +116,17 @@ public class ConsultaProdutoWindowController {
         } else {
 
             deleteConfirmationMessage(() -> {
-                produtoService.excluirPor(produtoSelecionado.getId());
-                produtoList.remove(produtoSelecionado);
-                tableProduto.refresh();
+                try {
+                    produtoService.excluirPor(produtoSelecionado.getId());
+                    produtoList.remove(produtoSelecionado);
+                    tableProduto.refresh();
+                } catch (Exception e) {
+                    exibirAlerta(
+                            Alert.AlertType.ERROR,
+                            "Erro de Exclusão",
+                            "Ocorreu um erro ao excluir: " + e.getMessage()
+                    );
+                }
             });
         }
     }
