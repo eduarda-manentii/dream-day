@@ -2,13 +2,10 @@ package com.br.dreamday.controller;
 
 import com.br.dreamday.domain.Cliente;
 import com.br.dreamday.domain.ItemOrcamento;
-import com.br.dreamday.domain.Orcamento;
 import com.br.dreamday.service.ClienteService;
 import com.br.dreamday.service.ItemOrcamentoService;
-import com.br.dreamday.service.OrcamentoService;
 import com.br.dreamday.utils.Formatter;
 import com.br.dreamday.utils.WindowUtils;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -24,9 +21,6 @@ import java.io.IOException;
 import java.util.List;
 
 public class ClienteRelatorioController {
-
-    @FXML
-    private Button btnFiltrar;
 
     @FXML
     private Button btnVoltar;
@@ -60,13 +54,10 @@ public class ClienteRelatorioController {
 
     private final ClienteService clienteService;
 
-    private final OrcamentoService orcamentoService;
-
     private final ItemOrcamentoService itemOrcamentoService;
 
     public ClienteRelatorioController() {
         clienteService = new ClienteService();
-        orcamentoService = new OrcamentoService();
         itemOrcamentoService = new ItemOrcamentoService();
     }
 

@@ -14,7 +14,7 @@
             <Font size="26.0" />
          </font>
       </Label>
-      <Label fx:id="lblCodigoFornecedor" layoutX="304.0" layoutY="57.0" prefHeight="38.0" prefWidth="124.0">
+      <Label fx:id="lblCodigoFornecedor" layoutX="300.0" layoutY="21.0" prefHeight="38.0" prefWidth="124.0">
          <font>
             <Font size="26.0" />
          </font>
