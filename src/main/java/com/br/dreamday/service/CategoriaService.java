@@ -9,8 +9,8 @@ import java.util.List;
 
 public class CategoriaService {
 
-    private DaoCategoria daoCategoria;
-    private DaoItemFornecedor daoItemFornecedor;
+    private final DaoCategoria daoCategoria;
+    private final DaoItemFornecedor daoItemFornecedor;
 
     public CategoriaService() {
         this.daoCategoria = FactoryDao.getInstance().getDaoCategoria();

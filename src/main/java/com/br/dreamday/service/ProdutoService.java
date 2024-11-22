@@ -43,7 +43,7 @@ public class ProdutoService {
         }
 
         boolean isDescricaoInvalida = produto.getDescricao().isBlank()
-                || produto.getDescricao().length() > 100
+                || produto.getDescricao().length() > 255
                 || produto.getDescricao().length() < 3;
 
         if (isDescricaoInvalida) {
