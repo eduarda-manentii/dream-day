@@ -8,6 +8,7 @@ import com.br.dreamday.service.ItemOrcamentoService;
 import com.br.dreamday.service.OrcamentoService;
 import com.br.dreamday.utils.Formatter;
 import com.br.dreamday.utils.WindowUtils;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -99,39 +100,35 @@ public class ClienteRelatorioController {
     private void geraRelatorio(Cliente cliente) {
 
         lblNomeCliente.setText(cliente.getNome());
-        List<Orcamento> orcamentos = orcamentoService.listarPor(cliente.getNome());
-        double valorTotal = 0;
 
-        for (Orcamento orcamento : orcamentos) {
-            valorTotal += orcamento.getCustoEstimado().doubleValue();
-        }
+        List<ItemOrcamento> itens = itemOrcamentoService.listarPorCliente(cliente.getId());
 
-        lblCusto.setText("R$ " + Formatter.converteParaPtBr(valorTotal));
+        double valorTotal = itens.stream()
+                .mapToDouble(i ->
+                        i.getQuantidade() * i.getItemFornecedor().getPreco().doubleValue())
+                .sum();
 
-        ObservableList<ItemOrcamento> itens = FXCollections.observableArrayList(itemOrcamentoService.listarPorCliente(cliente.getId()));
+        lblCusto.setText(Double.toString(valorTotal));
 
+        ObservableList<ItemOrcamento> obItens = FXCollections.observableArrayList(itens);
         itensColumn.setCellValueFactory(param -> {
             ItemOrcamento item = param.getValue();
             return new SimpleStringProperty(item.getProduto().getNome());
         });
-
         valorColumn.setCellValueFactory(param -> {
             ItemOrcamento item = param.getValue();
             return new SimpleStringProperty("R$ " + Formatter.converteParaPtBr(item.getItemFornecedor().getPreco()));
         });
-
         qtdeColumn.setCellValueFactory(param -> {
             ItemOrcamento item = param.getValue();
-            return new SimpleStringProperty();
+            return new SimpleStringProperty(String.valueOf(item.getQuantidade()));
         });
-
         totalUnitarioColumn.setCellValueFactory(param -> {
             ItemOrcamento item = param.getValue();
             double valor = item.getQuantidade() * item.getItemFornecedor().getPreco().doubleValue();
             return new SimpleStringProperty("R$ " + Formatter.converteParaPtBr(valor));
         });
-
-        table.setItems(itens);
+        table.setItems(obItens);
         painelRelatorio.setVisible(true);
     }
 
