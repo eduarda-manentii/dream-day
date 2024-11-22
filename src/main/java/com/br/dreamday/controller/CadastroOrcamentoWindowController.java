@@ -1,6 +1,5 @@
 package com.br.dreamday.controller;
 
-import com.br.dreamday.MainViewApplication;
 import com.br.dreamday.domain.*;
 import com.br.dreamday.service.ClienteService;
 import com.br.dreamday.service.OrcamentoService;
@@ -10,22 +9,15 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 import static com.br.dreamday.utils.WindowUtils.exibirAlerta;
 
@@ -89,7 +81,7 @@ public class CadastroOrcamentoWindowController {
             if (orcamentoSelecionado == null) {
                 Orcamento orcamento = new Orcamento(cliente, status, dataDeCriacao, custoEstimado, BigDecimal.ZERO, observacoes);
                 service.salvar(orcamento);
-                limparCampor();
+                limparCampos();
             } else {
                 orcamentoSelecionado.setCliente(cliente);
                 orcamentoSelecionado.setCustoEstimado(custoEstimado);
@@ -138,11 +130,11 @@ public class CadastroOrcamentoWindowController {
         return String.format("%.2f", valor);
     }
 
-    private void limparCampor() {
+    private void limparCampos() {
         txtAreaObservacoes.setText("");
         txtCustoEstimado.setText("");
-        cbCliente.setItems(null);
-        cbStatus.setItems(null);
+        cbCliente.setValue(cbCliente.getItems().getFirst());
+        cbStatus.setValue(cbStatus.getItems().getFirst());
     }
 
     private boolean camposPreenchidos() {
